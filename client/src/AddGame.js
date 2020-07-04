@@ -6,7 +6,7 @@ class AddGame extends React.Component {
     this.state = {
       name: '',
       description: '',
-      image: '',
+      image: null,
       publisher: '',
       categories: [''],
       min_players: null,
@@ -59,16 +59,16 @@ class AddGame extends React.Component {
 
         <div className="form-group">
           <label>Players</label>
-          <input type="number" className="form-control" name="minPlayers" onChange={this.handleChange} />
+          <input type="number" className="form-control" name="min_players" onChange={this.handleChange} />
           -
-          <input type="number" className="form-control" name="maxPlayers" onChange={this.handleChange} />
+          <input type="number" className="form-control" name="max_players" onChange={this.handleChange} />
         </div>
 
         <div className="form-group">
           <label>Playtime (minutes)</label>
-          <input type="number" className="form-control" name="minTime" onChange={this.handleChange} />
+          <input type="number" className="form-control" name="min_playtime" onChange={this.handleChange} />
           -
-          <input type="number" className="form-control" name="maxTime" onChange={this.handleChange} />
+          <input type="number" className="form-control" name="max_playtime" onChange={this.handleChange} />
         </div>
 
         <div className="form-group">
@@ -78,7 +78,7 @@ class AddGame extends React.Component {
 
         <div className="form-group">
           <label htmlFor="age">Minumum Age</label>
-          <input type="number" className="form-control" name="age" onChange={this.handleChange} />
+          <input type="number" className="form-control" name="min_age" onChange={this.handleChange} />
         </div>
 
         <input type="submit" className="btn btn-primary" value="Save Game" />
@@ -88,13 +88,12 @@ class AddGame extends React.Component {
   }
 
   handleChange(event) {
-    const target = event.target;
-    const name = target.name;
-    const value = target.value;
+    const name = event.target.name;
+    const value = name === 'image' ? event.target.files[0] : event.target.value;
 
     this.setState({ [name]: value });
 
-    if(name === 'name') {
+    if (name === 'name') {
       // TODO: Check database for similar game names
     }
   }
@@ -126,6 +125,13 @@ class AddGame extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    let values = this.state;
+    values.categories = values.categories.filter(e => e !== '');
+
+    console.log(values);
+
+    // TODO: Upload image file to S3
     // TODO: Save values to database
   }
 
