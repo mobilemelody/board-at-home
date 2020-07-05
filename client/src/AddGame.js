@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 
-class AddGame extends React.Component {
+class AddGameForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +16,6 @@ class AddGame extends React.Component {
       max_playtime: null,
       year: null,
       min_age: null,
-      category_list: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -24,28 +23,6 @@ class AddGame extends React.Component {
   }
 
   componentDidMount() {
-    let categories = [
-      "Abstract",
-      "Connection",
-      "Cooperative",
-      "Deduction",
-      "Dexterity",
-      "Economic",
-      "Educational",
-      "Fantasy",
-      "Farming",
-      "Fighting",
-      "Finance",
-      "Food",
-      "Guessing",
-      "Historical",
-      "Maze",
-    ];
-
-    let options = [];
-    categories.forEach(e => options.push({ value: e, label: e }));
-
-    this.setState({ category_list: options });
   }
 
   createForm() {
@@ -79,7 +56,7 @@ class AddGame extends React.Component {
         
         <div className="form-group">
           <label htmlFor="categories">Categories</label>
-          <Select isMulti options={this.state.category_list} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
+          <Select isMulti options={this.props.category_list} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
         </div>
         <h3 className="mt-4">Game Details</h3>
 
@@ -157,6 +134,50 @@ class AddGame extends React.Component {
       </div>
     );
   }
+}
+
+
+class AddGame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      category_list: [],
+    };
+  }
+
+  componentDidMount() {
+    // TODO: Get categories from database
+    let categories = [
+      "Abstract",
+      "Connection",
+      "Cooperative",
+      "Deduction",
+      "Dexterity",
+      "Economic",
+      "Educational",
+      "Fantasy",
+      "Farming",
+      "Fighting",
+      "Finance",
+      "Food",
+      "Guessing",
+      "Historical",
+      "Maze",
+    ];
+
+    // Convert array values to objects
+    let options = [];
+    categories.forEach(e => options.push({ value: e, label: e }));
+
+    this.setState({ category_list: options });
+  }
+
+  render() {
+    return (
+      <AddGameForm category_list={this.state.category_list} />
+    );
+  }
+
 }
 
 export default AddGame;
