@@ -28,60 +28,75 @@ class AddGame extends React.Component {
     return (
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+          </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <textarea className="form-control" name="description" onChange={this.handleChange} />
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea className="form-control" name="description" onChange={this.handleChange} />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="image">Image</label>
-          <input type="file" className="form-control-file" name="image" onChange={this.handleChange} />
-        </div>
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label htmlFor="image">Image</label>
+            <input type="file" className="form-control-file" name="image" onChange={this.handleChange} />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="publisher">Publisher</label>
-          <input type="text" className="form-control" name="publisher" onChange={this.handleChange} />
+          <div className="form-group col-md-6">
+            <label htmlFor="publisher">Publisher</label>
+            <input type="text" className="form-control" name="publisher" onChange={this.handleChange} />
+          </div>
         </div>
         
         <div className="form-group">
           <label>Categories</label>
-          <input type="button" className="btn btn-secondary" value="add" onClick={this.addCategory.bind(this)} />
-        </div>
-        <div className="form-group">
           {this.createCategoryInputs()}
         </div>
+        <button className="btn btn-light" value="add" onClick={this.addCategory.bind(this)}>
+          <i className="fa fa-plus" aria-hidden="true"></i> Add Category
+        </button>
 
-        <h3>Game Details</h3>
+        <h3 className="mt-4">Game Details</h3>
 
-        <div className="form-group">
-          <label>Players</label>
-          <input type="number" className="form-control" name="min_players" onChange={this.handleChange} />
-          -
-          <input type="number" className="form-control" name="max_players" onChange={this.handleChange} />
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label>Players</label>
+            <div className="d-flex flex-row">
+              <input type="number" className="form-control" name="min_players" placeholder="min" onChange={this.handleChange} />
+              <div className="mx-2 mt-1"> &ndash; </div>
+              <input type="number" className="form-control" name="max_players" placeholder="max" onChange={this.handleChange} />
+            </div>
+          </div>
+
+
+          <div className="form-group col-md-6">
+            <label>Playtime (minutes)</label>
+            <div className="d-flex flex-row">
+              <input type="number" className="form-control" name="min_playtime" placeholder="min" onChange={this.handleChange} />
+              <div className="mx-2 mt-1"> &ndash; </div>
+              <input type="number" className="form-control" name="max_playtime" placeholder="max" onChange={this.handleChange} />
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Playtime (minutes)</label>
-          <input type="number" className="form-control" name="min_playtime" onChange={this.handleChange} />
-          -
-          <input type="number" className="form-control" name="max_playtime" onChange={this.handleChange} />
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label htmlFor="year">Year</label>
+            <input type="number" className="form-control" name="year" onChange={this.handleChange} />
+          </div>
+
+          <div className="form-group col-md-6">
+            <label htmlFor="age">Minimum Age</label>
+            <input type="number" className="form-control" name="min_age" onChange={this.handleChange} />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="year">Year</label>
-          <input type="number" className="form-control" name="year" onChange={this.handleChange} />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="age">Minumum Age</label>
-          <input type="number" className="form-control" name="min_age" onChange={this.handleChange} />
-        </div>
-
-        <input type="submit" className="btn btn-primary" value="Save Game" />
+        <input type="submit" className="btn btn-lg btn-primary" value="Save Game" />
 
       </form>
     );
@@ -99,10 +114,15 @@ class AddGame extends React.Component {
   }
 
   createCategoryInputs() {
+    // TODO: Convert to select dropdowns and/or add autocomplete
     return this.state.categories.map((e, i) =>
-      <div key={i}>
+      <div key={i} className="input-group mb-2">
         <input type="text" className="form-control" value={e||''} onChange={this.handleCategoryChange.bind(this, i)} />
-        <input type="button" className="btn btn-secondary" value="Remove" onClick={this.removeCategory.bind(this, i)} />
+        <div className="input-group-append">
+          <button className="btn btn-secondary" onClick={this.removeCategory.bind(this, i)}>
+            <i className="fa fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     );
   }
@@ -137,7 +157,7 @@ class AddGame extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container py-3">
         <h1>Add a Game</h1>
         {this.createForm()}
       </div>
