@@ -146,7 +146,7 @@ class AddGame extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let values = this.state;
+    let values = {...this.state};
     values.categories = values.categories.filter(e => e !== '');
 
     console.log(values);
