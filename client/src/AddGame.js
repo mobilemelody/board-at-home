@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 
 class AddGame extends React.Component {
   constructor(props) {
@@ -8,13 +9,14 @@ class AddGame extends React.Component {
       description: '',
       image: null,
       publisher: '',
-      categories: [''],
+      categories: null,
       min_players: null,
       max_players: null,
       min_playtime: null,
       max_playtime: null,
       year: null,
       min_age: null,
+      category_list: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,6 +24,28 @@ class AddGame extends React.Component {
   }
 
   componentDidMount() {
+    let categories = [
+      "Abstract",
+      "Connection",
+      "Cooperative",
+      "Deduction",
+      "Dexterity",
+      "Economic",
+      "Educational",
+      "Fantasy",
+      "Farming",
+      "Fighting",
+      "Finance",
+      "Food",
+      "Guessing",
+      "Historical",
+      "Maze",
+    ];
+
+    let options = [];
+    categories.forEach(e => options.push({ value: e, label: e }));
+
+    this.setState({ category_list: options });
   }
 
   createForm() {
@@ -54,13 +78,9 @@ class AddGame extends React.Component {
         </div>
         
         <div className="form-group">
-          <label>Categories</label>
-          {this.createCategoryInputs()}
+          <label htmlFor="categories">Categories</label>
+          <Select isMulti options={this.state.category_list} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
         </div>
-        <button className="btn btn-light" value="add" onClick={this.addCategory.bind(this)}>
-          <i className="fa fa-plus" aria-hidden="true"></i> Add Category
-        </button>
-
         <h3 className="mt-4">Game Details</h3>
 
         <div className="form-row">
@@ -113,41 +133,15 @@ class AddGame extends React.Component {
     }
   }
 
-  createCategoryInputs() {
-    // TODO: Convert to select dropdowns and/or add autocomplete
-    return this.state.categories.map((e, i) =>
-      <div key={i} className="input-group mb-2">
-        <input type="text" className="form-control" value={e||''} onChange={this.handleCategoryChange.bind(this, i)} />
-        <div className="input-group-append">
-          <button className="btn btn-secondary" onClick={this.removeCategory.bind(this, i)}>
-            <i className="fa fa-times" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  handleCategoryChange(i, event) {
-    let categories = [...this.state.categories];
-    categories[i] = event.target.value;
-    this.setState({ categories });
-  }
-
-  addCategory() {
-    this.setState(prevState => ({ categories: [...prevState.categories, ''] }));
-  }
-
-  removeCategory(i) {
-    let categories = [...this.state.categories];
-    categories.splice(i, 1);
-    this.setState({ categories });
+  handleCategoryChange(categories) {
+    this.setState({ categories: categories });
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
     let values = {...this.state};
-    values.categories = values.categories.filter(e => e !== '');
+    values.categories = values.categories.map(e => e.value);
 
     console.log(values);
 
