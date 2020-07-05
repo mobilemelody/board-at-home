@@ -118,12 +118,63 @@ class AddGameForm extends React.Component {
     event.preventDefault();
 
     let values = {...this.state};
-    values.categories = values.categories.map(e => e.value);
+    if (values.categories) {
+      values.categories = values.categories.map(e => e.value);
+    }
 
-    console.log(values);
+    // Upload image file to S3
+    // TODO: Validate/modify filename to prevent accidental overwrites
+    if (values.image) {
+      let image_data = {
+        fileName: values.image.name,
+        fileType: values.image.type,
+      }
+      // TODO: Update URL
+      fetch('http://192.168.99.100:3000/games/sign-s3', {
+        method: 'POST',
+        body: JSON.stringify(image_data),
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+      .then(res => res.json())
+      .then(res => {
+        let returnData = res.data.returnData;
+        let signedRequest = returnData.signedRequest;
+        let url = returnData.url;
+        fetch(signedRequest, {
+          method: 'PUT',
+          body: values.image,
+          headers: {
+            "Content-Type": image_data.fileType
+          },
+        })
+        .then(res => {
+          // Save values to database
+          values.image = url;
+          this.saveToDB(values);
+        })
+      })
+    } else {
+      this.saveToDB(values);
+    }
+    
+  }
 
-    // TODO: Upload image file to S3
-    // TODO: Save values to database
+  saveToDB(values) {
+    // TODO: Update URL
+    fetch('http://192.168.99.100:3000/games', {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+    .then(res => res.json())
+    .then(res => {
+      // TODO: Go to new game page
+      console.log(res)
+    })
   }
 
   render() {
