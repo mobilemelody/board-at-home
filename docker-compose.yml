@@ -39,6 +39,8 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data/
       - ./scripts:/docker-entrypoint-initdb.d/
+    networks:
+      - bah-network
 volumes:
   database-data:
 networks:
