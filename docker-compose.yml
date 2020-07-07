@@ -24,6 +24,7 @@ services:
       - 3000:3000
     env_file:
       - api.env
+      - db.env
     volumes:
       - ./api:/api
       - /api/node_modules
@@ -40,6 +41,9 @@ services:
       - db.env
     volumes:
       - database-data:/var/lib/postgresql/data/
+      - ./scripts:/docker-entrypoint-initdb.d/
+    networks:
+      - bah-network
 volumes:
   database-data:
 networks:
