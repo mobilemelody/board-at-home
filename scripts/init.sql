@@ -77,6 +77,8 @@ CREATE TABLE public."Game" (
     "minAge" smallint,
     "minPlaytime" smallint,
     "maxPlaytime" smallint,
+    "minPlayers" smallint,
+    "maxPlayers" smallint,
     publisher text
 );
 
