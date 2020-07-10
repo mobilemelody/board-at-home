@@ -16,7 +16,16 @@ client.connect(err => {
     console.error('connection error', err.stack)
   } else {
     console.log('connected')
+    client.query('SELECT * FROM "Game"', (err, res) => {
+      if (err) {
+        console.log(err)
+      } else {
+      console.log(res)
+      }
+    })
   }
 })
+
+// SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\' ORDER BY table_name
 
 module.exports = {client}
