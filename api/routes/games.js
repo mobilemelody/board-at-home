@@ -59,7 +59,7 @@ router.post('/', (req, res, next) => {
   query_fields.push('"identifierID"');
   query.values.push("userId");
 
-  query.text = 'INSERT INTO "Game"(' + query_fields.join(', ') + ') VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *';
+  query.text = 'INSERT INTO "Game"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length) + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {
