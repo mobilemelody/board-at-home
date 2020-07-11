@@ -106,7 +106,8 @@ ALTER TABLE public."GameCategory" OWNER TO postgres;
 
 CREATE TABLE public."GameCategorySelect" (
     id integer NOT NULL,
-    category text NOT NULL
+    category text NOT NULL,
+    "identifierID" text
 );
 
 
@@ -196,7 +197,8 @@ CREATE TABLE public."Review" (
     id integer NOT NULL,
     "userID" bigint NOT NULL,
     "gameID" bigint NOT NULL,
-    "overallRating" numeric(2,1)
+    "overallRating" numeric(2,1),
+    comments text
 );
 
 
