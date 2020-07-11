@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const dbUtils = require('../utils/db.js');
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -70,7 +71,7 @@ router.post('/', (req, res, next) => {
     // Save categories
     let categories = req.body.categories;
     if (categories) {
-      query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + expand(categories.length, 2) + ' RETURNING *';
+      query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + dbUtils.expand(categories.length, 2) + ' RETURNING *';
       query.values = [];
       categories.forEach(e => {
         query.values.push(game_id);
@@ -116,11 +117,5 @@ router.post('/sign-s3', (req, res) => {
     res.json({ data: {returnData} });
   });
 });
-
-// expand(3, 2) returns "($1, $2), ($3, $4), ($5, $6)" 
-function expand(rowCount, columnCount, startAt=1){
-  var index = startAt
-  return Array(rowCount).fill(0).map(v => `(${Array(columnCount).fill(0).map(v => `$${index++}`).join(", ")})`).join(", ")
-}
 
 module.exports = router;

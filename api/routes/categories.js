@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const dbUtils = require('../utils/db.js');
 
 /* Get all categories */
 router.get('/', (req, res) => {
@@ -33,7 +34,7 @@ router.post('/', (req, res) => {
   ];
 
   let query = { text: '', values: [] };
-  query.text = 'INSERT INTO "GameCategorySelect"(category) VALUES' + expand(categories.length, 1) + ' RETURNING *';
+  query.text = 'INSERT INTO "GameCategorySelect"(category) VALUES' + dbUtils.expand(categories.length, 1) + ' RETURNING *';
   query.values = categories;
 
   db.client.query(query, (err, result) => {
@@ -44,11 +45,5 @@ router.post('/', (req, res) => {
   });
 
 });
-
-// expand(3, 2) returns "($1, $2), ($3, $4), ($5, $6)" 
-function expand(rowCount, columnCount, startAt=1){
-  var index = startAt
-  return Array(rowCount).fill(0).map(v => `(${Array(columnCount).fill(0).map(v => `$${index++}`).join(", ")})`).join(", ")
-}
 
 module.exports = router;
