@@ -118,4 +118,58 @@ router.post('/sign-s3', (req, res) => {
   });
 });
 
+/* Get reviews for a game */
+router.get('/:game_id/reviews', (req, res) => {
+
+  let query = {
+    text: 'SELECT * FROM "Review" WHERE "gameID" = $1',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    res.status(200).send(result.rows);
+  });
+});
+
+/* Create review for game */
+router.post('/:game_id/reviews', (req, res) => {
+
+  // Map form field names to database field names
+  const fields = {
+    overallRating: '"overallRating"',
+  };
+
+  // Create array of field names for query
+  let query_fields = Object.keys(fields).map(e => fields[e]);
+
+  // Build query object
+  let query = { text: '', values: [] };
+
+  // Add overall rating
+  for (let field in fields) {
+    query.values.push(parseInt(req.body[field]) || null);
+  }
+
+  // TODO: Add user details
+  query_fields.push('"userID"');
+  query.values.push(1);
+
+  // Add game info
+  query_fields.push('"gameID"');
+  query.values.push(parseInt(req.params.game_id));
+
+  query.text = 'INSERT INTO "Review"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length)  + ' RETURNING *';
+
+  // Run query
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    res.status(200).send(result.rows);
+  });
+});
+
 module.exports = router;
