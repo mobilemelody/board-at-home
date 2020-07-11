@@ -65,8 +65,24 @@ router.post('/', (req, res, next) => {
     if (err) {
       return res.status(400).send(err);
     }
-    res.status(200).send(result.rows[0]);
-    // TODO: Save categories
+    let game_id = result.rows[0].id;
+
+    // Save categories
+    let categories = req.body.categories;
+    query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + expand(categories.length, 2) + ' RETURNING *';
+    query.values = [];
+    categories.forEach(e => {
+      query.values.push(game_id);
+      query.values.push(e);
+    });
+
+    db.client.query(query, (err, result) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      res.status(200).send(result.rows);
+    });
+
   });
 
 });
@@ -96,5 +112,54 @@ router.post('/sign-s3', (req, res) => {
     res.json({ data: {returnData} });
   });
 });
+
+/* Get all categories */
+router.get('/categories', (req, res) => {
+  db.client.query('SELECT * FROM "GameCategorySelect"', (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    res.status(200).send(result.rows);
+  });
+});
+
+// TODO: Remove once GameCategorySelect table initialization is complete
+router.post('/categories', (req, res) => {
+  let categories = [
+    "Abstract",
+    "Connection",
+    "Cooperative",
+    "Deduction",
+    "Dexterity",
+    "Economic",
+    "Educational",
+    "Fantasy",
+    "Farming",
+    "Fighting",
+    "Finance",
+    "Food",
+    "Guessing",
+    "Historical",
+    "Maze",
+  ];
+
+  let query = { text: '', values: [] };
+  query.text = 'INSERT INTO "GameCategorySelect"(category) VALUES' + expand(categories.length, 1) + ' RETURNING *';
+  query.values = categories;
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    res.status(200).send(result.rows);
+  });
+
+});
+
+// expand(3, 2) returns "($1, $2), ($3, $4), ($5, $6)" 
+function expand(rowCount, columnCount, startAt=1){
+  var index = startAt
+  return Array(rowCount).fill(0).map(v => `(${Array(columnCount).fill(0).map(v => `$${index++}`).join(", ")})`).join(", ")
+}
 
 module.exports = router;

@@ -197,30 +197,17 @@ class AddGame extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: Get categories from database
-    let categories = [
-      "Abstract",
-      "Connection",
-      "Cooperative",
-      "Deduction",
-      "Dexterity",
-      "Economic",
-      "Educational",
-      "Fantasy",
-      "Farming",
-      "Fighting",
-      "Finance",
-      "Food",
-      "Guessing",
-      "Historical",
-      "Maze",
-    ];
+    // Get categories from database
+    // TODO: Update URL
+    fetch('http://192.168.99.100:3000/games/categories')
+      .then((res) => res.json())
+      .then(res => {
+        // Create select options object
+        let options = [];
+        res.forEach(e => options.push({ value: e.id, label: e.category }));
 
-    // Convert array values to objects
-    let options = [];
-    categories.forEach(e => options.push({ value: e, label: e }));
-
-    this.setState({ category_list: options });
+        this.setState({ category_list: options });
+      });
   }
 
   render() {
