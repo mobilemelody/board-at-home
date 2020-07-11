@@ -123,7 +123,6 @@ class AddGameForm extends React.Component {
     }
 
     // Upload image file to S3
-    // TODO: Validate/modify filename to prevent accidental overwrites
     if (values.image) {
       let image_data = {
         fileName: values.image.name,

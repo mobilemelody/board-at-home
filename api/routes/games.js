@@ -69,19 +69,23 @@ router.post('/', (req, res, next) => {
 
     // Save categories
     let categories = req.body.categories;
-    query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + expand(categories.length, 2) + ' RETURNING *';
-    query.values = [];
-    categories.forEach(e => {
-      query.values.push(game_id);
-      query.values.push(e);
-    });
+    if (categories) {
+      query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + expand(categories.length, 2) + ' RETURNING *';
+      query.values = [];
+      categories.forEach(e => {
+        query.values.push(game_id);
+        query.values.push(e);
+      });
 
-    db.client.query(query, (err, result) => {
-      if (err) {
-        return res.status(400).send(err);
-      }
+      db.client.query(query, (err, result) => {
+        if (err) {
+          return res.status(400).send(err);
+        }
+        res.status(200).send(result.rows);
+      });
+    } else {
       res.status(200).send(result.rows);
-    });
+    }
 
   });
 
@@ -90,7 +94,7 @@ router.post('/', (req, res, next) => {
 /* Upload game image to S3 */
 router.post('/sign-s3', (req, res) => {
   const S3 = new AWS.S3();
-  const fileName = req.body.fileName;
+  const fileName = Date.now() + '-' + req.body.fileName;
   const fileType = req.body.fileType;
 
   const s3Params = {
