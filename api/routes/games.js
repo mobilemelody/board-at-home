@@ -44,7 +44,9 @@ router.post('/', (req, res, next) => {
   // Validate data received
   if (!("name" in req.body)) {
     let err = { "Error": "The request object is missing one of the required fields" };
-    return res.status(400).send(err);
+    return res.status(400)
+      .set({ "Content-Type": "application/json" })
+      .send(err);
   }
 
   // Build query object
@@ -61,31 +63,60 @@ router.post('/', (req, res, next) => {
 
   query.text = 'INSERT INTO "Game"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length) + ' RETURNING *';
 
-  // Run query
+  // Run query to add game
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
     }
-    let game_id = result.rows[0].id;
+
+    // Setup return object
+    let game = result.rows[0];
+    let hostname = req.protocol + '://' + req.headers.host;
+    game.url = hostname + '/games/' + game.id;
 
     // Save categories
     let categories = req.body.categories;
     if (categories) {
+
+      // Build query object
       query.text = 'INSERT INTO "GameCategory"("gameID", "categoryID") VALUES' + dbUtils.expand(categories.length, 2) + ' RETURNING *';
       query.values = [];
       categories.forEach(e => {
-        query.values.push(game_id);
+        query.values.push(game.id);
         query.values.push(e);
       });
 
+      // Run query to add categories
       db.client.query(query, (err, result) => {
         if (err) {
           return res.status(400).send(err);
         }
-        res.status(200).send(result.rows);
+
+        // Add categories to return object
+        game.categories = result.rows.map(e => ({ 
+          id: e.categoryID, 
+          url: hostname + '/categories/' + e.categoryID 
+        }));
+
+        // Send game object
+        res.status(201)
+          .set({ 
+            "Content-Type": "application/json",
+            "Content-Location": game.url
+          })
+          .send(game);
       });
-    } else {
-      res.status(200).send(result.rows);
+    } 
+
+    // If no categories, send game object with empty category array
+    else {
+      game.categories = [];
+      res.status(201)
+        .set({ 
+          "Content-Type": "application/json",
+          "Content-Location": game.url
+        })
+        .send(game);
     }
 
   });
