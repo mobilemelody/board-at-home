@@ -3,7 +3,7 @@
 const userState = {
     isFetching: false,
     isReceived: false,
-    isLoggedIn: false,
+    isLoggedIn: true,
     error: null,
     collections: [],
 }
