@@ -198,7 +198,7 @@ class AddGame extends React.Component {
   componentDidMount() {
     // Get categories from database
     // TODO: Update URL
-    fetch('http://192.168.99.100:3000/games/categories')
+    fetch('http://192.168.99.100:3000/categories')
       .then((res) => res.json())
       .then(res => {
         // Create select options object
