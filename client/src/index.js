@@ -1,13 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+// React Redux Imports
+import "core-js/stable"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import { HashRouter as Router, Route } from 'react-router-dom'
+import { createStore, applyMiddleware } from 'redux'
+import { Base } from "./components/Base"
+import reducers from "./reducers"
+import thunkMiddleware from 'redux-thunk'
 import * as serviceWorker from './serviceWorker';
 
+
+// Create Redux Store
+const store = createStore(reducers, applyMiddleware(thunkMiddleware))
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // Makes store available via any child component that calls connect()
+  <Provider store={store}>
+    <Router>
+      <Route component={Base} />
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 
