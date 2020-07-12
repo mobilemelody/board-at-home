@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import { connect } from 'react-redux'
 
 class AddGameForm extends React.Component {
   constructor(props) {
@@ -187,7 +188,7 @@ class AddGameForm extends React.Component {
 }
 
 
-class AddGame extends React.Component {
+class _AddGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -217,4 +218,4 @@ class AddGame extends React.Component {
 
 }
 
-export default AddGame;
+export const AddGame = connect(null, null)(_AddGame)
