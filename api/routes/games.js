@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const dbUtils = require('../utils/db.js');
+const apiUtils = require('../utils/api.js');
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -23,6 +24,7 @@ router.get('/', (req, res, next) => {
 
 /* Add a game */
 router.post('/', (req, res, next) => {
+  let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
   const fields = {
@@ -71,7 +73,6 @@ router.post('/', (req, res, next) => {
 
     // Setup return object
     let game = result.rows[0];
-    let hostname = req.protocol + '://' + req.headers.host;
     game.url = hostname + '/games/' + game.id;
 
     // Save categories
@@ -151,6 +152,7 @@ router.post('/sign-s3', (req, res) => {
 
 /* Get reviews for a game */
 router.get('/:game_id/reviews', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
     text: 'SELECT * FROM "Review" WHERE "gameID" = $1',
@@ -161,16 +163,36 @@ router.get('/:game_id/reviews', (req, res) => {
     if (err) {
       return res.status(400).send(err);
     }
-    res.status(200).send(result.rows);
+
+    let reviews = {};
+    reviews.results = result.rows.map(e => apiUtils.formatReview(e, hostname));
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(reviews);
   });
 });
 
 /* Create review for game */
 router.post('/:game_id/reviews', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
   const fields = {
     overallRating: '"overallRating"',
+    comments: 'comments',
+    strategy: '"strategy"',
+    luck: '"luck"',
+    playerInteraction: '"playerInteraction"',
+    replayValue: '"replayValue"',
+    complexity: '"complexity"',
+    gfKids: '"gfKids"',
+    gfTeens: '"gfTeens"',
+    gfAdults: '"gfAdults"',
+    gfFamilies: '"gfFamilies"',
+    gf2Player: '"gf2Player"',
+    gfLargeGroups: '"gfLargeGroups"',
+    gfSocialDistancing: '"gfSocialDistancing"'
   };
 
   // Create array of field names for query
@@ -179,9 +201,19 @@ router.post('/:game_id/reviews', (req, res) => {
   // Build query object
   let query = { text: '', values: [] };
 
-  // Add overall rating
+  // Add rating values
   for (let field in fields) {
-    query.values.push(parseInt(req.body[field]) || null);
+    let val;
+
+    if (field === 'comments') {
+      val = req.body[field] || null;
+    } else if (field.startsWith('gf')) {
+      val = req.body[field] === 'true';
+    } else {
+      val = parseInt(req.body[field]) || null;
+    }
+
+    query.values.push(val);
   }
 
   // TODO: Add user details
@@ -199,7 +231,14 @@ router.post('/:game_id/reviews', (req, res) => {
     if (err) {
       return res.status(400).send(err);
     }
-    res.status(200).send(result.rows);
+
+    let review = apiUtils.formatReview(result.rows[0], hostname);
+    res.status(201)
+      .set({ 
+        "Content-Type": "application/json",
+        "Content-Location": review.url
+      })
+      .send(review);
   });
 });
 
