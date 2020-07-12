@@ -16,18 +16,7 @@ client.connect(err => {
     console.error('connection error', err.stack)
   } else {
     console.log('connected')
-    client.query('SELECT g.name, gcs.category FROM "Game" g INNER JOIN "GameCategory" gc ON gc."gameID" = g.id INNER JOIN "GameCategorySelect" gcs ON gcs.id = gc."categoryID"', (err, res) => {
-      if (err) {
-        console.log(err)
-      } else {
-      console.log(res)
-      }
-    })
   }
 })
-
-// SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\' ORDER BY table_name
-// SELECT g.name, gcs.category FROM "Game" g INNER JOIN "GameCategory" gc ON gc."gameID" = g.id INNER JOIN "GameCategorySelect" gcs ON gcs.id = gc."categoryID"'
-// SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\' ORDER BY table_name
 
 module.exports = {client}
