@@ -11,12 +11,12 @@ class AddGameForm extends React.Component {
       image: null,
       publisher: '',
       categories: null,
-      min_players: null,
-      max_players: null,
-      min_playtime: null,
-      max_playtime: null,
+      minPlayers: null,
+      maxPlayers: null,
+      minPlaytime: null,
+      maxPlaytime: null,
       year: null,
-      min_age: null,
+      minAge: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -65,9 +65,9 @@ class AddGameForm extends React.Component {
           <div className="form-group col-md-6">
             <label>Players</label>
             <div className="d-flex flex-row">
-              <input type="number" className="form-control" name="min_players" placeholder="min" onChange={this.handleChange} />
+              <input type="number" className="form-control" name="minPlayers" placeholder="min" onChange={this.handleChange} />
               <div className="mx-2 mt-1"> &ndash; </div>
-              <input type="number" className="form-control" name="max_players" placeholder="max" onChange={this.handleChange} />
+              <input type="number" className="form-control" name="maxPlayers" placeholder="max" onChange={this.handleChange} />
             </div>
           </div>
 
@@ -75,9 +75,9 @@ class AddGameForm extends React.Component {
           <div className="form-group col-md-6">
             <label>Playtime (minutes)</label>
             <div className="d-flex flex-row">
-              <input type="number" className="form-control" name="min_playtime" placeholder="min" onChange={this.handleChange} />
+              <input type="number" className="form-control" name="minPlaytime" placeholder="min" onChange={this.handleChange} />
               <div className="mx-2 mt-1"> &ndash; </div>
-              <input type="number" className="form-control" name="max_playtime" placeholder="max" onChange={this.handleChange} />
+              <input type="number" className="form-control" name="maxPlaytime" placeholder="max" onChange={this.handleChange} />
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ class AddGameForm extends React.Component {
 
           <div className="form-group col-md-6">
             <label htmlFor="age">Minimum Age</label>
-            <input type="number" className="form-control" name="min_age" onChange={this.handleChange} />
+            <input type="number" className="form-control" name="minAge" onChange={this.handleChange} />
           </div>
         </div>
 
@@ -125,14 +125,14 @@ class AddGameForm extends React.Component {
 
     // Upload image file to S3
     if (values.image) {
-      let image_data = {
+      let imageData = {
         fileName: values.image.name,
         fileType: values.image.type,
       }
       // TODO: Update URL
       fetch('http://192.168.99.100:3000/games/sign-s3', {
         method: 'POST',
-        body: JSON.stringify(image_data),
+        body: JSON.stringify(imageData),
         headers: {
           "Content-Type": "application/json"
         },
@@ -146,7 +146,7 @@ class AddGameForm extends React.Component {
           method: 'PUT',
           body: values.image,
           headers: {
-            "Content-Type": image_data.fileType
+            "Content-Type": imageData.fileType
           },
         })
         .then(res => {

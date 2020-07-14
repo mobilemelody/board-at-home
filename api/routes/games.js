@@ -6,7 +6,7 @@ const apiUtils = require('../utils/api.js');
 
 const AWS = require('aws-sdk');
 AWS.config.update({
-  region: 'us-east-2',
+  region: process.env.BucketRegion,
   accessKeyId: process.env.AWSAccessKeyId,
   secretAccessKey: process.env.AWSSecretKey,
 });
@@ -32,12 +32,12 @@ router.post('/', (req, res, next) => {
     description: 'description',
     image: '"imgFileName"',
     publisher: 'publisher',
-    min_players: '"minPlayers"',
-    max_players: '"maxPlayers"',
-    min_playtime: '"minPlaytime"',
-    max_playtime: '"maxPlaytime"',
+    minPlayers: '"minPlayers"',
+    maxPlayers: '"maxPlayers"',
+    minPlaytime: '"minPlaytime"',
+    maxPlaytime: '"maxPlaytime"',
     year: 'year',
-    min_age: '"minAge"',
+    minAge: '"minAge"',
   };
 
   // Create array of field names for query
@@ -45,7 +45,7 @@ router.post('/', (req, res, next) => {
 
   // Validate data received
   if (!("name" in req.body)) {
-    let err = { "Error": "The request object is missing one of the required fields" };
+    let err = { "Error": "The request object is missing the name field" };
     return res.status(400)
       .set({ "Content-Type": "application/json" })
       .send(err);
@@ -144,7 +144,7 @@ router.post('/sign-s3', (req, res) => {
     }
     const returnData = {
       signedRequest: data,
-      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${s3Params.Key}`
     };
     res.json({ data: {returnData} });
   });
