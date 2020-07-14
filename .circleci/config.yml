@@ -1,14 +1,32 @@
 version: 2.1
+orbs: circleci/heroku@0.0.10
 jobs:
-  build:
+  test:
     docker:
       - image: 'circleci/node:10.0'
     steps:
       - checkout
-      - run: echo 'hello world'
+      - run: echo 'This will eventually run tests'
+  build_and_deploy:
+    docker:
+      - image: 'circleci/node:10.0'
+    steps:
+      - checkout
+      - run: echo 'This will build and deploy to heroku'
+workflows:
+  version: 2
+  deploy_to_heroku:
+    jobs:
+      - test
+      - build_and_deploy:
+        requires:
+          - test
+        filters:
+          branches:
+            only:
+              - master
 
 # version: 2.1
-# orbs: circleci/heroku@0.0.10
 # jobs:
 #   deploy-to-heroku:
 #     docker:
@@ -24,8 +42,6 @@ jobs:
 #   test:
 #     steps:
 #       - echo 'HELLO WORLD'
-# workflows:
-#   version: 2
 #   deploy:
 #     jobs:
 #       - deploy-to-heroku:
