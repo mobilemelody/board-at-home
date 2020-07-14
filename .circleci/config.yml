@@ -7,13 +7,25 @@ jobs:
       - image: 'circleci/node:10.0'
     steps:
       - checkout
-      - run: echo 'This will eventually run tests'
+      - run:
+          name: Run Tests
+          command: echo 'This will eventually run tests'
   build_and_deploy:
     docker:
       - image: 'circleci/node:10.0'
     steps:
       - checkout
-      - run: echo 'This will build and deploy to heroku'
+      - heroku/install
+      - setup_remote_docker:
+          version: 19.03.8
+      - run:
+          name: Build Docker image and push to Heroku registry
+          command: >
+            docker login --username $HEROKU_USERNAME --password $HEROKU_PASSWORD registry.heroku.com
+
+            heroku container:push web -a boardathome
+
+            heroku container:release web -a boardathome
 workflows:
   version: 2
   deploy_to_heroku:
