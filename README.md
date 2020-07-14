@@ -18,3 +18,11 @@ Final project for OSU CS467 Capstone built by Jed Piezas, Melody Reebs, and Zach
 - `docker ps` to get an overall view of what services are on, what ports they're listening on, etc.
 - `docker-compose stop <client/api>` If you want to stop a particular service
 - `docker-compose down` to tear it all down
+
+# Manually deploying to Heroku
+The following will soon be deprecated in favour of automated deployments that are triggered when a pull-request to master is merged
+
+1. Run the command `heroku container:login` and then follow the steps needed to login to Heroku
+2. Run the command `heroku container:push web -a boardathome` to build a docker image and push it to Heroku's Docker Image registry
+3. Run the command `heroku container:release web -a boardathome`
+4. Visit boardathome.herokuapp.com to see the app successfully deployed!
