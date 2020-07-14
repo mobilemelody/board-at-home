@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 // RC Dealer App Component Imports
 import { App } from "./App"
-// import { GameAdd } from './GameAdd'
+import { AddGame } from './AddGame'
 
 /*************************************
 ** Base Component
@@ -18,8 +18,8 @@ export class Base extends Component {
   render() {
     return (
       <div className="main-wrapper">
-        <Route exact path='/' component={App} />
-        {/* <Route path='/game/add' component={GameAdd} /> */}
+        <Route exact path='/'><App/></Route>
+        <Route path='/games/add'><AddGame/></Route>
       </div>
     )
   }
