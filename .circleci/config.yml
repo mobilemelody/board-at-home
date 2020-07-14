@@ -6,13 +6,15 @@ jobs:
       - image: 'circleci/node:10.0'
     steps:
       - checkout
-      - echo 'HELLO WORLD'
       # - heroku/install
       # - setup_remote_docker:
       #   version: 19.03.8
       # - run:
       #   name: Build image
       #   command:
+  test-job:
+    steps:
+      - echo 'HELLO WORLD'
 workflows:
   version: 2
   deploy:
@@ -22,3 +24,6 @@ workflows:
           branches:
             only:
               - master
+  test-job:
+    jobs:
+      - test-job
