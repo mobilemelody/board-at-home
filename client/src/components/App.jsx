@@ -43,21 +43,20 @@ class _App extends React.Component {
       // Login can invoke userLogin() with parameters
     }
 
-    // if (!user.isLoggedIn) {
-    //   navbar =
-    //     <Navbar bg="dark" variant="dark">
-    //       <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
-    //       <Nav className="mr-auto">
-    //         <Nav.Link href="#features">Games</Nav.Link>
-    //         <Nav.Link href="#pricing">Reviews</Nav.Link>
-    //       </Nav>
-    //       <Form inline>
-    //         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-    //         <Button variant="outline-info">Search</Button>
-    //       </Form>
-    //   </Navbar>
-    //   body = <p>Logged in!</p>
-    // }
+    if (user.isLoggedIn) {
+      navbar =
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link href="#features">Games</Nav.Link>
+          </Nav>
+          <Form inline>
+            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <Button variant="outline-info">Search</Button>
+          </Form>
+      </Navbar>
+      body = <p>Logged in!</p>
+    }
 
     if (user.isFetching) {
       // Add a loading icon
