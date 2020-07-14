@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Build Docker image and push to Heroku registry
           command: >
-            docker login --username $HEROKU_USERNAME --password $HEROKU_PASSWORD registry.heroku.com
+            docker login --username=$HEROKU_USERNAME --password=$HEROKU_PASSWORD registry.heroku.com
 
             heroku container:push web -a boardathome
 
