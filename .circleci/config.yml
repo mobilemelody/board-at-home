@@ -1,7 +1,7 @@
 version: 2.1
 orbs: circleci/heroku@0.0.10
 jobs:
-  test:
+  run_tests:
     docker:
       - image: 'circleci/node:10.0'
     steps:
@@ -17,10 +17,10 @@ workflows:
   version: 2
   deploy_to_heroku:
     jobs:
-      - test
+      - run_tests
       - build_and_deploy:
         requires:
-          - test
+          - run_tests
         filters:
           branches:
             only:
