@@ -1,5 +1,6 @@
 version: 2.1
-orbs: circleci/heroku@0.0.10
+orbs:
+  heroku: circleci/heroku@0.0.10
 jobs:
   run_tests:
     docker:
@@ -19,36 +20,9 @@ workflows:
     jobs:
       - run_tests
       - build_and_deploy:
-        requires:
-          - run_tests
-        filters:
-          branches:
-            only:
-              - master
-
-# version: 2.1
-# jobs:
-#   deploy-to-heroku:
-#     docker:
-#       - image: 'circleci/node:10.0'
-#     steps:
-#       - checkout
-#       # - heroku/install
-#       # - setup_remote_docker:
-#       #   version: 19.03.8
-#       # - run:
-#       #   name: Build image
-#       #   command:
-#   test:
-#     steps:
-#       - echo 'HELLO WORLD'
-#   deploy:
-#     jobs:
-#       - deploy-to-heroku:
-#         filters:
-#           branches:
-#             only:
-#               - master
-#   test-job:
-#     jobs:
-#       - test
+          requires:
+            - run_tests
+          filters:
+            branches:
+              only:
+                - master
