@@ -8,6 +8,7 @@ const usersRouter = require('./routes/users');
 const cors = require('cors');
 
 const app = express();
+const postgres = require('./db/index');
 
 app.use(cors());
 app.use(logger('dev'));
