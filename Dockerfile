@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:14.5 AS front-end
+FROM mhart/alpine-node:10 AS front-end
 
 RUN mkdir -p /web/
 
@@ -12,7 +12,7 @@ RUN yarn
 
 RUN yarn run build
 
-FROM mhart/alpine-node:14.5
+FROM mhart/alpine-node:10
 
 WORKDIR /web/api
 
