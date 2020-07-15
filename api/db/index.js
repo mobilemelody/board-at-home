@@ -15,7 +15,7 @@ client.connect(err => {
   if (err) {
     console.error('connection error', err.stack)
   } else {
-    console.log('connected')
+    console.log('connected to Postgres')
   }
 })
 

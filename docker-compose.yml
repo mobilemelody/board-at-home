@@ -6,6 +6,8 @@ services:
     image: web-client
     stdin_open: true
     restart: always
+    env_file:
+      - client.env
     ports:
       - 8080:8080
     depends_on:
@@ -27,6 +29,7 @@ services:
       - /api/node_modules
     env_file:
       - api.env
+      - db.env
     depends_on:
       - psql
     networks:
@@ -36,8 +39,6 @@ services:
     image: postgres:13
     ports:
       - 5432:5432
-    env_file:
-      - db.env
     volumes:
       - database-data:/var/lib/postgresql/data/
       - ./scripts:/docker-entrypoint-initdb.d/

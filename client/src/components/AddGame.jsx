@@ -54,7 +54,7 @@ class AddGameForm extends React.Component {
             <input type="text" className="form-control" name="publisher" onChange={this.handleChange} />
           </div>
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="categories">Categories</label>
           <Select isMulti options={this.props.category_list} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
@@ -129,8 +129,7 @@ class AddGameForm extends React.Component {
         fileName: values.image.name,
         fileType: values.image.type,
       }
-      // TODO: Update URL
-      fetch('http://192.168.99.100:3000/games/sign-s3', {
+      fetch(`${process.env.REACT_APP_API_URL}/games/sign-s3`, {
         method: 'POST',
         body: JSON.stringify(imageData),
         headers: {
@@ -158,12 +157,11 @@ class AddGameForm extends React.Component {
     } else {
       this.saveToDB(values);
     }
-    
+
   }
 
   saveToDB(values) {
-    // TODO: Update URL
-    fetch('http://192.168.99.100:3000/games', {
+    fetch(`${process.env.REACT_APP_API_URL}:3000/games`, {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {
@@ -198,8 +196,7 @@ class _AddGame extends React.Component {
 
   componentDidMount() {
     // Get categories from database
-    // TODO: Update URL
-    fetch('http://192.168.99.100:3000/categories')
+    fetch(`${process.env.REACT_APP_API_URL}/categories`)
       .then((res) => res.json())
       .then(res => {
         // Create select options object
