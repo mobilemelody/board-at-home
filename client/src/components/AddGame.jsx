@@ -129,6 +129,7 @@ class AddGameForm extends React.Component {
         fileName: values.image.name,
         fileType: values.image.type,
       }
+
       fetch(`${process.env.REACT_APP_API_URL}/games/sign-s3`, {
         method: 'POST',
         body: JSON.stringify(imageData),

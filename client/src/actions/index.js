@@ -39,7 +39,7 @@ const receiveGames = createAction("RECEIVE_GAMES")
 export const getGames = () => {
     return dispatch => {
         dispatch(fetchingGames)
-        return api.get("/games/all")
+        return api.get(`${process.env.REACT_APP_API_URL}/games/all`)
         .then(resp => dispatch(receiveGames(resp)))
         .catch(err => dispatch(errorGames()))
     }
