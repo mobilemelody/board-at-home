@@ -162,7 +162,7 @@ class AddGameForm extends React.Component {
   }
 
   saveToDB(values) {
-    fetch(`${process.env.REACT_APP_API_URL}:3000/games`, {
+    fetch(`${process.env.REACT_APP_API_URL}/games`, {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {
