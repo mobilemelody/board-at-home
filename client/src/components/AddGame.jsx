@@ -2,6 +2,8 @@ import React from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux'
 
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://githubconnector.herokuapp.com';
+
 class AddGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -130,7 +132,7 @@ class AddGameForm extends React.Component {
         fileType: values.image.type,
       }
 
-      fetch(`${process.env.REACT_APP_API_URL}/games/sign-s3`, {
+      fetch(`${baseURL}/games/sign-s3`, {
         method: 'POST',
         body: JSON.stringify(imageData),
         headers: {
@@ -162,7 +164,7 @@ class AddGameForm extends React.Component {
   }
 
   saveToDB(values) {
-    fetch(`${process.env.REACT_APP_API_URL}/games`, {
+    fetch(`${baseURL}/games`, {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {
@@ -197,7 +199,7 @@ class _AddGame extends React.Component {
 
   componentDidMount() {
     // Get categories from database
-    fetch(`${process.env.REACT_APP_API_URL}/categories`)
+    fetch(`${baseURL}/categories`)
       .then((res) => res.json())
       .then(res => {
         // Create select options object

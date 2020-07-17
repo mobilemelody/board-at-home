@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://githubconnector.herokuapp.com';
+
 // Configure Axios Header
 axios.interceptors.request.use((config) => {
     // Get Items from localStorage and pass to config header
@@ -21,16 +23,16 @@ axios.interceptors.request.use((config) => {
 const api = {
   get: (url, filter) => {
     filter = filter || ""
-    return axios.get(process.env.REACT_APP_API_URL + url + filter)
+    return axios.get(baseURL + url + filter)
   },
   put: (url, data) => {
-    return axios.put(process.env.REACT_APP_API_URL + url, data)
+    return axios.put(baseURL + url, data)
   },
   post: (url, data) => {
-    return axios.post(process.env.REACT_APP_API_URL + url, data)
+    return axios.post(baseURL + url, data)
   },
   delete: (url) => {
-    return axios.delete(process.env.REACT_APP_API_URL + url)
+    return axios.delete(baseURL + url)
   }
 }
 

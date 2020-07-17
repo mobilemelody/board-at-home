@@ -2,6 +2,8 @@
 import { createAction } from 'redux-actions'
 import api from "../lib/api"
 
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://githubconnector.herokuapp.com';
+
 // Create actions for User state
 const errorUser = createAction("ERROR_USER")
 const fetchingUser = createAction("FETCHING_USER")
@@ -39,7 +41,7 @@ const receiveGames = createAction("RECEIVE_GAMES")
 export const getGames = () => {
     return dispatch => {
         dispatch(fetchingGames)
-        return api.get(`${process.env.REACT_APP_API_URL}/games/all`)
+        return api.get(`${baseURL}/games/all`)
         .then(resp => dispatch(receiveGames(resp)))
         .catch(err => dispatch(errorGames()))
     }
