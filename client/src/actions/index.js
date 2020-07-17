@@ -37,10 +37,121 @@ const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
 
 export const getGames = () => {
-    return dispatch => {
-        dispatch(fetchingGames)
+    return (dispatch, getState) => {
+
+        const { user } = getState()
+        // add user id to parameters
+
         return api.get("/games/all")
         .then(resp => dispatch(receiveGames(resp)))
         .catch(err => dispatch(errorGames()))
     }
 }
+
+
+// Create actions for Review state
+const errorInsertReview = createAction("ERROR_INSERT_REVIEW")
+const errorDeleteReview = createAction("ERROR_DELETE_REVIEW")
+const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE")
+const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW")
+
+const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING")
+const receiveReviews = createAction("RECEIVE_REVIEWS")
+const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE")
+const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT")
+const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE")
+
+
+export const submitReviewFetch = () => {
+    return (dispatch) => {
+        dispatch(submitReviewFetching())
+    }
+}
+
+// Insert new review
+export const submitReview = (data) => {
+    return (dispatch, getState) => {
+        const {user} = getState() 
+        data.userID = user.userID
+
+        return api.post('/reviews', data)
+        .then(res => {
+            dispatch(receiveReviewInserted({resp: {
+                payload: res,
+                userID: user.userID,
+                reviewInserted: data, 
+            }}))
+        })
+        .catch(err => {
+            dispatch(errorInsertReview({resp: {
+                error: err
+            }}))
+        })
+    }
+}
+
+// update existing review
+export const updateReview = (data) => {
+    return (dispatch, getState) => {
+        const {user} = getState() 
+        data.userID = user.userID
+
+        return api.post('/reviews', data)
+        .then(res => {
+            dispatch(receiveReviewUpdated({resp: {
+                payload: res,
+                userID: user.userID,
+                reviewUpdated: data, 
+            }}))
+        })
+        .catch(err => {
+            dispatch(errorUpdateReviews({resp: {
+                error: err,
+                userReview: data,
+            }}))
+        })
+    }
+}
+
+// delete review
+export const deleteReview = (data) => {
+    return (dispatch, getState) => {
+        const {user} = getState() 
+        data.userID = user.userID
+
+        return api.post('/delete', data)
+        .then(res => {
+            dispatch(receiveReviewsDeleted({resp: {
+                payload: res,
+                userID: user.userID
+            }}))
+        })
+        .catch(err => {
+            dispatch(errorDeleteReview({resp: {
+                error: err,
+                userReview: data,
+            }}))
+        })
+    }
+}
+
+// get reviews for game
+export const getReviews = () => {
+    return (dispatch, getState) => {
+        const {user} = getState() 
+        const { game } = getState()
+        return api.post('/reviews')
+        .then(res => {
+            dispatch(receiveReviews({resp: {
+                payload: res,
+                userID: user.userID
+            }}))
+        })
+        .catch(err => {
+            dispatch(errorReceiveReviews(err))
+        })
+    }
+}
+
+
+

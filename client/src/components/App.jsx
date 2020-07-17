@@ -4,18 +4,18 @@ import { bindActionCreators } from 'redux'
 import { userLogin, userLogout } from "../actions"
 import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
 import DotLoader from 'react-spinners/DotLoader'
-
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { css } from "@emotion/core";
 
-import logo from '../images/logo.svg'
 import '../css/App.css'
 
 import { Login }  from './Login'
+import { Game } from './Game'
+
 
 class _App extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this._userLogout = this._userLogout.bind(this)
   }
 
@@ -43,21 +43,20 @@ class _App extends React.Component {
       // Login can invoke userLogin() with parameters
     }
 
-    // if (!user.isLoggedIn) {
-    //   navbar =
-    //     <Navbar bg="dark" variant="dark">
-    //       <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
-    //       <Nav className="mr-auto">
-    //         <Nav.Link href="#features">Games</Nav.Link>
-    //         <Nav.Link href="#pricing">Reviews</Nav.Link>
-    //       </Nav>
-    //       <Form inline>
-    //         <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-    //         <Button variant="outline-info">Search</Button>
-    //       </Form>
-    //   </Navbar>
-    //   body = <p>Logged in!</p>
-    // }
+    if (user.isLoggedIn) {
+      navbar =
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link href="#features">Games</Nav.Link>
+          </Nav>
+          <Form inline>
+            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <Button variant="outline-info">Search</Button>
+          </Form>
+      </Navbar>
+      body = <div className='Game'><Game/></div>
+    }
 
     if (user.isFetching) {
       // Add a loading icon
