@@ -3,12 +3,11 @@ const { Client } = require('pg')
 const dotenv = require('dotenv')
 dotenv.config()
 
+const isProduction = process.env.NODE_ENV === 'production';
+const connectionString = `postgresql://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`;
+
 const client = new Client({
-  user: process.env.POSTGRES_USER,
-  host: process.env.POSTGRES_HOST,
-  database: process.env.POSTGRES_DB,
-  password: process.env.POSTGRES_PASSWORD,
-  port: process.env.POSTGRES_PORT,
+  connectionString: isProduction ? process.env.DATABASE_URL : connectionString
 })
 
 client.connect(err => {
