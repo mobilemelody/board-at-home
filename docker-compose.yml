@@ -6,8 +6,6 @@ services:
     image: web-client
     stdin_open: true
     restart: always
-    env_file:
-      - client.env
     ports:
       - 8080:8080
     depends_on:
