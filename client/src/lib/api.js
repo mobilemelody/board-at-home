@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://githubconnector.herokuapp.com';
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
 
 // Configure Axios Header
 axios.interceptors.request.use((config) => {
