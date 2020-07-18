@@ -14,7 +14,12 @@ const S3_BUCKET = process.env.Bucket;
 
 /* Get all games */
 router.get('/', (req, res, next) => {
-  db.client.query('SELECT * FROM "Game"', (err, result) => {
+  const getGamesQuery = 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
+  ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+  ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+  ' GROUP BY "Game".id';
+
+  db.client.query(getGamesQuery, (err, result) => {
     if (err) {
       return res.status(400).send(err);
     }
