@@ -1,6 +1,14 @@
 # Board at Home API
 Documentation for the API endpoints for the Board at Home project
 
+- [Add a game](#add-a-game)
+- [Get all games](#get-all-games)
+- [Add a review](#add-a-review)
+- [Get reviews for a game](#get-reviews-for-a-game)
+- [Get all review](#get-all-reviews)
+- [Get review](#get-review)
+- [Get all categories](#get-all-categories)
+
 ## Add a game
 ```
 POST /games
@@ -23,6 +31,7 @@ POST /games
 ```
 
 ### Response
+Status: 201 Created
 ```JSON
 {
   "id": 1,
@@ -31,7 +40,7 @@ POST /games
   "name": "Game Name",
   "year": 2015,
   "description": "Description of the game",
-  "imgFileName": "URL to game image",
+  "imgFileName": "<url-to-image>",
   "minAge": 10,
   "minPlaytime": 60,
   "maxPlaytime": 90,
@@ -50,6 +59,33 @@ POST /games
     }
   ]
 }
+```
+
+## Get all games
+```
+GET /games
+```
+
+### Response
+Status: 200 OK
+```JSON
+[
+  {
+    "id": 1,
+    "isUserCreated": true,
+    "identifierID": "userId",
+    "name": "Game Name",
+    "year": 2015,
+    "description": "Description of the game",
+    "imgFileName": "<url-to-image>",
+    "minAge": 10,
+    "minPlaytime": 60,
+    "maxPlaytime": 90,
+    "publisher": "Publisher Name",
+    "minPlayers": 2,
+    "maxPlayers": 6
+  }
+]
 ```
 
 ## Add a review
@@ -78,6 +114,7 @@ POST /games/:game_id/reviews
 ```
 
 ### Response
+Status: 201 Created
 ```JSON
 {
     "user": {
@@ -113,6 +150,7 @@ GET /games/:game_id/reviews
 ```
 
 ### Response
+Status: 200 OK
 ```JSON
 {
   "results": [
@@ -143,8 +181,7 @@ GET /games/:game_id/reviews
       "gfLargeGroups": false,
       "gfSocialDistancing": true,
       "url": "<base-url>/reviews/1"
-    },
-    //...
+    }
   ]
 }
 ```
@@ -155,6 +192,7 @@ GET /reviews
 ```
 
 ### Response
+Status: 200 OK
 ```JSON
 {
   "results": [
@@ -185,8 +223,7 @@ GET /reviews
       "gfLargeGroups": false,
       "gfSocialDistancing": true,
       "url": "<base-url>/reviews/1"
-    },
-    //...
+    }
   ]
 }
 ```
@@ -197,6 +234,7 @@ GET /reviews/:review_id
 ```
 
 ### Response
+Status: 200 OK
 ```JSON
 {
   "user": {
@@ -226,4 +264,21 @@ GET /reviews/:review_id
   "gfSocialDistancing": true,
   "url": "<base-url>/reviews/1"
 }
+```
+
+## Get all categories
+```
+GET /categories
+```
+
+### Response
+Status: 200 OK
+```JSON
+[
+  {
+    "id": 1,
+    "category": "4x",
+    "identifierID": "85OKv8p5Ow"
+  }
+]
 ```
