@@ -95,7 +95,7 @@ router.post('/', (req, res, next) => {
 
         // Add categories to return object
         game.categories = result.rows.map(e => ({ 
-          id: e.categoryID, 
+          id: parseInt(e.categoryID), 
           url: hostname + '/categories/' + e.categoryID 
         }));
 
