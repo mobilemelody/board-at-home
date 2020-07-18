@@ -22,7 +22,6 @@ export const user = (state = userState, action) => {
         })
 
         case "FETCHING_USER":
-        console.log("fetching user")
         return Object.assign({}, state, {
             isFetching: true
         })
