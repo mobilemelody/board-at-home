@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  heroku: circleci/heroku@0.0.10
 jobs:
   run_tests:
     docker:
@@ -15,7 +13,6 @@ jobs:
       - image: 'circleci/node:10.0'
     steps:
       - checkout
-      - heroku/install
       - setup_remote_docker:
           version: 19.03.8
       - run:
@@ -23,9 +20,9 @@ jobs:
           command: >
             docker login --username=$HEROKU_USERNAME --password=$HEROKU_PASSWORD registry.heroku.com
 
-            heroku container:push web -a boardathome
+            docker build --rm=false -t registry.heroku.com/boardathome/web .
 
-            heroku container:release web -a boardathome
+            docker push registry.heroku.com/boardathome/web:latest
 workflows:
   version: 2
   deploy_to_heroku:
