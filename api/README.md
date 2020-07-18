@@ -7,6 +7,8 @@ Documentation for the API endpoints for the Board at Home project
 - [Get reviews for a game](#get-reviews-for-a-game)
 - [Get all review](#get-all-reviews)
 - [Get review](#get-review)
+- [Update review](#update-review)
+- [Delete review](#delete-review)
 - [Get all categories](#get-all-categories)
 
 ## Add a game
@@ -266,7 +268,7 @@ Status: 200 OK
 }
 ```
 
-## Update a review
+## Update review
 ```
 PATCH /reviews/:review_id
 ```
@@ -314,6 +316,13 @@ Status: 200 OK
 }
 ```
 
+## Delete review
+```
+DELETE /reviews/:review_id
+```
+
+### Response
+Status: 204 No Content
 
 ## Get all categories
 ```

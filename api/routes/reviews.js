@@ -129,4 +129,32 @@ router.patch('/:review_id', (req, res) => {
 
 });
 
+/* Delete a review */
+router.delete('/:review_id', (req, res) => {
+
+  // Create query object
+  let query = {
+    text: 'DELETE FROM "Review" WHERE id = $1',
+    values: [req.params.review_id]
+  }
+
+  // Run query
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    } else if (result.rowCount == 0) {
+      err = { "Error": "No review with this id exists" };
+      return res.status(404)
+        .set({ "Content-Type": "application/json" })
+        .send(err)
+    }
+
+    res.status(204)
+      .set({ "Content-Type": "application/json" })
+      .send();
+  });
+
+
+});
+
 module.exports = router;
