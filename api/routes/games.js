@@ -142,7 +142,11 @@ router.post('/sign-s3', (req, res) => {
 /* Get game information by id */
 router.get('/:game_id', (req, res) => {
   const query = {
-    text: 'SELECT * FROM "Game" WHERE id = $1',
+    text: 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
+      ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+      ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+      ' WHERE "Game".id = $1' +
+      ' GROUP BY "Game".id',
     values: [req.params.game_id]
   }
 
