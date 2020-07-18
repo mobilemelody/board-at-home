@@ -21,11 +21,11 @@ jobs:
       - run:
           name: Build Docker image and push to Heroku registry
           command: >
-            docker login --username=$HEROKU_USERNAME --password=$HEROKU_PASSWORD registry.heroku.com
+            HEROKU_API_KEY=$HEROKU_PASSWORD heroku container:login
 
-            heroku container:push web -a boardathome
+            HEROKU_API_KEY=$HEROKU_PASSWORD heroku container:push -a boardathome web
 
-            heroku container:release web -a boardathome
+            HEROKU_API_KEY=$HEROKU_PASSWORD heroku container:release -a boardathome web
 workflows:
   version: 2
   deploy_to_heroku:
