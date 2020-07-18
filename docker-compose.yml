@@ -22,11 +22,12 @@ services:
     restart: always
     ports:
       - 3000:3000
-    env_file:
-      - db.env
     volumes:
       - ./api:/api
       - /api/node_modules
+    env_file:
+      - api.env
+      - db.env
     depends_on:
       - psql
     networks:
