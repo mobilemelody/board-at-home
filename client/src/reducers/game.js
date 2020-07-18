@@ -2,6 +2,7 @@
 const gameState = {
     isFetching: false,
     isReceived: false,
+    isSet: false,
     error: null,
     data: {},
     reviews: []
@@ -19,7 +20,8 @@ export const game = (state = gameState, action) => {
 
         case "FETCHING_GAME":
         return Object.assign({}, state, {
-            isFetching: true
+            isFetching: true,
+            isSet: true
         })
 
         case "RECEIVE_GAME":
@@ -34,10 +36,21 @@ export const game = (state = gameState, action) => {
             reviews: action.payload.data.reviews
         })
 
+        case "SET_GAME_STATE":
+        console.log(action.payload)
+        return Object.assign({}, state, {
+            isReceived: true,
+            isFetching: false,
+            isSet: true,
+            error: null,
+            data: action.payload,
+        })
+
         case "RESET_GAME":
         return Object.assign({}, state, {
             isFetching: false,
             isReceived: false,
+            isSet: false,
             error: null,
             data: {},
             reviews: []

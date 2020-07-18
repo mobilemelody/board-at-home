@@ -36,6 +36,8 @@ class _App extends React.Component {
   render() {
 
     const { user } = this.props
+    const { game } = this.props
+
     let body = <div className="blank"/>
     let navbar = <div className="blank"/>
 
@@ -61,8 +63,12 @@ class _App extends React.Component {
             <Button variant="outline-info">Search</Button>
           </Form>
       </Navbar>
-      // body = <div className='Game'><Game/></div>
-      body = <div className='Games'><Games/></div>
+
+      if (game.isSet) {
+        body = <div className='Game'><Game/></div>
+      } else {
+        body = <div className='Games'><Games/></div>
+      }
     }
 
     if (user.isFetching) {
@@ -98,8 +104,8 @@ class _App extends React.Component {
 // connect(states, dispatch functions)
 export const App = connect(state => {
   const { user } = state
-  // const { game } = state 
-  return { user /*, game */}
+  const { game } = state 
+  return { user, game}
 
   // bindActionCreators turns an object whose values are action creators, into an object with the same keys, 
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.

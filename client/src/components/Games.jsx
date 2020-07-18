@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBRating } from 'mdbreact';
@@ -7,6 +9,7 @@ import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {Button} from 'react-bootstrap'
+import { getSetGameState } from '../actions/index'
 
 
 const GamePageTotal = (from, to, size) => (
@@ -102,13 +105,36 @@ const GamesPaginationOptions = {
 class _Games extends React.Component {
     constructor(props) {
         super(props)
+        this._setGame = this._setGame.bind(this)
     }
 
     componentDidMount() {
-        
+        // get games
+    }
+
+    _setGame(game) {
+        this.props.getSetGameState({
+            id: game.id,
+            isUserCreated: game.isUserCreated,
+            identifierID: game.identifierID,
+            name: game.name,
+            publisher: game.publisher,
+            year: game.year,
+            minPlaytime: game.minPlaytime,
+            minPlayers: game.minPlayers,
+            maxPlayers: game.maxPlayers,
+            imgFileName: game.imgFileName,
+            description: game.description,
+        })
     }
 
     render() {
+
+        const rowEvents = {
+            onClick: (e, row, rowIndex) => {
+                this._setGame(row)
+            }
+        }
 
         const { games } = this.props
         let tableData = []
@@ -116,8 +142,8 @@ class _Games extends React.Component {
         // Push reviews to table data
         games.rows.forEach(function(game) {
             tableData.push({
-                id: game.id,
                 // Hidden columns that show in expand renderer 
+                id: game.id,
                 isUserCreated: game.isUserCreated,
                 identifierID: game.identifierID,
                 name: game.name,
@@ -186,10 +212,6 @@ class _Games extends React.Component {
                             variant="info"
                              size="sm"
                             type="submit"
-                            onClick={() => {
-                                this._submitReview()
-                                }}
-                            
                             >See Reviews</Button>
                         </Grid>
                     </Grid>
@@ -200,12 +222,13 @@ class _Games extends React.Component {
             <Grid container spacing={3}>
             <Grid item xs={12}>
                     <br/><br/>
-                    <h3>Games</h3>
+                    <Typography variant="h4">Games</Typography>
                     <div className="GamesTable">
                         <BootstrapTable
                             keyField="id"
                             data={ tableData }
                             columns={ GamesColumns }
+                            rowEvents={ rowEvents }
                             // expandRow={ OtherReviewsExpandRow }
                             bordered={ false }
                             pagination={ paginationFactory(GamesPaginationOptions) }
@@ -220,4 +243,8 @@ class _Games extends React.Component {
 export const Games = connect(state => {
     const { games } = state
     return { games }
-}, null)(_Games)
+}, dispatch => {
+  return bindActionCreators({
+    getSetGameState
+    }, dispatch)
+})(_Games)

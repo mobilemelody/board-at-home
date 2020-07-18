@@ -55,5 +55,6 @@
 
 .App .Games {
   text-align: left;
-  padding: 10%;
+  padding-left: 10%;
+  padding-right: 10%;
 }

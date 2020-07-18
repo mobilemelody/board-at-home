@@ -36,6 +36,8 @@ const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
 
+const setGameState = createAction("SET_GAME_STATE")
+
 export const getGames = () => {
     return (dispatch, getState) => {
 
@@ -48,6 +50,11 @@ export const getGames = () => {
     }
 }
 
+export const getSetGameState = (game) => {
+    return (dispatch) => {
+        return dispatch(setGameState(game))
+    }
+}
 
 // Create actions for Review state
 const errorInsertReview = createAction("ERROR_INSERT_REVIEW")
