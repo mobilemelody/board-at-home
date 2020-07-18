@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:14.5
+FROM mhart/alpine-node:10
 
 WORKDIR /api
 
