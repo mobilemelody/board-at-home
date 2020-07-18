@@ -13,6 +13,10 @@
   }
 }
 
+.Review-Wrapper .form-check-input{
+  background: #708bb8 !important
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -106,7 +110,8 @@
 
 .CommentsWrapper .CommentsP {
   background-color: #f1f1f1;
-    height: 100px !important;
+  height: 100px !important;
+  padding: 5px;
 }
 
 .App .Game .ReviewTable .react-bootstrap-table .table th {

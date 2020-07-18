@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBRating } from 'mdbreact';
 
-import {UserReview, Reviews} from './Review'
+import {Reviews} from './Review'
 
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,11 +31,6 @@ class _Game extends React.Component {
 
         const { game } = this.props
         // const { review }
-
-         let reviewBody = []
-
-        reviewBody.push(<UserReview/>)
-        reviewBody.push(<Reviews/>)
 
         return (
             <Grid container spacing={3}>
@@ -80,7 +75,7 @@ class _Game extends React.Component {
                 </Grid>
 
                 {/* Review Body */}
-                {reviewBody}
+                <Reviews/>
 
                 <Grid item xs={12}>
                     <hr/>

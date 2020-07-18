@@ -16,13 +16,102 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 
-const customTotal = (from, to, size) => (
+const OtherReviewPageTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
         Showing { from } to { to } of { size } Results
     </span>
 )
 
-const expandRow = {
+// Set custom pagination
+const OtherReviewPaginationOptions = {
+    paginationSize: 5,
+    pageStartIndex: 1,
+    hideSizePerPage: true, 
+    hidePageListOnlyOnePage: true,
+    firstPageText: 'First',
+    prePageText: 'Back',
+    nextPageText: 'Next',
+    lastPageText: 'Last',
+    nextPageTitle: 'First page',
+    prePageTitle: 'Pre page',
+    firstPageTitle: 'Next page',
+    lastPageTitle: 'Last page',
+    showTotal: true,
+    paginationTotalRenderer: OtherReviewPageTotal,
+    disablePageTitle: true,
+    sizePerPageList: [{
+        text: '5', value: 5
+    }]
+};
+
+// Other Review table columns
+const OtherReviewsColumns = [{
+    dataField: 'id',
+    text: '',
+    hidden: true
+}, {
+    dataField: 'img',
+    classes: 'UserImg',
+    text: '',
+    }, {
+    dataField: 'userAndRating',
+    classes: 'UserAndRating',
+    text: '',
+    }, {
+    dataField: 'comments',
+    classes: 'Comments',
+    text: '',
+}, {
+    dataField: 'strategy',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'luck',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'playerInteraction',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'replayValue',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'complexity',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'artAndStyle',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gfKids',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gfTeens',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gfFamilies',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gf2Player',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gfLargeGroups',
+    text: '',
+    hidden: true,
+}, {
+    dataField: 'gfSocialDistancing',
+    text: '',
+    hidden: true,
+}];
+
+const OtherReviewsExpandRow = {
     parentClassName: 'parent-expanded',
     className: 'child-expanded',
     onlyOneExpanding: true,
@@ -57,7 +146,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Strategy</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.strategy} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -67,7 +156,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Luck</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.luck} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -77,7 +166,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Player Interaction</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.playerInteraction} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -87,7 +176,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Replay Value</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.replayValue} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -97,7 +186,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Complexity</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.complexity} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -107,7 +196,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Art & Style</p></Grid>
                     <Grid item xs={4}>
                         <Rating
-                            value={5} // Add review state here here
+                            value={row.artAndStyle} // Add review state here here
                             readOnly
                         />
                     </Grid>
@@ -122,7 +211,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Families</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={true}
+                            checked={row.gfFamilies}
                             disableRipple
                             color='default'
                             size='small'
@@ -134,7 +223,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Adults</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={true}
+                            checked={row.gfAdults}
                             disableRipple
                             color='default'
                             size='small'
@@ -146,7 +235,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Teens</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={false}
+                            checked={row.gfTeens}
                             disableRipple
                             color='default'
                             size='small'
@@ -158,7 +247,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Kids</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={false}
+                            checked={row.gfKids}
                             disableRipple
                             color='default'
                             size='small'
@@ -170,7 +259,7 @@ const expandRow = {
                     <Grid item xs={4}><p>2 Players</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={true}
+                            checked={row.gf2Player}
                             disableRipple
                             color='default'
                             size='small'
@@ -182,7 +271,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Large Groups</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={true}
+                            checked={row.gfLargeGroups}
                             disableRipple
                             color='default'
                             size='small'
@@ -194,7 +283,7 @@ const expandRow = {
                     <Grid item xs={4}><p>Social Distancing</p></Grid>
                     <Grid item xs={4}>
                         <Checkbox
-                            checked={true}
+                            checked={row.gfSocialDistancing}
                             disableRipple
                             color='default'
                             size='small'
@@ -209,7 +298,7 @@ const expandRow = {
 }
 
 
-class _UserReview extends React.Component {
+class _Reviews extends React.Component {
     constructor(props) {
         super(props)
         this._submitReview = this._submitReview.bind(this)
@@ -305,396 +394,341 @@ class _UserReview extends React.Component {
 
     render() {
 
-        const { game } = this.props
         const { reviews } = this.props
-        var userReviewed = false
+        var formDisabled = false
+        var tableData = []
 
-        if (game.userReviewed && !this.state.editReview) {
-            userReviewed = true
+        if (reviews.userReviewed && !this.state.editReview) {
+            formDisabled = true
         }
 
-        return (
-            <Grid item xs={12}>
-                <h3>Add a Review</h3>
-                <hr className='GameLine'></hr>
-                <div className="Review-Wrapper">
-                    <Form>
-                            <Grid container spacing={2}>
-                                {/* Star Ratings */}
-                                <Grid item xs={6}>
-                                    <fieldset disabled={userReviewed}>
-                                    <Typography>Ratings</Typography>
-                                    <br/>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={6}>
-                                            <p>Overall Rating</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="overallRating"
-                                                value={userReviewed ? game.userReview.overallRating : this.state.overallRating}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("overallRating", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Strategy</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="strategy"
-                                                value={userReviewed ? game.userReview.strategy : this.state.strategy}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("strategy", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Luck</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="luck"
-                                                value={userReviewed ? game.userReview.luck : this.state.luck}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("luck", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Player Interaction</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="playerInteraction"
-                                                value={userReviewed ? game.userReview.playerInteraction : this.state.playerInteraction}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("playerInteraction", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Replay Value</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="replayValue"
-                                                value={userReviewed ? game.userReview : this.state.replayValue}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("replayValue", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Complexity</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="complexity"
-                                                value={userReviewed ? game.userReview.complexity: this.state.complexity}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("complexity", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <p>Art & Style</p>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Rating
-                                                name="artAndStyle"
-                                                value={userReviewed ? game.userReview.artAndStyle : this.state.artAndStyle}
-                                                onChange={(event, newValue) => {
-                                                    this._setValue("artAndStyle", newValue);
-                                                }}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                    </fieldset>
-                                </Grid>
-
-                                {/* Good For */}
-                                <Grid item xs={6}>
-                                    <fieldset disabled={userReviewed}>
-                                    <Typography>Good For</Typography>
-                                    <br/>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={4}>
-                                            <p>Families</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxFamilies">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox"
-                                                    checked={userReviewed ? game.userReview.gfFamilies : this.state.gfFamilies} 
-                                                    id="gfFamilies" 
-                                                    onChange={() => { this._setCheckBoxValue("gfFamilies")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>Adults</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxAdults">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gfAdults : this.state.gfAdults} 
-                                                    id="gfAdults" 
-                                                    onChange={() => { this._setCheckBoxValue("gfAdults")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>Teens</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxTeens">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gfTeens : this.state.gfTeens}
-                                                    id="gfTeens" 
-                                                    onChange={() => { this._setCheckBoxValue("gfTeens")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>Kids</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxKids">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gfKids : this.state.gfKids}
-                                                    id="gfKids" 
-                                                    onChange={() => { this._setCheckBoxValue("gfKids")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>2 Players</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckbox2Player">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gf2Player : this.state.gf2Player}
-                                                    id="gf2Player" 
-                                                    onChange={() => { this._setCheckBoxValue("gf2Player")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>Large Groups</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxLargeGroups">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gfLargeGroups : this.state.gfLargeGroups}
-                                                    id="gfLargeGroups" 
-                                                    onChange={() => { this._setCheckBoxValue("gfLargeGroups")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <p>Social Distancing</p>
-                                        </Grid>
-                                        <Grid item xs={8}>
-                                            <Form.Group id="formGridCheckboxSocialDistancing">
-                                                <Form.Check 
-                                                    size="lg"
-                                                    type="checkbox" 
-                                                    checked={userReviewed ? game.userReview.gfSocialDistancing : this.state.gfSocialDistancing}
-                                                    id="gfSocialDistancing"
-                                                    onChange={() => { this._setCheckBoxValue("gfSocialDistancing")}}
-                                                />
-                                            </Form.Group>
-                                        </Grid>
-                                    </Grid>
-                                    </fieldset>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <fieldset disabled={userReviewed}>
-                                    <Typography>Comments</Typography>
-                                    <InputGroup>
-                                        <Form.Control 
-                                            as="textarea"
-                                            aria-label="With textarea"
-                                            ref={this.comments}
-                                            value={userReviewed ? game.userReview.comments : this.comments.current.value}
-                                            onChange={() => {this._setValue("comments", this.comments.current.value)}}
-                                        />
-                                    </InputGroup>
-                                    </fieldset>
-                                </Grid>
-                                { userReviewed ? 
-                                    <Grid item xs={12}>
-                                        <Button 
-                                            variant="primary"
-                                            onClick={() => {
-                                                this._setFormEdit(game.userReview)
-                                            }}
-                                        >&nbsp;Edit&nbsp;</Button>
-                                        <Button 
-                                            variant="primary"
-                                            onClick={() => {
-                                                this._deleteReview(game.userReview)
-                                            }}
-                                        >Delete</Button>
-                                    </Grid>
-                                    :
-                                    <Grid item xs={12}>
-                                        <Button 
-                                        variant="primary" 
-                                        type="submit"
-                                        onClick={() => {
-                                            this._submitReview()
-                                            }}
-                                        
-                                        >Submit</Button>
-                                    </Grid>
-                                }
-                            </Grid>
-                    </Form>
-                </div>
-            </Grid>
-        )
-    }
-}
-
-export const UserReview = connect(state => {
-    const { game } = state
-    return { game }
-}, null)(_UserReview)
-
-class _Reviews extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
-
-    render() {
-        const { game } = this.props
-
-        const columns = [{
-            dataField: 'id',
-            text: '',
-            hidden: true
-        }, {
-            dataField: 'img',
-            classes: 'UserImg',
-            text: '',
-            }, {
-            dataField: 'userAndRating',
-            classes: 'UserAndRating',
-            text: '',
-            }, {
-            dataField: 'comments',
-            classes: 'Comments',
-            text: '',
-            }
-        ];
-
-        const products = [{
-            id: 1,
-            img: 
-                <Paper className='ImgReview'>
-                    <img className='ImgCenterReview' src = {"https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg"}/>
-                </Paper>,
-            userAndRating: 
-                <div>
-                    <Typography>lifeIsAGame</Typography>
-                    <hr/>
-                    <p>Overall Rating</p>
-                    <Rating
-                        name="overallRating"
-                        value={1}
-                        readOnly
-                    />
-                </div>,
-            comments:
-                <div className="CommentsWrapper">
-                    <h6>Comments</h6>
-                    <p className="CommentsP">
-                        DO NOT BUY THIS GAME. I reached out to the publisher asking for a free game in exchange for exposure on my Instagram page. They had the audacity to tell me NO! I'm boycotting spending my hard earned exposure on this publisher!
-                    </p>
-                </div>
-            },{      
-            id: 2,      
-            img: 
-                <Paper className='ImgReview'>
-                    <img className='ImgCenterReview' src = {"https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg"}/>
-                </Paper>,
-            userAndRating: 
-                <div>
-                    <Typography>boardGameGoblin</Typography>
-                    <hr/>
-                    <p>Overall Rating</p>
-                    <Rating
-                        name="overallRating"
-                        value={5}
-                        readOnly
-                    />
-                </div>,
-            comments:
-                <div className="CommentsWrapper">
-                    <h6>Comments</h6>
-                    <p className="CommentsP">
-                        I really enjoyed this game with my kids. 
-                    </p>
-                </div>
-            }
-        ]
-
-        const paginationOptions = {
-            paginationSize: 5,
-            pageStartIndex: 1,
-            // withFirstAndLast: false, // Hide the going to First and Last page button
-            hideSizePerPage: true, // Hide the sizePerPage dropdown always
-            hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-            firstPageText: 'First',
-            prePageText: 'Back',
-            nextPageText: 'Next',
-            lastPageText: 'Last',
-            nextPageTitle: 'First page',
-            prePageTitle: 'Pre page',
-            firstPageTitle: 'Next page',
-            lastPageTitle: 'Last page',
-            showTotal: true,
-            paginationTotalRenderer: customTotal,
-            disablePageTitle: true,
-            sizePerPageList: [{
-                text: '5', value: 5
-            }]
-        };
+        // Push reviews to table data
+        reviews.rows.forEach(function(review) {
+            tableData.push({
+                id: review.id,
+                img: 
+                    <Paper className='ImgReview'>
+                        <img className='ImgCenterReview' src = {review.userImg}/>
+                    </Paper>,
+                userAndRating: 
+                    <div>
+                        <Typography>{review.userName}</Typography>
+                        <hr/>
+                        <p>Overall Rating</p>
+                        <Rating
+                            name="overallRating"
+                            value={review.overallRating}
+                            readOnly
+                        />
+                    </div>,
+                comments:
+                    <div className="CommentsWrapper">
+                        <h6>Comments</h6>
+                        <p className="CommentsP">
+                            {review.comments}
+                        </p>
+                    </div>,
+                // Hidden columns that show in expand renderer 
+                strategy: review.strategy,
+                luck: review.luck,
+                playerInteraction: review.playerInteraction,
+                replayValue: review.replayValue,
+                complexity: review.complexity,
+                artAndStyle: review.artAndStyle,
+                gfAdults: review.gfAdults,
+                gfTeens: review.gfTeens,
+                gfKids: review.gfKids,
+                gfFamilies: review.gfFamilies,
+                gf2Player: review.gf2Player,
+                gfLargeGroups: review.gfLargeGroups,
+                gfSocialDistancing: review.gfSocialDistancing
+            })  
+        }) 
 
         return (
-            <Grid item xs={12}>
-                <h3>Reviews</h3>
-                <div className="ReviewTable">
-                    <BootstrapTable
-                        keyField="id"
-                        data={ products }
-                        columns={ columns }
-                        expandRow={ expandRow }
-                        bordered={ false }
-                        pagination={ paginationFactory(paginationOptions) }
-                    />
-                </div>
-            </Grid>
+            <div className="Review-Wrapper">
+                <Grid item xs={12}>
+                    {/* Review heading */}
+                    {(() => {
+                        if (formDisabled && !this.state.editReview) {
+                            return <h3>Your Review</h3>
+                        } else if (this.state.editReview) {
+                            return <h3>Edit Review</h3>
+                        } else {
+                            return <h3>Add a Review</h3>
+                        }
+                    })()}
+                    <hr className='GameLine'></hr>
+                        <div className="Form-Wrapper">
+                            <Form>
+                                <Grid container spacing={2}>
+                                    {/* Star Ratings */}
+                                    <Grid item xs={6}>
+                                        <fieldset disabled={formDisabled}>
+                                        <Typography>Ratings</Typography>
+                                        <br/>
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={6}>
+                                                <p>Overall Rating</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="overallRating"
+                                                    value={formDisabled ? reviews.userReview.overallRating : this.state.overallRating}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("overallRating", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Strategy</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="strategy"
+                                                    value={formDisabled ? reviews.userReview.strategy : this.state.strategy}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("strategy", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Luck</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="luck"
+                                                    value={formDisabled ? reviews.userReview.luck : this.state.luck}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("luck", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Player Interaction</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="playerInteraction"
+                                                    value={formDisabled ? reviews.userReview.playerInteraction : this.state.playerInteraction}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("playerInteraction", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Replay Value</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="replayValue"
+                                                    value={formDisabled ? reviews.userReview.replayValue : this.state.replayValue}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("replayValue", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Complexity</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="complexity"
+                                                    value={formDisabled ? reviews.userReview.complexity: this.state.complexity}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("complexity", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <p>Art & Style</p>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Rating
+                                                    name="artAndStyle"
+                                                    value={formDisabled ? reviews.userReview.artAndStyle : this.state.artAndStyle}
+                                                    onChange={(event, newValue) => {
+                                                        this._setValue("artAndStyle", newValue);
+                                                    }}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                        </fieldset>
+                                    </Grid>
+
+                                    {/* Good For */}
+                                    <Grid item xs={6}>
+                                        <fieldset disabled={formDisabled}>
+                                        <Typography>Good For</Typography>
+                                        <br/>
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={4}>
+                                                <p>Families</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxFamilies">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox"
+                                                        checked={formDisabled ? reviews.userReview.gfFamilies : this.state.gfFamilies} 
+                                                        id="gfFamilies" 
+                                                        onChange={() => { this._setCheckBoxValue("gfFamilies")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>Adults</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxAdults">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gfAdults : this.state.gfAdults} 
+                                                        id="gfAdults" 
+                                                        onChange={() => { this._setCheckBoxValue("gfAdults")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>Teens</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxTeens">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gfTeens : this.state.gfTeens}
+                                                        id="gfTeens" 
+                                                        onChange={() => { this._setCheckBoxValue("gfTeens")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>Kids</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxKids">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gfKids : this.state.gfKids}
+                                                        id="gfKids" 
+                                                        onChange={() => { this._setCheckBoxValue("gfKids")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>2 Players</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckbox2Player">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gf2Player : this.state.gf2Player}
+                                                        id="gf2Player" 
+                                                        onChange={() => { this._setCheckBoxValue("gf2Player")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>Large Groups</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxLargeGroups">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gfLargeGroups : this.state.gfLargeGroups}
+                                                        id="gfLargeGroups" 
+                                                        onChange={() => { this._setCheckBoxValue("gfLargeGroups")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <p>Social Distancing</p>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Form.Group id="formGridCheckboxSocialDistancing">
+                                                    <Form.Check 
+                                                        size="lg"
+                                                        type="checkbox" 
+                                                        checked={formDisabled ? reviews.userReview.gfSocialDistancing : this.state.gfSocialDistancing}
+                                                        id="gfSocialDistancing"
+                                                        onChange={() => { this._setCheckBoxValue("gfSocialDistancing")}}
+                                                    />
+                                                </Form.Group>
+                                            </Grid>
+                                        </Grid>
+                                        </fieldset>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <fieldset disabled={formDisabled}>
+                                        <Typography>Comments</Typography>
+                                        <InputGroup>
+                                            <Form.Control 
+                                                as="textarea"
+                                                aria-label="With textarea"
+                                                ref={this.comments}
+                                                value={formDisabled ? reviews.userReview.comments : this.comments.current.value}
+                                                onChange={() => {this._setValue("comments", this.comments.current.value)}}
+                                            />
+                                        </InputGroup>
+                                        </fieldset>
+                                    </Grid>
+                                    { formDisabled ? 
+                                        <Grid item xs={12}>
+                                            <Button 
+                                                variant="primary"
+                                                onClick={() => {
+                                                    this._setFormEdit(reviews.userReview)
+                                                }}
+                                            >&nbsp;Edit&nbsp;</Button>
+                                            <Button 
+                                                variant="primary"
+                                                onClick={() => {
+                                                    this._deleteReview(reviews.userReview)
+                                                }}
+                                            >Delete</Button>
+                                        </Grid>
+                                        :
+                                        <Grid item xs={12}>
+                                            <Button 
+                                            variant="primary" 
+                                            type="submit"
+                                            onClick={() => {
+                                                this._submitReview()
+                                                }}
+                                            
+                                            >Submit</Button>
+                                        </Grid>
+                                    }
+                                </Grid>
+                        </Form>
+                    </div>
+                </Grid>
+                {/* Other Reviews Table */}
+                <Grid item xs={12}>
+                    <br/><br/>
+                    <h3>Other Reviews</h3>
+                    <div className="ReviewTable">
+                        <BootstrapTable
+                            keyField="id"
+                            data={ tableData }
+                            columns={ OtherReviewsColumns }
+                            expandRow={ OtherReviewsExpandRow }
+                            bordered={ false }
+                            pagination={ paginationFactory(OtherReviewPaginationOptions) }
+                        />
+                    </div>
+                </Grid>
+            </div>
         )
     }
 }
 
 export const Reviews = connect(state => {
-    const { game } = state
-    return { game }
+    const { reviews } = state
+    return { reviews }
 }, null)(_Reviews)
