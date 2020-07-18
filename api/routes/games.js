@@ -27,18 +27,7 @@ router.post('/', (req, res, next) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    name: 'name',
-    description: 'description',
-    image: '"imgFileName"',
-    publisher: 'publisher',
-    minPlayers: '"minPlayers"',
-    maxPlayers: '"maxPlayers"',
-    minPlaytime: '"minPlaytime"',
-    maxPlaytime: '"maxPlaytime"',
-    year: 'year',
-    minAge: '"minAge"',
-  };
+  const fields = dbUtils.gameFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
@@ -95,7 +84,7 @@ router.post('/', (req, res, next) => {
 
         // Add categories to return object
         game.categories = result.rows.map(e => ({
-          id: e.categoryID,
+          id: parseInt(e.categoryID),
           url: hostname + '/categories/' + e.categoryID
         }));
 
@@ -179,7 +168,7 @@ router.get('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT * FROM "Review" WHERE "gameID" = $1',
+    text: 'SELECT "Review".*, "User".username, "User"."imgFileName" FROM "Review" INNER JOIN "User" ON "Review"."userID" = "User".id WHERE "Review"."gameID" = $1',
     values: [req.params.game_id]
   }
 
@@ -202,22 +191,7 @@ router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    overallRating: '"overallRating"',
-    comments: 'comments',
-    strategy: '"strategy"',
-    luck: '"luck"',
-    playerInteraction: '"playerInteraction"',
-    replayValue: '"replayValue"',
-    complexity: '"complexity"',
-    gfKids: '"gfKids"',
-    gfTeens: '"gfTeens"',
-    gfAdults: '"gfAdults"',
-    gfFamilies: '"gfFamilies"',
-    gf2Player: '"gf2Player"',
-    gfLargeGroups: '"gfLargeGroups"',
-    gfSocialDistancing: '"gfSocialDistancing"'
-  };
+  const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
@@ -232,7 +206,7 @@ router.post('/:game_id/reviews', (req, res) => {
     if (field === 'comments') {
       val = req.body[field] || null;
     } else if (field.startsWith('gf')) {
-      val = req.body[field] === 'true';
+      val = req.body[field] || req.body[field] === 'true';
     } else {
       val = parseInt(req.body[field]) || null;
     }
