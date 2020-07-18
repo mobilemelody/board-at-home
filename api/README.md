@@ -266,6 +266,55 @@ Status: 200 OK
 }
 ```
 
+## Update a review
+```
+PATCH /reviews/:review_id
+```
+
+### Request
+```JSON
+{
+  "overallRating": 3,
+  "comments": "New comment",
+  "strategy": 4,
+  "gfTeens": true,
+  "gfAdults": false,
+  "gfLargeGroups": true
+}
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "user": {
+    "id": 1,
+    "url": "<base-url>/users/1"
+  },
+  "game": {
+    "id": 1,
+    "url": "<base-url>/games/1"
+  },
+  "id": 1,
+  "overallRating": "3.0",
+  "comments": "New comment",
+  "strategy": "4.0",
+  "luck": "2.0",
+  "playerInteraction": "4.0",
+  "replayValue": "4.0",
+  "complexity": "3.0",
+  "gfKids": false,
+  "gfTeens": true,
+  "gfAdults": false,
+  "gfFamilies": true,
+  "gf2Player": false,
+  "gfLargeGroups": true,
+  "gfSocialDistancing": true,
+  "url": "<base-url>/reviews/1"
+}
+```
+
+
 ## Get all categories
 ```
 GET /categories

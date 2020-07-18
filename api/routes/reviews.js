@@ -49,4 +49,84 @@ router.get('/:review_id', (req, res) => {
   });
 });
 
+/* Update a review */
+router.patch('/:review_id', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  // Map form field names to database field names
+  const fields = {
+    overallRating: '"overallRating"',
+    comments: 'comments',
+    strategy: '"strategy"',
+    luck: '"luck"',
+    playerInteraction: '"playerInteraction"',
+    replayValue: '"replayValue"',
+    complexity: '"complexity"',
+    gfKids: '"gfKids"',
+    gfTeens: '"gfTeens"',
+    gfAdults: '"gfAdults"',
+    gfFamilies: '"gfFamilies"',
+    gf2Player: '"gf2Player"',
+    gfLargeGroups: '"gfLargeGroups"',
+    gfSocialDistancing: '"gfSocialDistancing"'
+  };
+
+  // Create array of field names for query
+  let query_fields = [];
+
+  // Build query object
+  let query = { text: '', values: [] };
+
+  // Add rating values
+  for (let field in req.body) {
+
+    // Check that field is valid
+    if (field in fields) {
+
+      if (field === 'comments') {
+        val = req.body[field];
+      } else if (field.startsWith('gf')) {
+        val = req.body[field] || req.body[field] === 'true';
+      } else {
+        val = parseInt(req.body[field]);
+      }
+
+      query.values.push(val);
+      query_fields.push(fields[field] + ' = $' + query.values.length);
+    }
+  }
+
+  // Check if no valid fields
+  if (!query_fields.length) {
+    let err = { "Error": "The request object is missing at least one valid field" };
+    return res.status(400)
+      .set({ "Content-Type": "application/json" })
+      .send(err);
+  }
+
+  query.values.push(parseInt(req.params.review_id));
+  query.text = 'UPDATE "Review" SET ' + query_fields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
+
+  // Run query
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    } else if (!result.rows.length) {
+      err = { "Error": "No review with this id exists" };
+      return res.status(404)
+        .set({ "Content-Type": "application/json" })
+        .send(err)
+    }
+
+    let review = apiUtils.formatReview(result.rows[0], hostname);
+    res.status(200)
+      .set({ 
+        "Content-Type": "application/json",
+        "Content-Location": review.url
+      })
+      .send(review);
+  });
+
+});
+
 module.exports = router;
