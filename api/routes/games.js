@@ -161,13 +161,13 @@ router.get('/:game_id', (req, res) => {
     if (err) {
       console.error(`Error querying DB: ${err.message}`);
 
-      return res.status(500)
+      return res.status(500).send('Internal server error');
     }
 
     const game = result.rows[0];
 
     if (!game) {
-      return res.status(404);
+      return res.status(404).send('Not found');
     }
 
     return res.status(200).send(game);
