@@ -155,7 +155,7 @@ router.get('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT * FROM "Review" WHERE "gameID" = $1',
+    text: 'SELECT "Review".*, "User".username, "User"."imgFileName" FROM "Review" INNER JOIN "User" ON "Review"."userID" = "User".id WHERE "Review"."gameID" = $1',
     values: [req.params.game_id]
   }
 
