@@ -208,7 +208,7 @@ router.post('/:game_id/reviews', (req, res) => {
     if (field === 'comments') {
       val = req.body[field] || null;
     } else if (field.startsWith('gf')) {
-      val = req.body[field] === 'true';
+      val = req.body[field] || req.body[field] === 'true';
     } else {
       val = parseInt(req.body[field]) || null;
     }
