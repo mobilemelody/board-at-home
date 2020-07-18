@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import BootstrapTable from 'react-bootstrap-table-next'
 import Paper from '@material-ui/core/Paper';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 
 const OtherReviewPageTotal = (from, to, size) => (
@@ -334,7 +333,7 @@ class _Reviews extends React.Component {
 
     // Get reviews when component loads
     componentDidMount() {
-
+        console.log(this.comments.current.value)
     }
 
     // Sets value for form
@@ -371,10 +370,10 @@ class _Reviews extends React.Component {
         } else {
             console.log("submit review")
         }
-        // console.log(review)
+        console.log(review)
 
-        this.props.submitReviewFetch()
-        this.props.submitReview(review)
+        // this.props.submitReviewFetch()
+        // this.props.submitReview(review)
     }
 
     _deleteReview(review) {
@@ -671,7 +670,7 @@ class _Reviews extends React.Component {
                                                 as="textarea"
                                                 aria-label="With textarea"
                                                 ref={this.comments}
-                                                value={formDisabled ? reviews.userReview.comments : this.comments.current.value}
+                                                value={formDisabled ? reviews.userReview.comments : this.state.comments}
                                                 onChange={() => {this._setValue("comments", this.comments.current.value)}}
                                             />
                                         </InputGroup>

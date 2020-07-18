@@ -129,9 +129,9 @@ export const reviews = (state = reviewsState, action) => {
             return Object.assign({}, state, {
                 isReceived: true,
                 isFetching: false,
-                userReviewed: true,
                 notifType: null,
                 error: null,
+                userReviewed: true,
                 userReview: {
                     id: 2,
                     userID: 1,

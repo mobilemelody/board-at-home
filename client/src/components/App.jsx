@@ -7,10 +7,16 @@ import DotLoader from 'react-spinners/DotLoader'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { css } from "@emotion/core";
 
+// CSS imports
 import '../css/App.css'
+import '../css/Games.css'
+import "mdbreact/dist/css/mdb.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import { Login }  from './Login'
 import { Game } from './Game'
+import { Games } from './Games'
 
 
 class _App extends React.Component {
@@ -55,7 +61,8 @@ class _App extends React.Component {
             <Button variant="outline-info">Search</Button>
           </Form>
       </Navbar>
-      body = <div className='Game'><Game/></div>
+      // body = <div className='Game'><Game/></div>
+      body = <div className='Games'><Games/></div>
     }
 
     if (user.isFetching) {

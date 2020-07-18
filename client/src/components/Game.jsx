@@ -6,8 +6,6 @@ import { MDBContainer, MDBRating } from 'mdbreact';
 
 import {Reviews} from './Review'
 
-import "mdbreact/dist/css/mdb.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const RatingPage = () => {
   return (
