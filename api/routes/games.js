@@ -94,26 +94,26 @@ router.post('/', (req, res, next) => {
         }
 
         // Add categories to return object
-        game.categories = result.rows.map(e => ({ 
-          id: e.categoryID, 
-          url: hostname + '/categories/' + e.categoryID 
+        game.categories = result.rows.map(e => ({
+          id: e.categoryID,
+          url: hostname + '/categories/' + e.categoryID
         }));
 
         // Send game object
         res.status(201)
-          .set({ 
+          .set({
             "Content-Type": "application/json",
             "Content-Location": game.url
           })
           .send(game);
       });
-    } 
+    }
 
     // If no categories, send game object with empty category array
     else {
       game.categories = [];
       res.status(201)
-        .set({ 
+        .set({
           "Content-Type": "application/json",
           "Content-Location": game.url
         })
@@ -147,6 +147,30 @@ router.post('/sign-s3', (req, res) => {
       url: `https://${S3_BUCKET}.s3.amazonaws.com/${s3Params.Key}`
     };
     res.json({ data: {returnData} });
+  });
+});
+
+/* Get game information by id */
+router.get('/:game_id', (req, res) => {
+  const query = {
+    text: 'SELECT * FROM "Game" WHERE id = $1',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      console.error(`Error querying DB: ${err.message}`);
+
+      return res.status(500)
+    }
+
+    const game = result.rows[0];
+
+    if (!game) {
+      return res.status(404);
+    }
+
+    return res.status(200).send(game);
   });
 });
 
@@ -234,7 +258,7 @@ router.post('/:game_id/reviews', (req, res) => {
 
     let review = apiUtils.formatReview(result.rows[0], hostname);
     res.status(201)
-      .set({ 
+      .set({
         "Content-Type": "application/json",
         "Content-Location": review.url
       })
