@@ -33,8 +33,8 @@ class AddGameForm extends React.Component {
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="form-group">
           <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+            <label htmlFor="name">Name<span className="text-danger">*</span></label>
+            <input type="text" className="form-control" name="name" required onChange={this.handleChange} />
           </div>
         </div>
 
