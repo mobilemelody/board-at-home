@@ -33,8 +33,8 @@ class AddGameForm extends React.Component {
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="form-group">
           <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+            <label htmlFor="name">Name<span className="text-danger">*</span></label>
+            <input type="text" className="form-control" name="name" required onChange={this.handleChange} />
           </div>
         </div>
 
@@ -59,7 +59,7 @@ class AddGameForm extends React.Component {
 
         <div className="form-group">
           <label htmlFor="categories">Categories</label>
-          <Select isMulti options={this.props.category_list} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
+          <Select isMulti options={this.props.categoryList} className="basic-multi-select" classNamePrefix="select" name="categories" onChange={this.handleCategoryChange.bind(this)} />
         </div>
         <h3 className="mt-4">Game Details</h3>
 
@@ -175,6 +175,7 @@ class AddGameForm extends React.Component {
     .then(res => {
       // TODO: Go to new game page
       console.log(res)
+      this.props.handleSubmit(res.name);
     })
   }
 
@@ -193,8 +194,15 @@ class _AddGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      category_list: [],
+      categoryList: [],
+      gameName: ''
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(name) {
+    this.setState({ gameName: name });
   }
 
   componentDidMount() {
@@ -206,13 +214,23 @@ class _AddGame extends React.Component {
         let options = [];
         res.forEach(e => options.push({ value: e.id, label: e.category }));
 
-        this.setState({ category_list: options });
+        this.setState({ categoryList: options });
       });
   }
 
   render() {
+    let alert = '';
+    if (this.state.gameName) {
+      alert = 
+        <div className="alert alert-primary">
+          {this.state.gameName} was added!
+        </div>
+    }
     return (
-      <AddGameForm category_list={this.state.category_list} />
+      <div>
+        {alert}
+        <AddGameForm categoryList={this.state.categoryList} handleSubmit={this.handleSubmit} />
+      </div>
     );
   }
 
