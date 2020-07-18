@@ -16,7 +16,7 @@ module.exports = {
         review.game.id = parseInt(input[field]);
         review.game.url = hostname + '/games/' + input[field];
       } else {
-        review[field] = input[field];
+        review[field] = parseInt(input[field]) || input[field];
       }
     }
     review.url = hostname + '/reviews/' + review.id;

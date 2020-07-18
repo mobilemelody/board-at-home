@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const apiUtils = require('../utils/api.js');
+const dbUtils = require('../utils/db.js');
 
 /* Get all reviews */
 router.get('/', (req, res) => {
@@ -54,22 +55,7 @@ router.patch('/:review_id', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    overallRating: '"overallRating"',
-    comments: 'comments',
-    strategy: '"strategy"',
-    luck: '"luck"',
-    playerInteraction: '"playerInteraction"',
-    replayValue: '"replayValue"',
-    complexity: '"complexity"',
-    gfKids: '"gfKids"',
-    gfTeens: '"gfTeens"',
-    gfAdults: '"gfAdults"',
-    gfFamilies: '"gfFamilies"',
-    gf2Player: '"gf2Player"',
-    gfLargeGroups: '"gfLargeGroups"',
-    gfSocialDistancing: '"gfSocialDistancing"'
-  };
+  const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
   let query_fields = [];

@@ -27,18 +27,7 @@ router.post('/', (req, res, next) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    name: 'name',
-    description: 'description',
-    image: '"imgFileName"',
-    publisher: 'publisher',
-    minPlayers: '"minPlayers"',
-    maxPlayers: '"maxPlayers"',
-    minPlaytime: '"minPlaytime"',
-    maxPlaytime: '"maxPlaytime"',
-    year: 'year',
-    minAge: '"minAge"',
-  };
+  const fields = dbUtils.gameFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
@@ -178,22 +167,7 @@ router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    overallRating: '"overallRating"',
-    comments: 'comments',
-    strategy: '"strategy"',
-    luck: '"luck"',
-    playerInteraction: '"playerInteraction"',
-    replayValue: '"replayValue"',
-    complexity: '"complexity"',
-    gfKids: '"gfKids"',
-    gfTeens: '"gfTeens"',
-    gfAdults: '"gfAdults"',
-    gfFamilies: '"gfFamilies"',
-    gf2Player: '"gf2Player"',
-    gfLargeGroups: '"gfLargeGroups"',
-    gfSocialDistancing: '"gfSocialDistancing"'
-  };
+  const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
