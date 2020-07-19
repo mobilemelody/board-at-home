@@ -1,9 +1,12 @@
 
 // User State definition
 const userState = {
+    id: null,
+    imgFileName: null,
+    userName: null,
     isFetching: false,
     isReceived: false,
-    isLoggedIn: true,
+    isLoggedIn: false,
     error: null,
     collections: [],
 }
@@ -22,7 +25,6 @@ export const user = (state = userState, action) => {
         })
 
         case "FETCHING_USER":
-        console.log("fetching user")
         return Object.assign({}, state, {
             isFetching: true
         })
@@ -48,6 +50,14 @@ export const user = (state = userState, action) => {
         return Object.assign({}, state, {})
 
         default:
-        return state
+        // return state
+        return Object.assign({}, state, {
+            id: 1,
+            imgFileName: "https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg",
+            userName: "testUser",
+            isFetching: false,
+            isReceived: true,
+            isLoggedIn: true,
+        })
     }
 }

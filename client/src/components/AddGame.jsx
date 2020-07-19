@@ -174,7 +174,6 @@ class AddGameForm extends React.Component {
     .then(res => res.json())
     .then(res => {
       // TODO: Go to new game page
-      console.log(res)
       this.props.handleSubmit(res.name);
     })
   }

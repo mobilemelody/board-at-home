@@ -133,7 +133,6 @@ router.post('/sign-s3', (req, res) => {
 
   S3.getSignedUrl('putObject', s3Params, (err, data) => {
     if(err){
-      console.log(err);
       return res.end();
     }
     const returnData = {
@@ -219,7 +218,6 @@ router.post('/:game_id/reviews', (req, res) => {
     } else {
       val = parseInt(req.body[field]) || null;
     }
-
     query.values.push(val);
   }
 

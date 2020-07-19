@@ -1,6 +1,8 @@
 INSERT INTO "User"(
 	id, username, password, "imgFileName")
-	VALUES (1, 'testUser', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg');
+	VALUES (1, 'testUser', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg'),
+	(2, 'IGInfluencer', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test2.jpeg'), 
+	(3, 'BoardFlipper', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test3.jpg');
 
 INSERT INTO "Game"
 ("id","isUserCreated","identifierID","name","year","description","imgFileName","minAge","maxPlaytime","minPlaytime","maxPlayers","minPlayers","publisher")
@@ -725,3 +727,14 @@ VALUES
 (100,17),
 (100,45),
 (100,47);
+
+
+INSERT INTO "Review" 
+("userID", "gameID", "overallRating", comments, strategy, luck, "playerInteraction", "replayValue", "complexity", "artAndStyle", "gfKids", "gfTeens", "gfAdults", "gfFamilies", "gf2Player", "gfLargeGroups", "gfSocialDistancing")
+VALUES 
+(2, 1, 1, 'DO NOT BUY THIS GAME. I reached out to the publisher asking for a free game in exchange for exposure on my Instagram page. They had the audacity to tell me NO! I''m boycotting spending my hard earned exposure on this publisher!', 5, 2, 5, 2, 5, 0, false, false, false, true, true, false, true),
+(3, 1, 4, 'I haven''t had this much fun since 2/25/2007.', 3, 2, 2, 5, 0, 4, true, false, false, true, true, true, false),
+(1, 2, 5, 'This game was great. I really enjoy beating my kids at this game every time!', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 3, 5, 'We play a million different games in our family (husband, wife, 4 kids – ages 5, 8, 10 and 12) and this one gets played weekly. Probably 100 plays in our family. It just gets better, too.', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 4, 5, 'The game takes too long to finish.', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 5, 5, 'We play this game every week with our neighbors', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false);
