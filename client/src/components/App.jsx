@@ -50,7 +50,7 @@ class _App extends React.Component {
       // Import login component
       navbar =         
       <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
+        <Navbar.Brand href="/">Board At Home</Navbar.Brand>
       </Navbar>
       body = <Login/>
     }
@@ -58,7 +58,7 @@ class _App extends React.Component {
     if (user.isLoggedIn) {
       navbar =
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
+          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="#features">Games</Nav.Link>
           </Nav>
@@ -79,7 +79,7 @@ class _App extends React.Component {
       // Add a loading icon
       navbar =         
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
+          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
         </Navbar>
       body = <DotLoader/>
     }
