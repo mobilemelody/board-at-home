@@ -14,7 +14,12 @@ const S3_BUCKET = process.env.Bucket;
 
 /* Get all games */
 router.get('/', (req, res, next) => {
-  db.client.query('SELECT * FROM "Game"', (err, result) => {
+  const getGamesQuery = 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
+  ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+  ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+  ' GROUP BY "Game".id ORDER BY "Game".id';
+
+  db.client.query(getGamesQuery, (err, result) => {
     if (err) {
       return res.status(400).send(err);
     }
@@ -27,18 +32,7 @@ router.post('/', (req, res, next) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    name: 'name',
-    description: 'description',
-    image: '"imgFileName"',
-    publisher: 'publisher',
-    minPlayers: '"minPlayers"',
-    maxPlayers: '"maxPlayers"',
-    minPlaytime: '"minPlaytime"',
-    maxPlaytime: '"maxPlaytime"',
-    year: 'year',
-    minAge: '"minAge"',
-  };
+  const fields = dbUtils.gameFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
@@ -94,26 +88,26 @@ router.post('/', (req, res, next) => {
         }
 
         // Add categories to return object
-        game.categories = result.rows.map(e => ({ 
-          id: e.categoryID, 
-          url: hostname + '/categories/' + e.categoryID 
+        game.categories = result.rows.map(e => ({
+          id: parseInt(e.categoryID),
+          url: hostname + '/categories/' + e.categoryID
         }));
 
         // Send game object
         res.status(201)
-          .set({ 
+          .set({
             "Content-Type": "application/json",
             "Content-Location": game.url
           })
           .send(game);
       });
-    } 
+    }
 
     // If no categories, send game object with empty category array
     else {
       game.categories = [];
       res.status(201)
-        .set({ 
+        .set({
           "Content-Type": "application/json",
           "Content-Location": game.url
         })
@@ -139,7 +133,6 @@ router.post('/sign-s3', (req, res) => {
 
   S3.getSignedUrl('putObject', s3Params, (err, data) => {
     if(err){
-      console.log(err);
       return res.end();
     }
     const returnData = {
@@ -150,12 +143,40 @@ router.post('/sign-s3', (req, res) => {
   });
 });
 
+/* Get game information by id */
+router.get('/:game_id', (req, res) => {
+  const query = {
+    text: 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
+      ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+      ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+      ' WHERE "Game".id = $1' +
+      ' GROUP BY "Game".id',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      console.error(`Error querying DB: ${err.message}`);
+
+      return res.status(500).send('Internal server error');
+    }
+
+    const game = result.rows[0];
+
+    if (!game) {
+      return res.status(404).send('Not found');
+    }
+
+    return res.status(200).send(game);
+  });
+});
+
 /* Get reviews for a game */
 router.get('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT * FROM "Review" WHERE "gameID" = $1',
+    text: 'SELECT "Review".*, "User".username, "User"."imgFileName" FROM "Review" INNER JOIN "User" ON "Review"."userID" = "User".id WHERE "Review"."gameID" = $1',
     values: [req.params.game_id]
   }
 
@@ -178,22 +199,7 @@ router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   // Map form field names to database field names
-  const fields = {
-    overallRating: '"overallRating"',
-    comments: 'comments',
-    strategy: '"strategy"',
-    luck: '"luck"',
-    playerInteraction: '"playerInteraction"',
-    replayValue: '"replayValue"',
-    complexity: '"complexity"',
-    gfKids: '"gfKids"',
-    gfTeens: '"gfTeens"',
-    gfAdults: '"gfAdults"',
-    gfFamilies: '"gfFamilies"',
-    gf2Player: '"gf2Player"',
-    gfLargeGroups: '"gfLargeGroups"',
-    gfSocialDistancing: '"gfSocialDistancing"'
-  };
+  const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
   let query_fields = Object.keys(fields).map(e => fields[e]);
@@ -208,11 +214,10 @@ router.post('/:game_id/reviews', (req, res) => {
     if (field === 'comments') {
       val = req.body[field] || null;
     } else if (field.startsWith('gf')) {
-      val = req.body[field] === 'true';
+      val = req.body[field] || req.body[field] === 'true';
     } else {
       val = parseInt(req.body[field]) || null;
     }
-
     query.values.push(val);
   }
 
@@ -234,7 +239,7 @@ router.post('/:game_id/reviews', (req, res) => {
 
     let review = apiUtils.formatReview(result.rows[0], hostname);
     res.status(201)
-      .set({ 
+      .set({
         "Content-Type": "application/json",
         "Content-Location": review.url
       })
