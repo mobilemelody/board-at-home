@@ -98,7 +98,7 @@ export const reviews = (state = reviewsState, action) => {
             })
 
         case "RECEIVE_REVIEW_INSERT":
-            var reviewInserted = action.payload.resp.reviewInserted
+            var reviewInserted = action.payload.resp.payload.data
 
             return Object.assign({}, state, {
                 isReceived: true,
@@ -110,7 +110,7 @@ export const reviews = (state = reviewsState, action) => {
             })
 
         case "RECEIVE_REVIEW_UPDATE":
-            var updatedReview = action.payload.resp.userReview
+            var updatedReview = action.payload.resp.payload.data
 
             return Object.assign({}, state, {
                 isReceived: true,

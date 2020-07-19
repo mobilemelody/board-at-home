@@ -370,7 +370,7 @@ class _Reviews extends React.Component {
     _submitReview() {
         this.setState({editReview: false})
 
-        const review = {
+        var review = {
             overallRating: this.state.overallRating,
             comments: this.state.comments,
             strategy: this.state.strategy,
@@ -389,6 +389,7 @@ class _Reviews extends React.Component {
         }
 
         if (this.state.editReview) {
+            review.id = this.state.id
             this.props.updateReview(review)
         } else {
             this.props.submitReview(review)
