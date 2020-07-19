@@ -33,6 +33,9 @@ const api = {
   },
   delete: (url) => {
     return axios.delete(baseURL + url)
+  },
+  patch: (url, data) => {
+    return axios.patch(baseURL + url, data)
   }
 }
 

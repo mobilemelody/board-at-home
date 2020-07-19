@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 // Import Actions
-import { } from '../actions/index'
+import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif } from '../actions/index'
 
 import {Form, Button, InputGroup} from 'react-bootstrap'
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import BootstrapTable from 'react-bootstrap-table-next'
 import Paper from '@material-ui/core/Paper';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-
+import {Notifier} from './Notifier.jsx'
 
 const OtherReviewPageTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
@@ -116,7 +117,6 @@ const OtherReviewsExpandRow = {
     onlyOneExpanding: true,
     onExpand: (row, isExpand, rowIndex, e) => {
         // call function if needed for state
-        console.log(row)
         return rowIndex
     },
     showExpandColumn: true,
@@ -306,9 +306,11 @@ class _Reviews extends React.Component {
         this._setCheckBoxValue = this._setCheckBoxValue.bind(this)
         this._setFormState = this._setFormState.bind(this)
         this._setFormEdit = this._setFormEdit.bind(this)
+        this._resetNotif = this._resetNotif.bind(this)
 
         // Local state for form data
         this.state = {
+            userID: 1,  // fix this later
             id: null,
             editReview: false,
             deleteReview: false,
@@ -333,7 +335,11 @@ class _Reviews extends React.Component {
 
     // Get reviews when component loads
     componentDidMount() {
-        console.log(this.comments.current.value)
+        this.props.getGameReviews()
+    }
+
+    _resetNotif() {
+        this.props.getResetReviewNotif()
     }
 
     // Sets value for form
@@ -358,29 +364,38 @@ class _Reviews extends React.Component {
         this.setState({
             [key]: !value,
         })
-        console.log(key, !value)
     }
 
     // Submits review
     _submitReview() {
-        const review = this.state
+        this.setState({editReview: false})
 
-        if (review.editReview) {
-            console.log('edit review')
-        } else {
-            console.log("submit review")
+        const review = {
+            overallRating: this.state.overallRating,
+            comments: this.state.comments,
+            strategy: this.state.strategy,
+            luck: this.state.luck,
+            playerInteraction: this.state.playerInteraction,
+            replayValue: this.state.replayValue,
+            complexity: this.state.complexity,
+            artAndStyle: this.state.artAndStyle,
+            gfKids: this.state.gfKids,
+            gfTeens: this.state.gfTeens,
+            gfAdults: this.state.gfAdults,
+            gfFamilies: this.state.gfFamilies,
+            gf2Player: this.state.gf2Player,
+            gfLargeGroups: this.state.gfLargeGroups,
+            gfSocialDistancing: this.state.gfSocialDistancing
         }
-        console.log(review)
 
-        // this.props.submitReviewFetch()
-        // this.props.submitReview(review)
+        if (this.state.editReview) {
+            this.props.updateReview(review)
+        } else {
+            this.props.submitReview(review)
+        }
     }
 
     _deleteReview(review) {
-        console.log("delete review")
-        console.log(review)
-        
-        this.props.submitReviewFetch()
         this.props.deleteReview(review)
     }
 
@@ -394,11 +409,19 @@ class _Reviews extends React.Component {
     render() {
 
         const { reviews } = this.props
+
         var formDisabled = false
         var tableData = []
+        var notifier = <div/>
 
         if (reviews.userReviewed && !this.state.editReview) {
             formDisabled = true
+        }
+
+        if (reviews.notifType !== null) {
+            notifier = <Notifier type={reviews.notifType}/>
+
+            this._resetNotif()
         }
 
         // Push reviews to table data
@@ -407,11 +430,11 @@ class _Reviews extends React.Component {
                 id: review.id,
                 img: 
                     <Paper className='ImgReview'>
-                        <img className='ImgCenterReview' src = {review.userImg}/>
+                        <img className='ImgCenterReview' src = {review.user.imgFileName}/>
                     </Paper>,
                 userAndRating: 
                     <div>
-                        <Typography>{review.userName}</Typography>
+                        <Typography>{review.user.username}</Typography>
                         <hr/>
                         <p>Overall Rating</p>
                         <Rating
@@ -446,6 +469,7 @@ class _Reviews extends React.Component {
 
         return (
             <div className="Review-Wrapper">
+                {notifier}
                 <Grid item xs={12}>
                     {/* Review heading */}
                     {(() => {
@@ -695,7 +719,6 @@ class _Reviews extends React.Component {
                                         <Grid item xs={12}>
                                             <Button 
                                             variant="primary" 
-                                            type="submit"
                                             onClick={() => {
                                                 this._submitReview()
                                                 }}
@@ -730,4 +753,8 @@ class _Reviews extends React.Component {
 export const Reviews = connect(state => {
     const { reviews } = state
     return { reviews }
-}, null)(_Reviews)
+}, dispatch => {
+  return bindActionCreators({
+    getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif 
+    }, dispatch)
+})(_Reviews)

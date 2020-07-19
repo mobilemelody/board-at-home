@@ -41,14 +41,10 @@ const receiveGames = createAction("RECEIVE_GAMES")
 const setGameState = createAction("SET_GAME_STATE")
 
 export const getGames = () => {
-    return (dispatch, getState) => {
-
-        const { user } = getState()
-        // add user id to parameters
-
-        return api.get(`${baseURL}/games/all`)
+    return (dispatch) => {
+        return api.get('/games/')
         .then(resp => dispatch(receiveGames(resp)))
-        .catch(err => dispatch(errorGames()))
+        .catch(err => dispatch(errorGames(err)))
     }
 }
 
@@ -69,6 +65,14 @@ const receiveReviews = createAction("RECEIVE_REVIEWS")
 const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE")
 const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT")
 const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE")
+const resetReviewNotif = createAction("RESET_NOTIF")
+
+export const getResetReviewNotif = () => {
+    return (dispatch) => {
+        dispatch(resetReviewNotif())
+    }
+}
+
 
 
 export const submitReviewFetch = () => {
@@ -78,22 +82,27 @@ export const submitReviewFetch = () => {
 }
 
 // Insert new review
-export const submitReview = (data) => {
+export const submitReview = (review) => {
     return (dispatch, getState) => {
-        const {user} = getState() 
-        data.userID = user.userID
+        const {user} = getState()
+        const {game} = getState()
 
-        return api.post('/reviews', data)
+        review.userID = user.id
+        review.game_id = game.data.id
+
+        return api.post(`/games/${game.data.id}/reviews`, review)
         .then(res => {
             dispatch(receiveReviewInserted({resp: {
                 payload: res,
-                userID: user.userID,
-                reviewInserted: data, 
+                userID: user.id,
+                reviewInserted: review, 
             }}))
         })
         .catch(err => {
             dispatch(errorInsertReview({resp: {
-                error: err
+                error: err, 
+                userID: user.id,
+                reviewInserted: review, 
             }}))
         })
     }
@@ -103,14 +112,12 @@ export const submitReview = (data) => {
 export const updateReview = (data) => {
     return (dispatch, getState) => {
         const {user} = getState() 
-        data.userID = user.userID
-
-        return api.post('/reviews', data)
+                return api.patch(`/reviews/${data.id}`, data)
         .then(res => {
             dispatch(receiveReviewUpdated({resp: {
                 payload: res,
-                userID: user.userID,
-                reviewUpdated: data, 
+                userID: user.id,
+                userReview: data, 
             }}))
         })
         .catch(err => {
@@ -128,11 +135,11 @@ export const deleteReview = (data) => {
         const {user} = getState() 
         data.userID = user.userID
 
-        return api.post('/delete', data)
+        return api.delete(`/reviews/${data.id}`)
         .then(res => {
             dispatch(receiveReviewsDeleted({resp: {
                 payload: res,
-                userID: user.userID
+                userID: user.id
             }}))
         })
         .catch(err => {
@@ -145,15 +152,16 @@ export const deleteReview = (data) => {
 }
 
 // get reviews for game
-export const getReviews = () => {
+export const getGameReviews = () => {
     return (dispatch, getState) => {
-        const {user} = getState() 
         const { game } = getState()
-        return api.post('/reviews')
+        const { user } = getState()
+        var game_id = game.data.id
+        return api.get(`/games/${game_id}/reviews`)
         .then(res => {
             dispatch(receiveReviews({resp: {
                 payload: res,
-                userID: user.userID
+                userID: user.id
             }}))
         })
         .catch(err => {

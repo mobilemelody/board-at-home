@@ -24,6 +24,20 @@
   margin-bottom: auto;
 }
 
+.App .Games .GamesTable .react-bootstrap-table .table th {
+  visibility: hidden !important;
+  height: 0px;
+}
+
+.App .Games .GamesTitleRow {
+  padding-bottom: 0px;
+}
+
+.App .Games .GamesTableRow {
+  padding-top: 0px;
+}
+
+
 .App .Games .ImgWrapper .ImgCenter {
   width: 175px;
   height: 175px;

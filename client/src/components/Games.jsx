@@ -2,14 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import {getGames, getSetGameState } from '../actions/index'
+
+import {Notifier} from './Notifier.jsx'
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { MDBContainer, MDBRating } from 'mdbreact';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {Button} from 'react-bootstrap'
-import { getSetGameState } from '../actions/index'
+import { Link } from "react-router-dom";
 
 
 const GamePageTotal = (from, to, size) => (
@@ -109,7 +112,7 @@ class _Games extends React.Component {
     }
 
     componentDidMount() {
-        // get games
+        this.props.getGames()
     }
 
     _setGame(game) {
@@ -123,6 +126,7 @@ class _Games extends React.Component {
             minPlaytime: game.minPlaytime,
             minPlayers: game.minPlayers,
             maxPlayers: game.maxPlayers,
+            minAge: game.minAge,
             imgFileName: game.imgFileName,
             description: game.description,
         })
@@ -130,14 +134,20 @@ class _Games extends React.Component {
 
     render() {
 
+        const { games } = this.props
+        let tableData = []
+        let notifier
+
+        // Create error notification
+        if (games.error !== null) {
+            notifier = <Notifier type="ERROR_GAMES"/>
+        }
+
         const rowEvents = {
             onClick: (e, row, rowIndex) => {
                 this._setGame(row)
             }
         }
-
-        const { games } = this.props
-        let tableData = []
 
         // Push reviews to table data
         games.rows.forEach(function(game) {
@@ -152,6 +162,7 @@ class _Games extends React.Component {
                 minPlaytime: game.minPlaytime,
                 minPlayers: game.minPlayers,
                 maxPlayers: game.maxPlayers,
+                minAge: game.minAge,
                 imgFileName: game.imgFileName,
                 description: game.description,
                 viewer:
@@ -210,7 +221,7 @@ class _Games extends React.Component {
                         <Grid item xs={12}>
                             <Button 
                             variant="info"
-                             size="sm"
+                            size="sm"
                             type="submit"
                             >See Reviews</Button>
                         </Grid>
@@ -220,9 +231,20 @@ class _Games extends React.Component {
 
         return (
             <Grid container spacing={3}>
-            <Grid item xs={12}>
-                    <br/><br/>
-                    <Typography variant="h4">Games</Typography>
+                {notifier}
+                <Grid item xs={12}><br/></Grid>
+                <Grid item xs={10} className="GamesTitleRow">
+                    <Typography variant="h3">Games</Typography>
+                </Grid>
+                <Grid item xs={2} className="GamesTitleRow">
+                    <Link to='/games/add'>
+                        <Button 
+                            variant="info"
+                            size="sm"
+                        >Add New Game</Button>
+                    </Link>
+                </Grid>
+                <Grid item xs={12} className="GamesTableRow">
                     <div className="GamesTable">
                         <BootstrapTable
                             keyField="id"
@@ -245,6 +267,6 @@ export const Games = connect(state => {
     return { games }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState
+    getSetGameState, getGames
     }, dispatch)
 })(_Games)

@@ -211,8 +211,13 @@ router.post('/:game_id/reviews', (req, res) => {
       val = parseInt(req.body[field]) || null;
     }
 
+        console.log(field, val)
+
+
     query.values.push(val);
   }
+
+  console.log("game id", req.params.game_id)
 
   // TODO: Add user details
   query_fields.push('"userID"');

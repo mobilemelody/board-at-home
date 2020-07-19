@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux'
 import { userLogin, userLogout } from "../actions"
 import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
 import DotLoader from 'react-spinners/DotLoader'
-import {AddGame} from './AddGame'
 import { Route } from 'react-router-dom'
+import {NotificationContainer} from 'react-notifications'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { css } from "@emotion/core";
@@ -16,10 +16,12 @@ import '../css/Games.css'
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-notifications/lib/notifications.css';
 
 import { Login }  from './Login'
 import { Game } from './Game'
 import { Games } from './Games'
+import {AddGame} from './AddGame'
 
 
 class _App extends React.Component {
@@ -51,7 +53,6 @@ class _App extends React.Component {
         <Navbar.Brand href="#home">Board At Home</Navbar.Brand>
       </Navbar>
       body = <Login/>
-      // Login can invoke userLogin() with parameters
     }
 
     if (user.isLoggedIn) {
@@ -61,10 +62,10 @@ class _App extends React.Component {
           <Nav className="mr-auto">
             <Nav.Link href="#features">Games</Nav.Link>
           </Nav>
-          <Form inline>
+          {/* <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
             <Button variant="outline-info">Search</Button>
-          </Form>
+          </Form> */}
       </Navbar>
 
       if (game.isSet) {
@@ -83,11 +84,6 @@ class _App extends React.Component {
       body = <DotLoader/>
     }
 
-    else if (user.isReceived && user.isLoggedIn) {
-      // Import UserProfile component
-      // body = <UserProfile/>
-    }
-
     else if (user.error !== null && !user.isLoggedIn) {
       // Display error message for logging in
       // Call a function/add component to show error and reprompt for login
@@ -96,8 +92,9 @@ class _App extends React.Component {
 
     return (
       <div className="App">
+        <NotificationContainer key="app"/>
         {navbar}
-                <Route path='/games/add'><AddGame/></Route>
+        <Route path='/games/add'><AddGame/></Route>        
         {body}
       </div>
     );
