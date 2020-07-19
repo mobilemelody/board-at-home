@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
   const getGamesQuery = 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
   ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
   ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
-  ' GROUP BY "Game".id';
+  ' GROUP BY "Game".id ORDER BY "Game".id';
 
   db.client.query(getGamesQuery, (err, result) => {
     if (err) {
