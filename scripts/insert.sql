@@ -734,4 +734,7 @@ INSERT INTO "Review"
 VALUES 
 (2, 1, 1, 'DO NOT BUY THIS GAME. I reached out to the publisher asking for a free game in exchange for exposure on my Instagram page. They had the audacity to tell me NO! I''m boycotting spending my hard earned exposure on this publisher!', 5, 2, 5, 2, 5, 0, false, false, false, true, true, false, true),
 (3, 1, 4, 'I haven''t had this much fun since 2/25/2007.', 3, 2, 2, 5, 0, 4, true, false, false, true, true, true, false),
-(1, 2, 5, 'This game was great. I really enjoy beating my kids at this game every time!.', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false);
+(1, 2, 5, 'This game was great. I really enjoy beating my kids at this game every time!', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 3, 5, 'We play a million different games in our family (husband, wife, 4 kids – ages 5, 8, 10 and 12) and this one gets played weekly. Probably 100 plays in our family. It just gets better, too.', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 4, 5, 'The game takes too long to finish.', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false),
+(1, 5, 5, 'We play this game every week with our neighbors', 4, 5, 5, 5, 5, 4, true, true, true, true, false, false, false);
