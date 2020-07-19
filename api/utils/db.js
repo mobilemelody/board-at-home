@@ -23,6 +23,7 @@ module.exports = {
     playerInteraction: '"playerInteraction"',
     replayValue: '"replayValue"',
     complexity: '"complexity"',
+    artAndStyle: '"artAndStyle"',
     gfKids: '"gfKids"',
     gfTeens: '"gfTeens"',
     gfAdults: '"gfAdults"',

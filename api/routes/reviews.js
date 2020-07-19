@@ -74,7 +74,7 @@ router.patch('/:review_id', (req, res) => {
       } else if (field.startsWith('gf')) {
         val = req.body[field] || req.body[field] === 'true';
       } else {
-        val = parseInt(req.body[field]);
+        val = parseInt(req.body[field]) || null;
       }
 
       query.values.push(val);
