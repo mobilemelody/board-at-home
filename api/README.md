@@ -10,6 +10,10 @@ Documentation for the API endpoints for the Board at Home project
 - [Update review](#update-review)
 - [Delete review](#delete-review)
 - [Get all categories](#get-all-categories)
+- [Add a collection](#add-a-collection)
+- [Add game to collection](#add-game-to-collection)
+- [Get a colleciton](#get-a-collection)
+- [Get user collections](#get-user-collections)
 
 ## Add a game
 ```
@@ -339,4 +343,97 @@ Status: 200 OK
     "identifierID": "85OKv8p5Ow"
   }
 ]
+```
+
+## Add a collection
+```
+POST /collections
+```
+
+### Request
+```JSON
+{
+  "name": "Collection Name",
+  "isPrivate": false
+}
+```
+
+### Response
+Status: 201 Created
+```JSON
+{
+  "id": 1,
+  "userID": 1,
+  "name": "Collection Name",
+  "isPrivate": false,
+  "gameCount": 0,
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Add game to collection
+```
+PUT /collections/:collection_id
+```
+
+### Request
+```JSON
+{
+  "gameID": 1
+}
+```
+
+### Response
+Status: 204 No Content
+
+## Get a collection
+```
+GET /collections/:collection_id
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "id": 1,
+  "name": "Collection Name",
+  "isPrivate": false,
+  "user": {
+    "id": 1,
+    "username": "username",
+    "imgFileName": "<url-to-image>",
+    "url": "<base-url>/users/1"
+  },
+  "games": [
+    {
+      "id": 1,
+      "name": "Game Name",
+      "imgFileName": "<url-to-image>",
+      "url": "<base-url>/games/1"
+    }
+  ],
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Get user collections
+```
+GET /users/:user_id/collections
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "collections": [
+    {
+      "id": 1,
+      "userID": 1,
+      "name": "Collection Name",
+      "isPrivate": false,
+      "gameCount": 2,
+      "url": "<base-url>/collections/1"
+    }
+  ]
+}
 ```
