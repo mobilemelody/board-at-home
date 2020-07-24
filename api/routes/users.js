@@ -18,25 +18,32 @@ router.get('/:user_id/collections', (req, res) => {
     values: [req.params.user_id]
   }
 
+  // Add game filter if needed
+  if ("gameID" in req.query) {
+    query.text += ' AND "UserCollection".id IN (SELECT "userColllectionID" FROM "CollectionGame" WHERE "gameID" = $2)';
+    query.values.push(req.query.gameID);
+  }
+
+  // Run query
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
+    } else if (!result.rows.length) {
+      err = { "Error": "This user does not have any collections" };
+      err.Error += "gameID" in req.query ? ' with this game' : '';
+      return res.status(404)
+        .set({ "Content-Type": "application/json" })
+        .send(err);
     }
 
-    if (result.rows.length) {
-      let collections = {};
+    let collections = {};
       collections.collections = result.rows.map(e => apiUtils.formatCollection(e, hostname));
 
       res.status(200)
         .set({ "Content-Type": "application/json" })
         .send(collections);
-    } else {
-      err = { "Error": "This user does not have any collections" };
-      res.status(404)
-        .set({ "Content-Type": "application/json" })
-        .send(err);
-    }
   });
+
 });
 
 module.exports = router;

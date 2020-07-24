@@ -1,15 +1,20 @@
 # Board at Home API
 Documentation for the API endpoints for the Board at Home project
 
+### Games
 - [Add a game](#add-a-game)
 - [Get all games](#get-all-games)
+- [Get all categories](#get-all-categories)
+
+### Reviews
 - [Add a review](#add-a-review)
 - [Get reviews for a game](#get-reviews-for-a-game)
 - [Get all review](#get-all-reviews)
 - [Get review](#get-review)
 - [Update review](#update-review)
 - [Delete review](#delete-review)
-- [Get all categories](#get-all-categories)
+
+### Collections
 - [Add a collection](#add-a-collection)
 - [Get a collection](#get-a-collection)
 - [Update a collection](#update-a-collection)
@@ -93,6 +98,23 @@ Status: 200 OK
     "publisher": "Publisher Name",
     "minPlayers": 2,
     "maxPlayers": 6
+  }
+]
+```
+
+## Get all categories
+```
+GET /categories
+```
+
+### Response
+Status: 200 OK
+```JSON
+[
+  {
+    "id": 1,
+    "category": "4x",
+    "identifierID": "85OKv8p5Ow"
   }
 ]
 ```
@@ -331,23 +353,6 @@ DELETE /reviews/:review_id
 ### Response
 Status: 204 No Content
 
-## Get all categories
-```
-GET /categories
-```
-
-### Response
-Status: 200 OK
-```JSON
-[
-  {
-    "id": 1,
-    "category": "4x",
-    "identifierID": "85OKv8p5Ow"
-  }
-]
-```
-
 ## Add a collection
 ```
 POST /collections
@@ -454,7 +459,7 @@ Status: 204 No Content
 
 ## Get user collections
 ```
-GET /users/:user_id/collections
+GET /users/:user_id/collections?gameID=:gameID
 ```
 
 ### Response
