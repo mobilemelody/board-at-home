@@ -34,7 +34,6 @@ router.post('/', (req, res) => {
     }
 
     let collection = apiUtils.formatCollection(result.rows[0], hostname);
-
     res.status(201)
       .set({
         "Content-Type": "application/json",
@@ -49,29 +48,29 @@ router.post('/', (req, res) => {
 router.get('/:collection_id', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
+  // Build query object
   let query = {
     text: 'SELECT "UserCollection".id AS "collectionID", "UserCollection".name AS "collectionName", "UserCollection"."isPrivate", "User".id AS "userID", "User".username, "User"."imgFileName" AS "userImage", "Game".* FROM "UserCollection" INNER JOIN "User" ON "User".id = "UserCollection"."userID" LEFT JOIN "CollectionGame" ON "UserCollection".id = "CollectionGame"."userColllectionID" LEFT JOIN "Game" ON "CollectionGame"."gameID" = "Game".id WHERE "UserCollection".id = $1',
     values: [req.params.collection_id]
   }
 
+  // Run query
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
-    }
-
-    if (result.rows.length) { 
-      let collection = apiUtils.formatCollectionGames(result.rows, hostname);
-
-      res.status(200)
-        .set({ "Content-Type": "application/json" })
-        .send(collection);
-    } else {
+    } else if (!result.rows.length) {
       err = { "Error": "No collection with this id exists" };
-      res.status(404)
+      return res.status(404)
         .set({ "Content-Type": "application/json" })
         .send(err);
     }
+
+    let collection = apiUtils.formatCollectionGames(result.rows, hostname);
+      res.status(200)
+        .set({ "Content-Type": "application/json" })
+        .send(collection);
   });
+
 });
 
 /* Update a collection */
@@ -127,13 +126,9 @@ router.patch('/:collection_id', (req, res) => {
 /* Add a game to a collection */
 router.put('/:collection_id/games/:game_id', (req, res) => {
 
-  // Validate data received
-  // TODO: Check that collection exists
-  // TODO: Check that game exists and is not already in collection
-
   // Build query object
   let query = { 
-    text: 'INSERT INTO "CollectionGame"("userColllectionID", "gameID") VALUES($1, $2) RETURNING *', 
+    text: 'INSERT INTO "CollectionGame"("userColllectionID", "gameID") SELECT $1, $2 WHERE NOT EXISTS (SELECT "userColllectionID", "gameID" FROM "CollectionGame" WHERE "userColllectionID" = $1 AND "gameID" = $2) RETURNING *', 
     values: [req.params.collection_id, req.params.game_id] 
   };
 
@@ -141,12 +136,18 @@ router.put('/:collection_id/games/:game_id', (req, res) => {
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
+    } else if (!result.rows.length) {
+      err = { "Error": "This game is already part of this collection" };
+      return res.status(404)
+        .set({ "Content-Type": "application/json" })
+        .send(err);
     }
 
     res.status(204)
       .set({ "Content-Type": "application/json" })
       .send();
   });
+
 });
 
 /* Remove a game from a collection */
