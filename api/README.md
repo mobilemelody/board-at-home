@@ -11,8 +11,11 @@ Documentation for the API endpoints for the Board at Home project
 - [Delete review](#delete-review)
 - [Get all categories](#get-all-categories)
 - [Add a collection](#add-a-collection)
+- [Get a collection](#get-a-collection)
+- [Update a collection](#update-a-collection)
 - [Add game to collection](#add-game-to-collection)
-- [Get a colleciton](#get-a-collection)
+- [Remove game from collection](#remove-game-from-collection)
+- [Delete a collection](#delete-a-collection)
 - [Get user collections](#get-user-collections)
 
 ## Add a game
@@ -366,25 +369,9 @@ Status: 201 Created
   "userID": 1,
   "name": "Collection Name",
   "isPrivate": false,
-  "gameCount": 0,
   "url": "<base-url>/collections/1"
 }
 ```
-
-## Add game to collection
-```
-PUT /collections/:collection_id
-```
-
-### Request
-```JSON
-{
-  "gameID": 1
-}
-```
-
-### Response
-Status: 204 No Content
 
 ## Get a collection
 ```
@@ -415,6 +402,55 @@ Status: 200 OK
   "url": "<base-url>/collections/1"
 }
 ```
+
+## Update a collection
+```
+PATCH /collections/:collection_id
+```
+
+### Request
+```JSON
+{
+  "name": "New Collection Name",
+  "isPrivate": true
+}
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "id": 1,
+  "userID": 1,
+  "name": "New Collection Name",
+  "isPrivate": true,
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Add game to collection
+```
+PUT /collections/:collection_id/games/:game_id
+```
+
+### Response
+Status: 204 No Content
+
+## Remove game from collection
+```
+DELETE /collections/:collection_id/games/:game_id
+```
+
+### Response
+Status: 204 No Content
+
+## Delete a collection
+```
+DELETE /collections/:collection_id
+```
+
+### Response
+Status: 204 No Content
 
 ## Get user collections
 ```

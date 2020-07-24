@@ -30,7 +30,10 @@ module.exports = {
       userID: parseInt(input.userID),
       name: input.name,
       isPrivate: input.isPrivate,
-      gameCount: parseInt(input.gameCount) || 0
+    }
+
+    if ("gameCount" in input) {
+      collection.gameCount = parseInt(input.gameCount);
     }
 
     collection.url = hostname + '/collections/' + collection.id;
