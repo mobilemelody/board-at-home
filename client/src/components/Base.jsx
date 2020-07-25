@@ -11,10 +11,6 @@ import { AddGame } from './AddGame'
 **************************************/
 
 export class Base extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div className="main-wrapper">

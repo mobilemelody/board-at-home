@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLogout } from "../actions"
-import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap'
 import DotLoader from 'react-spinners/DotLoader'
 import { Route, Link } from 'react-router-dom'
 import {NotificationContainer} from 'react-notifications'
@@ -60,8 +60,7 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="#features">Games</Nav.Link>
-            {/* TODO: Use req param once authentication is done */}
-            <Link to="#/profile/1">
+            <Link to="/profile/:id">
               <Nav.Link>Profile</Nav.Link>
             </Link>
           </Nav>
@@ -98,7 +97,7 @@ class _App extends React.Component {
         <NotificationContainer key="app"/>
         {navbar}
         <Route path='/games/add'><AddGame/></Route>
-        <Route path='#/profile/1'><UserProfile/></Route>
+        <Route path='/profile/:id'><UserProfile/></Route>
         {body}
       </div>
     );

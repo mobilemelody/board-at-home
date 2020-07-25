@@ -35,7 +35,7 @@ router.get('/:review_id', (req, res) => {
       return res.status(400).send(err);
     }
 
-    if (result.rows.length) { 
+    if (result.rows.length) {
       let review = apiUtils.formatReview(result.rows[0], hostname);
 
       res.status(200)
@@ -106,7 +106,7 @@ router.patch('/:review_id', (req, res) => {
 
     let review = apiUtils.formatReview(result.rows[0], hostname);
     res.status(200)
-      .set({ 
+      .set({
         "Content-Type": "application/json",
         "Content-Location": review.url
       })
@@ -128,7 +128,7 @@ router.delete('/:review_id', (req, res) => {
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
-    } else if (result.rowCount == 0) {
+    } else if (result.rowCount === 0) {
       err = { "Error": "No review with this id exists" };
       return res.status(404)
         .set({ "Content-Type": "application/json" })
