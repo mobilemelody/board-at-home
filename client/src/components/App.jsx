@@ -1,17 +1,17 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { userLogin, userLogout } from "../actions"
-import { Nav, Navbar } from 'react-bootstrap'
-import DotLoader from 'react-spinners/DotLoader'
-import { Route, Link } from 'react-router-dom'
-import {NotificationContainer} from 'react-notifications'
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { userLogin, userLogout } from "../actions";
+import { Navbar, Nav, NavLink } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import DotLoader from 'react-spinners/DotLoader';
+import {NotificationContainer} from 'react-notifications';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // CSS imports
-import '../css/App.css'
-import '../css/Games.css'
+import '../css/App.css';
+import '../css/Games.css';
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -20,9 +20,6 @@ import 'react-notifications/lib/notifications.css';
 import { Login }  from './Login';
 import { Game } from './Game';
 import { Games } from './Games';
-import {AddGame} from './AddGame';
-import UserProfile from './UserProfile';
-
 
 class _App extends React.Component {
   constructor(props) {
@@ -59,13 +56,15 @@ class _App extends React.Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link href="#features">Games</Nav.Link>
-            <Link to="/profile/:id">
-              <Nav.Link>Profile</Nav.Link>
-            </Link>
+            <LinkContainer to="/features">
+              <NavLink>Games</NavLink>
+            </LinkContainer>
+            <LinkContainer to="/profile/:id">
+              <NavLink>Profile</NavLink>
+            </LinkContainer>
           </Nav>
           {/* <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <FormControl type="text" plac<Route path='/profile/:id'><UserProfile/></Route>eholder="Search" className="mr-sm-2" />
             <Button variant="outline-info">Search</Button>
           </Form> */}
       </Navbar>
@@ -96,8 +95,6 @@ class _App extends React.Component {
       <div className="App">
         <NotificationContainer key="app"/>
         {navbar}
-        <Route path='/games/add'><AddGame/></Route>
-        <Route path='/profile/:id'><UserProfile/></Route>
         {body}
       </div>
     );
