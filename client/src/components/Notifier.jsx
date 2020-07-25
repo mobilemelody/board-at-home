@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 
 class _Notifier extends Component {
   constructor(props) {
-    super(props)
-    this._createNotification = this._createNotification.bind(this)
+    super(props);
+    this._createNotification = this._createNotification.bind(this);
   }
 
   componentDidMount() {
-    this._createNotification(this.props.type)
+    this._createNotification(this.props.type);
   }
 
   _createNotification(type) {
@@ -53,9 +53,9 @@ class _Notifier extends Component {
   }
 
   render() {
-    return (<div className="blank" />)
+    return (<div className="blank" />);
   }
 }
 
 
-export const Notifier = connect(null, null)(_Notifier)
+export const Notifier = connect(null, null)(_Notifier);

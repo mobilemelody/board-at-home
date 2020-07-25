@@ -9,9 +9,7 @@ const receiveUser = createAction("RECEIVE_USER");
 const resetUser = createAction("RESET_USER");
 
 export const userLoading = () => {
-  return dispatch => {
-    dispatch(fetchingUser());
-  }
+  return dispatch => dispatch(fetchingUser());
 }
 
 export const userLogin = (username, password) => {
