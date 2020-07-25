@@ -4,11 +4,10 @@ import { bindActionCreators } from 'redux'
 import { userLogin, userLogout } from "../actions"
 import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
 import DotLoader from 'react-spinners/DotLoader'
-import { Route } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import {NotificationContainer} from 'react-notifications'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { css } from "@emotion/core";
 
 // CSS imports
 import '../css/App.css'
@@ -18,10 +17,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-notifications/lib/notifications.css';
 
-import { Login }  from './Login'
-import { Game } from './Game'
-import { Games } from './Games'
-import {AddGame} from './AddGame'
+import { Login }  from './Login';
+import { Game } from './Game';
+import { Games } from './Games';
+import {AddGame} from './AddGame';
+import UserProfile from './UserProfile';
 
 
 class _App extends React.Component {
@@ -33,13 +33,12 @@ class _App extends React.Component {
   componentDidMount(){
     // Add method to check if user is already logged in by checking token in localStorage
   }
-  
+
   _userLogout(){
     this.props.userLogout()
   }
 
   render() {
-
     const { user } = this.props
     const { game } = this.props
 
@@ -48,7 +47,7 @@ class _App extends React.Component {
 
     if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
-      navbar =         
+      navbar =
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="/">Board At Home</Navbar.Brand>
       </Navbar>
@@ -61,6 +60,10 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="#features">Games</Nav.Link>
+            {/* TODO: Use req param once authentication is done */}
+            <Link to="#/profile/1">
+              <Nav.Link>Profile</Nav.Link>
+            </Link>
           </Nav>
           {/* <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
@@ -77,7 +80,7 @@ class _App extends React.Component {
 
     if (user.isFetching) {
       // Add a loading icon
-      navbar =         
+      navbar =
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
         </Navbar>
@@ -94,7 +97,8 @@ class _App extends React.Component {
       <div className="App">
         <NotificationContainer key="app"/>
         {navbar}
-        <Route path='/games/add'><AddGame/></Route>        
+        <Route path='/games/add'><AddGame/></Route>
+        <Route path='#/profile/1'><UserProfile/></Route>
         {body}
       </div>
     );
@@ -105,10 +109,10 @@ class _App extends React.Component {
 // connect(states, dispatch functions)
 export const App = connect(state => {
   const { user } = state
-  const { game } = state 
+  const { game } = state
   return { user, game}
 
-  // bindActionCreators turns an object whose values are action creators, into an object with the same keys, 
+  // bindActionCreators turns an object whose values are action creators, into an object with the same keys,
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({

@@ -86,7 +86,7 @@ const GamesColumns = [{
 const GamesPaginationOptions = {
     paginationSize: 5,
     pageStartIndex: 1,
-    hideSizePerPage: true, 
+    hideSizePerPage: true,
     hidePageListOnlyOnePage: true,
     firstPageText: 'First',
     prePageText: 'Back',
@@ -152,7 +152,7 @@ class _Games extends React.Component {
         // Push reviews to table data
         games.rows.forEach(function(game) {
             tableData.push({
-                // Hidden columns that show in expand renderer 
+                // Hidden columns that show in expand renderer
                 id: game.id,
                 isUserCreated: game.isUserCreated,
                 identifierID: game.identifierID,
@@ -176,25 +176,25 @@ class _Games extends React.Component {
                             </div>
                         </Grid>
                         <Grid item xs={5}>
-                            <div className ="DetailsWrapper"> 
+                            <div className ="DetailsWrapper">
                                 <Grid container spacing={1}>
                                     {/* Placeholder items for spacing */}
                                     <Grid item xs={12}><br/><br/>Details<hr/></Grid>
 
                                     <Grid item xs={4}>Players:</Grid>
-                                    <Grid item xs={4}>{game.minPlayers} - {game.maxPlayers}</Grid> 
+                                    <Grid item xs={4}>{game.minPlayers} - {game.maxPlayers}</Grid>
                                     <Grid item xs={4}></Grid>
 
                                     <Grid item xs={4}>Minimum Age:</Grid>
-                                    <Grid item xs={4}>{game.minAge}</Grid> 
+                                    <Grid item xs={4}>{game.minAge}</Grid>
                                     <Grid item xs={4}></Grid>
 
                                     <Grid item xs={4}>Playtime:</Grid>
-                                    <Grid item xs={7}>{game.minPlaytime} - {game.maxPlaytime} minutes</Grid> 
+                                    <Grid item xs={7}>{game.minPlaytime} - {game.maxPlaytime} minutes</Grid>
                                     <Grid item xs={1}></Grid>
 
                                     <Grid item xs={4}>Publisher:</Grid>
-                                    <Grid item xs={7}>{game.publisher}</Grid> 
+                                    <Grid item xs={7}>{game.publisher}</Grid>
                                     <Grid item xs={1}></Grid>
 
                                     <Grid item xs={4}>Year Published:</Grid>
@@ -205,7 +205,7 @@ class _Games extends React.Component {
                             </div>
                         </Grid>
                         <Grid item xs={3}>
-                            <div className ="CategoriesWrapper"> 
+                            <div className ="CategoriesWrapper">
                                 <Grid item xs={12}><br/><br/>Categories<hr/></Grid>
                                 <p>Not yet implemented</p>
                             </div>
@@ -219,15 +219,15 @@ class _Games extends React.Component {
                             </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <Button 
+                            <Button
                             variant="info"
                             size="sm"
                             type="submit"
                             >See Reviews</Button>
                         </Grid>
                     </Grid>
-            })  
-        }) 
+            })
+        })
 
         return (
             <Grid container spacing={3}>
@@ -238,7 +238,7 @@ class _Games extends React.Component {
                 </Grid>
                 <Grid item xs={2} className="GamesTitleRow">
                     <Link to='/games/add'>
-                        <Button 
+                        <Button
                             variant="info"
                             size="sm"
                         >Add New Game</Button>
