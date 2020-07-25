@@ -1,41 +1,37 @@
 // React Redux Imports and Axios
-import { createAction } from 'redux-actions'
-import api from "../lib/api"
-
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
+import { createAction } from 'redux-actions';
+import api from "../lib/api";
 
 // Create actions for User state
-const errorUser = createAction("ERROR_USER")
-const fetchingUser = createAction("FETCHING_USER")
-const receiveUser = createAction("RECEIVE_USER")
-const resetUser = createAction("RESET_USER")
+const errorUser = createAction("ERROR_USER");
+const fetchingUser = createAction("FETCHING_USER");
+const receiveUser = createAction("RECEIVE_USER");
+const resetUser = createAction("RESET_USER");
 
 export const userLoading = () => {
   return dispatch => {
-    dispatch(fetchingUser())
+    dispatch(fetchingUser());
   }
 }
 
 export const userLogin = (username, password) => {
   // dispatch triggers a state change
   return dispatch => {
-    let data = { username, password }
+    let data = { username, password };
 
     return api.post("/user/login", data)
       .then(resp => dispatch(receiveUser(resp)))
-      .catch(err => dispatch(errorUser(err)))
+      .catch(err => dispatch(errorUser(err)));
   }
 }
 
 export const userLogout = () => {
-  return dispatch => {
-    dispatch(resetUser())
-  }
+  return dispatch => dispatch(resetUser());
 }
 
 // Create actions for Game state
 const errorGames = createAction("ERROR_GAMES")
-const fetchingGames = createAction("FETCHING_GAMES")
+// const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
 
 const setGameState = createAction("SET_GAME_STATE")
@@ -84,11 +80,11 @@ export const submitReviewFetch = () => {
 // Insert new review
 export const submitReview = (review) => {
   return (dispatch, getState) => {
-    const { user } = getState()
-    const { game } = getState()
+    const { user } = getState();
+    const { game } = getState();
 
-    review.userID = user.id
-    review.game_id = game.data.id
+    review.userID = user.id;
+    review.game_id = game.data.id;
 
     return api.post(`/games/${game.data.id}/reviews`, review)
       .then(res => {
@@ -108,14 +104,14 @@ export const submitReview = (review) => {
             reviewInserted: review,
           }
         }))
-      })
+      });
   }
 }
 
 // update existing review
 export const updateReview = (data) => {
   return (dispatch, getState) => {
-    const { user } = getState()
+    const { user } = getState();
     return api.patch(`/reviews/${data.id}`, data)
       .then(res => {
         dispatch(receiveReviewUpdated({
@@ -124,7 +120,7 @@ export const updateReview = (data) => {
             userID: user.id,
             userReview: data,
           }
-        }))
+        }));
       })
       .catch(err => {
         dispatch(errorUpdateReviews({
@@ -132,16 +128,16 @@ export const updateReview = (data) => {
             error: err,
             userReview: data,
           }
-        }))
-      })
+        }));
+      });
   }
 }
 
 // delete review
 export const deleteReview = (data) => {
   return (dispatch, getState) => {
-    const { user } = getState()
-    data.userID = user.userID
+    const { user } = getState();
+    data.userID = user.userID;
 
     return api.delete(`/reviews/${data.id}`)
       .then(res => {
@@ -150,7 +146,7 @@ export const deleteReview = (data) => {
             payload: res,
             userID: user.id
           }
-        }))
+        }));
       })
       .catch(err => {
         dispatch(errorDeleteReview({
@@ -158,17 +154,17 @@ export const deleteReview = (data) => {
             error: err,
             userReview: data,
           }
-        }))
-      })
+        }));
+      });
   }
 }
 
 // get reviews for game
 export const getGameReviews = () => {
   return (dispatch, getState) => {
-    const { game } = getState()
-    const { user } = getState()
-    var game_id = game.data.id
+    const { game } = getState();
+    const { user } = getState();
+    var game_id = game.data.id;
     return api.get(`/games/${game_id}/reviews`)
       .then(res => {
         dispatch(receiveReviews({
@@ -176,11 +172,11 @@ export const getGameReviews = () => {
             payload: res,
             userID: user.id
           }
-        }))
+        }));
       })
       .catch(err => {
         dispatch(errorReceiveReviews(err))
-      })
+      });
   }
 }
 
