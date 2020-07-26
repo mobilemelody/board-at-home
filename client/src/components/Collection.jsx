@@ -62,23 +62,35 @@ class _Collection extends React.Component {
   }
 
   render() {
-
-    const collection = this.props.collection.data;
+    // I prefer to declare state objects with a destructuring assignment
+    const { collection } = this.props;
     console.log(this.props.collection);
 
-    let tableData = collection.games;
-    tableData.forEach(game => {
-      game.gameInfo = <a href={game.url}><img src={game.imgFileName} height="50"/> {game.name}</a>;
-      game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
-      game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
-      game.remove = <IconButton aria-label="remove"><DeleteIcon/></IconButton>;
+    // Set body equal to whatever you want to return depending on if the state has an error, is received, is fetching, is empty, etc.
+    let body = <div></div>
 
-    });
+    if (!collection.isReceived) {    
+      
+      // Show something else besides the table, there is also the fetching state you should check if you want to show a loading icon or something. 
 
-    let privacy = collection.isPrivate ? <Chip icon={<LockIcon/>} label="Private" size="small" /> : <Chip icon={<PublicIcon/>} label="Public" size="small" />
+      body = <p>Loading.....</p>
+    }
 
-    return (
-      <Container className="py-3">
+    // Only show the table when the collection is received. You might want to add a check to make sure tableData length > 0
+    if (collection.isReceived) {
+      let tableData = collection.data.games;
+
+      tableData.forEach(game => {
+        game.gameInfo = <a href={game.url}><img src={game.imgFileName} height="50"/> {game.name}</a>;
+        game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
+        game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
+        game.remove = <IconButton aria-label="remove"><DeleteIcon/></IconButton>;
+
+      });
+
+      let privacy = collection.isPrivate ? <Chip icon={<LockIcon/>} label="Private" size="small" /> : <Chip icon={<PublicIcon/>} label="Public" size="small" />
+
+      let body = <Container className="py-3">
         <Row>
           <Col xs={12} md={8}>
             <h1>Collection Name <IconButton aria-label="edit"><EditIcon/></IconButton></h1>
@@ -95,6 +107,12 @@ class _Collection extends React.Component {
           bordered={ false }
         />
       </Container>
+    }
+
+    return (
+      <div className="collection-wrapper">
+        {body}
+      </div>
     );
   }
 }

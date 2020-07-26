@@ -186,6 +186,7 @@ const receiveCollection = createAction("RECEIVE_COLLECTION")
 const setCollectionState = createAction("SET_COLLECTION_STATE")
 
 export const getCollection = () => {
+
   return (dispatch, getState) => {
     const { collection } = getState();
     let collection_id = collection.data.id;
