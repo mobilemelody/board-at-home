@@ -17,7 +17,7 @@ export class Base extends Component {
       <div className="main-wrapper">
         <Route exact path='/'><App/></Route>
         <Route path='/games/add'><AddGame/></Route>
-        <Route path='/collections/:id'><Collection/></Route>
+        <Route path='/collections/:id' component={Collection} />
       </div>
     )
   }

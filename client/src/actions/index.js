@@ -185,12 +185,12 @@ const receiveCollection = createAction("RECEIVE_COLLECTION")
 
 const setCollectionState = createAction("SET_COLLECTION_STATE")
 
-export const getCollection = () => {
+export const getCollection = (id) => {
   return (dispatch, getState) => {
     const { collection } = getState();
-    let collection_id = collection.data.id;
+    let collection_id = id;
     // TODO: Update to get correct collection id
-    return api.get('/collections/1')
+    return api.get(`/collections/${collection_id}`)
       .then(res => {
         dispatch(receiveCollection({
           resp: {

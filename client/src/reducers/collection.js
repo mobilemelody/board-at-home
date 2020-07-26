@@ -9,10 +9,10 @@ const collectionState = {
 export const collection = (state = collectionState, action) => {
   switch(action.type) {
     case "ERROR_COLLECTION":
+      console.log("collection error", action)
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
-        // error: action.payload.data.err
         error: "Error fetching collection"
       });
 
@@ -23,11 +23,12 @@ export const collection = (state = collectionState, action) => {
       });
 
     case "RECEIVE_COLLECTION":
+      console.log("collection receive", action.payload);
       return Object.assign({}, state, {
           isReceived: true,
           isFetching: false,
           error: null,
-          data: action.payload.data.collection,
+          data: action.payload.resp.payload.data,
       });
 
     case "SET_COLLECTION_STATE":
