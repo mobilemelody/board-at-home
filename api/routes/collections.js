@@ -50,7 +50,7 @@ router.get('/:collection_id', (req, res) => {
 
   // Build query object
   let query = {
-    text: 'SELECT "UserCollection".id AS "collectionID", "UserCollection".name AS "collectionName", "UserCollection"."isPrivate", "User".id AS "userID", "User".username, "User"."imgFileName" AS "userImage", "Game".* FROM "UserCollection" INNER JOIN "User" ON "User".id = "UserCollection"."userID" LEFT JOIN "CollectionGame" ON "UserCollection".id = "CollectionGame"."userColllectionID" LEFT JOIN "Game" ON "CollectionGame"."gameID" = "Game".id WHERE "UserCollection".id = $1',
+    text: 'SELECT "UserCollection".id AS "collectionID", "UserCollection".name AS "collectionName", "UserCollection"."isPrivate", "User".id AS "userID", "User".username, "User"."imgFileName" AS "userImage", "Game".*, ratings."overallRating" FROM "UserCollection" INNER JOIN "User" ON "User".id = "UserCollection"."userID" LEFT JOIN "CollectionGame" ON "UserCollection".id = "CollectionGame"."userColllectionID" LEFT JOIN "Game" ON "CollectionGame"."gameID" = "Game".id LEFT JOIN (SELECT "gameID", AVG("overallRating") AS "overallRating" FROM "Review" GROUP BY "gameID") ratings ON "Game".id = ratings."gameID" WHERE "UserCollection".id = $1',
     values: [req.params.collection_id]
   }
 
