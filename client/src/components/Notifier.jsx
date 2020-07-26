@@ -14,6 +14,18 @@ class _Notifier extends Component {
 
     _createNotification(type){
         switch (type) {
+
+        case 'ERROR_SIGNUP_ALL_FIELDS':
+            NotificationManager.error("Try again", "All fields required for signup",5000)
+            break
+
+        case 'ERROR_SIGNUP_PASSWORD':
+            NotificationManager.error("Try again", "Password and confirmed password must match",5000)
+            break
+
+        case 'ERROR_SIGNUP_EMAIL':
+            NotificationManager.error("Try again", "Email and confirmed email must match",5000)
+            break
         
         case 'ERROR_GAMES':
             NotificationManager.error("Try again later", "Error Getting Games",5000)

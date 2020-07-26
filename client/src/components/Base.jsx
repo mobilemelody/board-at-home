@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom'
 // RC Dealer App Component Imports
 import { App } from "./App"
 import { AddGame } from './AddGame'
+import {Signup} from './Signup'
 
 /*************************************
 ** Base Component
@@ -20,6 +21,7 @@ export class Base extends Component {
       <div className="main-wrapper">
         <Route exact path='/'><App/></Route>
         <Route path='/games/add'><AddGame/></Route>
+        <Route path='/signup'><Signup/></Route>
       </div>
     )
   }

@@ -8,6 +8,7 @@ const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000'
 const errorUser = createAction("ERROR_USER")
 const fetchingUser = createAction("FETCHING_USER")
 const receiveUser = createAction("RECEIVE_USER")
+const receiveUserLogin = createAction("RECEIVE_USER_LOGIN")
 const resetUser = createAction("RESET_USER")
 
 export const userLoading = () => {
@@ -16,13 +17,29 @@ export const userLoading = () => {
     }
 }
 
+export const userSignUp = (user) => {
+    return (dispatch) => {
+        return api.post("/users/signup", user)
+        .then(resp => dispatch(receiveUser(resp)))
+        .catch(err => dispatch(errorUser(err)))
+    }
+}
+
+export const checkLoggedIn = () => {
+    return (dispatch) => {
+        return api.get("/users/check")
+        .then(resp => dispatch(receiveUser(resp)))
+        .catch(err => dispatch(errorUser(err)))
+    }
+}
+
 export const userLogin = (username, password) => {
     // dispatch triggers a state change
-    return dispatch => {
+    return (dispatch) => {
         let data = {username, password}
-
-        return api.post("/user/login", data)
-        .then(resp => dispatch(receiveUser(resp)))
+        console.log("login")
+        return api.post("/users/login", data)
+        .then(resp => dispatch(receiveUserLogin(resp)))
         .catch(err => dispatch(errorUser(err)))
     }
 }

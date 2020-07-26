@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
+import { Redirect } from "react-router-dom";
 import {getGames, getSetGameState } from '../actions/index'
 
 import {Notifier} from './Notifier.jsx'
@@ -109,6 +109,9 @@ class _Games extends React.Component {
     constructor(props) {
         super(props)
         this._setGame = this._setGame.bind(this)
+        this.state = {
+            viewGame: false
+        }
     }
 
     componentDidMount() {
@@ -130,13 +133,26 @@ class _Games extends React.Component {
             imgFileName: game.imgFileName,
             description: game.description,
         })
+        this.setState({viewGame: true})
     }
 
     render() {
 
+        const { user } = this.props
         const { games } = this.props
+
         let tableData = []
         let notifier
+
+        // Redirect to Home page if user logs out on games page
+        if (!user.isLoggedIn) {
+            return <Redirect to='/'/>
+        }
+
+        if (this.state.viewGame) {
+            console.log("viewgame")
+            return <Redirect push to='/game'/>
+        }
 
         // Create error notification
         if (games.error !== null) {
@@ -230,41 +246,44 @@ class _Games extends React.Component {
         }) 
 
         return (
-            <Grid container spacing={3}>
-                {notifier}
-                <Grid item xs={12}><br/></Grid>
-                <Grid item xs={10} className="GamesTitleRow">
-                    <Typography variant="h3">Games</Typography>
+            <div className='Games'>
+                <Grid container spacing={3}>
+                    {notifier}
+                    <Grid item xs={12}><br/></Grid>
+                    <Grid item xs={10} className="GamesTitleRow">
+                        <Typography variant="h3">Games</Typography>
+                    </Grid>
+                    <Grid item xs={2} className="GamesTitleRow">
+                        <Link to='/games/add'>
+                            <Button 
+                                variant="info"
+                                size="sm"
+                            >Add New Game</Button>
+                        </Link>
+                    </Grid>
+                    <Grid item xs={12} className="GamesTableRow">
+                        <div className="GamesTable">
+                            <BootstrapTable
+                                keyField="id"
+                                data={ tableData }
+                                columns={ GamesColumns }
+                                rowEvents={ rowEvents }
+                                // expandRow={ OtherReviewsExpandRow }
+                                bordered={ false }
+                                pagination={ paginationFactory(GamesPaginationOptions) }
+                            />
+                        </div>
+                    </Grid>
                 </Grid>
-                <Grid item xs={2} className="GamesTitleRow">
-                    <Link to='/games/add'>
-                        <Button 
-                            variant="info"
-                            size="sm"
-                        >Add New Game</Button>
-                    </Link>
-                </Grid>
-                <Grid item xs={12} className="GamesTableRow">
-                    <div className="GamesTable">
-                        <BootstrapTable
-                            keyField="id"
-                            data={ tableData }
-                            columns={ GamesColumns }
-                            rowEvents={ rowEvents }
-                            // expandRow={ OtherReviewsExpandRow }
-                            bordered={ false }
-                            pagination={ paginationFactory(GamesPaginationOptions) }
-                        />
-                    </div>
-                </Grid>
-            </Grid>
+            </div>
         )
     }
 }
 
 export const Games = connect(state => {
-    const { games } = state
-    return { games }
+  const { user } = state
+  const { games } = state 
+  return { user, games}
 }, dispatch => {
   return bindActionCreators({
     getSetGameState, getGames

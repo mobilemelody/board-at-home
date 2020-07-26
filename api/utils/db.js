@@ -33,6 +33,14 @@ module.exports = {
     gfSocialDistancing: '"gfSocialDistancing"'
   },
 
+  // Map form field names to database field names for user
+  userFields: {
+    username: "username",
+    email: "email",
+    password: "password",
+    image: '"imgFileName"',
+  },
+
   // expand(3, 2) returns "($1, $2), ($3, $4), ($5, $6)" 
   expand: function (rowCount, columnCount, startAt=1){
     var index = startAt
