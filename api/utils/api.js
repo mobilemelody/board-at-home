@@ -65,6 +65,8 @@ module.exports = {
       if (e.id) {
         let game = {
           id: e.id,
+          imgFileName: e.imgFileName,
+          overallRating: parseFloat(e.overallRating),
           url: hostname + '/games/' + e.id
         };
 
