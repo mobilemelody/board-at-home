@@ -1,3 +1,5 @@
+const db = require('./db');
+
 module.exports = {
   // Formats review objects
   formatReview: function (input, hostname) {
@@ -43,6 +45,7 @@ module.exports = {
 
   // Formats collection objects with games
   formatCollectionGames: function (input, hostname) {
+    // Add collection information
     let collection = {
       id: parseInt(input[0].collectionID),
       name: input[0].collectionName,
@@ -56,14 +59,20 @@ module.exports = {
       games: []
     }
 
+    // Add info for each game
+    const gameFields = db.gameFields;
     input.forEach(e => {
       if (e.id) {
-        collection.games.push({
+        let game = {
           id: e.id,
-          name: e.name,
-          imgFileName: e.imgFileName,
           url: hostname + '/games/' + e.id
-        });
+        };
+
+        for (let field in gameFields) {
+          game[field] = e[field];
+        }
+
+        collection.games.push(game);
       }
     });
 
