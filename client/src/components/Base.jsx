@@ -12,10 +12,6 @@ import { Collection } from './Collection';
 **************************************/
 
 export class Base extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div className="main-wrapper">

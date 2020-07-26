@@ -2,13 +2,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLogout } from "../actions"
-import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
+import { Nav, Navbar } from 'react-bootstrap'
 import DotLoader from 'react-spinners/DotLoader'
 import { Route } from 'react-router-dom'
 import {NotificationContainer} from 'react-notifications'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { css } from "@emotion/core";
+// import { css } from "@emotion/core";
 
 // CSS imports
 import '../css/App.css'
@@ -33,7 +33,7 @@ class _App extends React.Component {
   componentDidMount(){
     // Add method to check if user is already logged in by checking token in localStorage
   }
-  
+
   _userLogout(){
     this.props.userLogout()
   }
@@ -48,7 +48,7 @@ class _App extends React.Component {
 
     if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
-      navbar =         
+      navbar =
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="/">Board At Home</Navbar.Brand>
       </Navbar>
@@ -77,7 +77,7 @@ class _App extends React.Component {
 
     if (user.isFetching) {
       // Add a loading icon
-      navbar =         
+      navbar =
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
         </Navbar>
@@ -94,7 +94,7 @@ class _App extends React.Component {
       <div className="App">
         <NotificationContainer key="app"/>
         {navbar}
-        <Route path='/games/add'><AddGame/></Route>        
+        <Route path='/games/add'><AddGame/></Route>
         {body}
       </div>
     );
@@ -105,10 +105,10 @@ class _App extends React.Component {
 // connect(states, dispatch functions)
 export const App = connect(state => {
   const { user } = state
-  const { game } = state 
+  const { game } = state
   return { user, game}
 
-  // bindActionCreators turns an object whose values are action creators, into an object with the same keys, 
+  // bindActionCreators turns an object whose values are action creators, into an object with the same keys,
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
