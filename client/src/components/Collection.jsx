@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
 import { Notifier } from './Notifier.jsx';
 import { Container, Row, Col } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
@@ -11,6 +12,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
+
+// Import Actions
+import { getCollection, getSetCollectionState } from '../actions/index'
 
 // Column names for table of games
 const tableColumns = [{
@@ -46,79 +50,21 @@ const tableColumns = [{
 class _Collection extends React.Component {
   constructor(props) {
     super(props);
-
-    // TODO: Get data from database
-    this.state = {
-      "id": 1,
-      "name": "Games I own",
-      "isPrivate": false,
-      "user": {
-          "id": 1,
-          "username": "testUser",
-          "imgFileName": "https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg",
-          "url": "http://localhost:3000/users/1"
-      },
-      "games": [
-      {
-        "id": 1,
-        "isUserCreated": false,
-        "identifierID": "kPDxpJZ8PD",
-        "name": "Spirit Island",
-        "year": 2016,
-        "description": "Powerful Spirits have existed on this isolated island for time immemorial. They are both part of the natural world and - at the same time - something beyond nature. Native Islanders, known as the Dahan, have learned how to co-exist with the spirits, but with a healthy dose of fear and reverence. However, now, the island has been \"discovered\" by invaders from a far-off land. These would-be colonists are taking over the land and upsetting the natural balance, destroying the presence of Spirits as they go. As Spirits, you must grow in power and work together to drive the invaders from your island... before it''s too late!",
-        "imgFileName": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254941010-61PJxjjnbfL.jpg",
-        "minAge": 13,
-        "minPlaytime": 90,
-        "maxPlaytime": 120,
-        "publisher": "Greater Than Games",
-        "minPlayers": 1,
-        "maxPlayers": 4,
-        "categories": [
-            "Alternate History",
-            "Environmental",
-            "Fantasy",
-            "Fighting",
-            "Mythology",
-            "Renaissance",
-            "Strategy",
-            "Territory Building"
-        ],
-        "overallRating": 4.1
-      },
-      {
-        "id": 2,
-        "isUserCreated": false,
-        "identifierID": "RLlDWHh7hR",
-        "name": "Gloomhaven",
-        "year": 2017,
-        "description": "Gloomhaven is a game of Euro-inspired tactical combat in a persistent world of shifting motives. Players will take on the role of a wandering adventurer with their own special set of skills and their own reasons for traveling to this dark corner of the world. \r\n \r\nPlayers must work together out of necessity to clear out menacing dungeons and forgotten ruins. In the process they will enhance their abilities with experience and loot, discover new locations to explore and plunder, and expand an ever-branching story fueled by the decisions they make. \r\n \r\nThis is a legacy game with a persistent and changing world that is ideally played over many game sessions. After a scenario, players will make decisions on what to do, which will determine how the story continues, kind of like a \"Choose Your Own Adventure\" book. Playing through a scenario is a cooperative affair where players will fight against automated monsters using an innovative card system to determine the order of play and what a player does on their turn.",
-        "imgFileName": "https://s3-us-west-1.amazonaws.com/5cc.images/games/uploaded/1559254920151-51ulRXlJ7LL.jpg",
-        "minAge": 12,
-        "minPlaytime": 60,
-        "maxPlaytime": 150,
-        "publisher": "Cephalofair Games",
-        "minPlayers": 1,
-        "maxPlayers": 4,
-        "categories": [
-            "Adventure",
-            "Fantasy",
-            "Strategy"
-        ],
-        "overallRating": 3.9
-      },
-      ],
-      "url": "http://localhost:3000/collections/1"
-    };
+    this._setCollection = this._setCollection.bind(this)
   }
 
   componentDidMount() {
+    this.props.getCollection();
+  }
+
+  _setCollection(collection) {
+    this.props.getSetCollectionState(collection);
   }
 
   render() {
 
-    // TODO: Get collection data from props instead of state
-    // const { collection } = this.props
-    const collection = this.state;
+    const collection = this.props.collection.data;
+    console.log(this.props.collection);
 
     let tableData = collection.games;
     tableData.forEach(game => {
@@ -153,4 +99,11 @@ class _Collection extends React.Component {
   }
 }
 
-export const Collection = connect(null, null)(_Collection);
+export const Collection = connect(state => {
+  const { collection } = state;
+  return { collection };
+}, dispatch => {
+  return bindActionCreators({
+    getCollection, getSetCollectionState
+  }, dispatch)
+})(_Collection)

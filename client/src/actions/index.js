@@ -178,5 +178,33 @@ export const getGameReviews = () => {
   }
 }
 
+// Create actions for Collection state
+const errorCollection = createAction("ERROR_COLLECTION")
+const fetchingCollection = createAction("FETCHING_COLLECTION")
+const receiveCollection = createAction("RECEIVE_COLLECTION")
 
+const setCollectionState = createAction("SET_COLLECTION_STATE")
+
+export const getCollection = () => {
+  return (dispatch, getState) => {
+    const { collection } = getState();
+    let collection_id = collection.data.id;
+    // TODO: Update to get correct collection id
+    return api.get('/collections/1')
+      .then(res => {
+        dispatch(receiveCollection({
+          resp: {
+            payload: res
+          }
+        }));
+      })
+      .catch(err => dispatch(errorCollection(err)));
+  }
+}
+
+export const getSetCollectionState = (collection) => {
+  return (dispatch) => {
+    return dispatch(setCollectionState(collection))
+  }
+}
 
