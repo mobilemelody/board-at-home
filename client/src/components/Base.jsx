@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 // RC Dealer App Component Imports
 import { App } from "./App";
 import { AddGame } from './AddGame';
-import UserProfile from './UserProfile';
+import { UserProfile } from './UserProfile';
 
 /*************************************
 ** Base Component
