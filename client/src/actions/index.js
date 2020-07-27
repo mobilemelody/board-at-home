@@ -179,17 +179,17 @@ export const getGameReviews = () => {
 }
 
 // Create actions for Collection state
-const errorCollection = createAction("ERROR_COLLECTION")
-const fetchingCollection = createAction("FETCHING_COLLECTION")
-const receiveCollection = createAction("RECEIVE_COLLECTION")
+const errorCollection = createAction("ERROR_COLLECTION");
+const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
 
-const setCollectionState = createAction("SET_COLLECTION_STATE")
+const receiveCollection = createAction("RECEIVE_COLLECTION");
+const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE")
+
+const setCollectionState = createAction("SET_COLLECTION_STATE");
 
 export const getCollection = (id) => {
   return (dispatch, getState) => {
-    const { collection } = getState();
     let collection_id = id;
-    // TODO: Update to get correct collection id
     return api.get(`/collections/${collection_id}`)
       .then(res => {
         dispatch(receiveCollection({
@@ -205,6 +205,33 @@ export const getCollection = (id) => {
 export const getSetCollectionState = (collection) => {
   return (dispatch) => {
     return dispatch(setCollectionState(collection))
+  }
+}
+
+// update collection info
+export const updateCollection = (data) => {
+  return (dispatch, getState) => {
+    let collectionData = {
+      name: data.name,
+      isPrivate: data.isPrivate
+    };
+    return api.patch(`/collections/${data.id}`, collectionData)
+      .then(res => {
+        dispatch(receiveCollectionUpdated({
+          resp: {
+            payload: res,
+            collectionInfo: data,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorUpdateCollection({
+          resp: {
+            error: err,
+            collectionInfo: data,
+          }
+        }));
+      });
   }
 }
 
