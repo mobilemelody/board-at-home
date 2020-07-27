@@ -1,63 +1,62 @@
 
 // User State definition
 const userState = {
-    id: null,
-    imgFileName: null,
-    userName: null,
-    isFetching: false,
-    isReceived: false,
-    isLoggedIn: false,
-    error: null,
-    collections: [],
+  id: null,
+  imgFileName: null,
+  userName: null,
+  isFetching: false,
+  isReceived: false,
+  isLoggedIn: false,
+  error: null,
+  collections: [],
 }
 
 // User action reducer handler
 export const user = (state = userState, action) => {
-    switch(action.type) {
+  switch (action.type) {
 
-        case "ERROR_USER":
-        return Object.assign({}, state, {
-            isReceived: true,
-            isFetching: false,
-            collections: [],
-            // error: action.payload.data.err
-            error: "Invalid login credentials"
-        })
+    case "ERROR_USER":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        collections: [],
+        error: "Invalid login credentials"
+      })
 
-        case "FETCHING_USER":
-        return Object.assign({}, state, {
-            isFetching: true
-        })
+    case "FETCHING_USER":
+      return Object.assign({}, state, {
+        isFetching: true
+      })
 
-        case "RECEIVE_USER":
-        let resp = action.payload.data
+    case "RECEIVE_USER":
+      const { token, id, imgFileName, username, collections } = action.payload;
 
-        // Add token to localStorage
-        localStorage.setItem("token", resp.token)
+      // Add token to localStorage
+      localStorage.setItem("token", token)
 
-        return Object.assign({}, state, {
-            isReceived: true,
-            isLoggedIn: true,
-            collections: resp.collections
-        })
+      return Object.assign({}, state, {
+        id,
+        imgFileName,
+        username,
+        isReceived: true,
+        isLoggedIn: true,
+        collections: collections,
+      })
 
-        case "RESET_USER":
-        // Remove token if present
-        if (localStorage.getItem('token')) {
-            localStorage.removeItem('token')
-        }
+    case "RESET_USER":
+      // Remove token if present
+      if (localStorage.getItem('token')) {
+        localStorage.removeItem('token')
+      }
 
-        return Object.assign({}, state, {})
+      return Object.assign({}, state, {})
 
-        default:
-        // return state
-        return Object.assign({}, state, {
-            id: 1,
-            imgFileName: "https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg",
-            userName: "testUser",
-            isFetching: false,
-            isReceived: true,
-            isLoggedIn: true,
-        })
-    }
+    default:
+      // return state
+      return Object.assign({}, state, {
+        isFetching: false,
+        isReceived: true,
+        isLoggedIn: true,
+      })
+  }
 }

@@ -48,6 +48,15 @@ export const getSetGameState = (game) => {
   }
 }
 
+export const getUser = () => {
+  return (dispatch) => {
+    // TODO: Make this dynamic
+    return api.get('/users/1')
+      .then(resp => dispatch(receiveUser(resp.data)))
+      .catch(err => dispatch(errorUser(err)))
+  }
+}
+
 // Create actions for Review state
 const errorInsertReview = createAction("ERROR_INSERT_REVIEW")
 const errorDeleteReview = createAction("ERROR_DELETE_REVIEW")

@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const apiUtils = require('../utils/api');
 
 /* GET users listing. */
-router.get('/:id', (req, res, next) => {
+router.get('/:user_id', (req, res, next) => {
   const getUserDataQuery = 'SELECT * FROM "User" WHERE "User".id = $1';
 
   const query = {
     text: getUserDataQuery,
-    values: [req.params.id]
+    values: [req.params.user_id]
   }
 
   db.client.query(query, (err, result) => {
@@ -35,7 +36,7 @@ router.get('/:user_id/collections', (req, res) => {
 
   let query = {
     text: 'SELECT "UserCollection".*, COALESCE(games.n, 0) AS "gameCount" FROM "UserCollection" LEFT JOIN (SELECT "userColllectionID", COUNT(*) AS n FROM "CollectionGame" GROUP BY "CollectionGame"."userColllectionID") games ON "UserCollection".id = games."userColllectionID" WHERE "UserCollection"."userID" = $1',
-    values: [req.params.user_id]
+    values: [req.params.id]
   }
 
   // Add game filter if needed
@@ -63,7 +64,33 @@ router.get('/:user_id/collections', (req, res) => {
       .set({ "Content-Type": "application/json" })
       .send(response);
   });
+});
 
+router.get('/:user_id/reviews', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  const reviewsQuery = 'SELECT "Review".id, "Review"."overallRating", "Review".comments, "Game".name FROM "Review"'
+   + ' JOIN "User" ON "Review"."userID" = "User".id'
+   + ' JOIN "Game" ON "Review"."gameID" = "Game".id'
+   + ' WHERE "User".id = $1 AND "Review"."overallRating" IS NOT NULL';
+
+  const query = {
+    text: reviewsQuery,
+    values: [req.params.user_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    const response = {};
+    response.reviews = result.rows.map(data => apiUtils.formatReview(data, hostname));
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(response);
+  });
 });
 
 module.exports = router;

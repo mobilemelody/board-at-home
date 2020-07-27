@@ -59,7 +59,7 @@ class _App extends React.Component {
             <LinkContainer to="/features">
               <NavLink>Games</NavLink>
             </LinkContainer>
-            <LinkContainer to="/profile/:id">
+            <LinkContainer to="/profile/">
               <NavLink>Profile</NavLink>
             </LinkContainer>
           </Nav>
@@ -106,7 +106,7 @@ class _App extends React.Component {
 export const App = connect(state => {
   const { user } = state
   const { game } = state
-  return { user, game}
+  return { user, game }
 
   // bindActionCreators turns an object whose values are action creators, into an object with the same keys,
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
