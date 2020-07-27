@@ -1,15 +1,27 @@
 # Board at Home API
 Documentation for the API endpoints for the Board at Home project
 
+### Games
 - [Add a game](#add-a-game)
 - [Get all games](#get-all-games)
+- [Get all categories](#get-all-categories)
+
+### Reviews
 - [Add a review](#add-a-review)
 - [Get reviews for a game](#get-reviews-for-a-game)
 - [Get all review](#get-all-reviews)
 - [Get review](#get-review)
 - [Update review](#update-review)
 - [Delete review](#delete-review)
-- [Get all categories](#get-all-categories)
+
+### Collections
+- [Add a collection](#add-a-collection)
+- [Get a collection](#get-a-collection)
+- [Update a collection](#update-a-collection)
+- [Add game to collection](#add-game-to-collection)
+- [Remove game from collection](#remove-game-from-collection)
+- [Delete a collection](#delete-a-collection)
+- [Get user collections](#get-user-collections)
 
 ## Add a game
 ```
@@ -86,6 +98,23 @@ Status: 200 OK
     "publisher": "Publisher Name",
     "minPlayers": 2,
     "maxPlayers": 6
+  }
+]
+```
+
+## Get all categories
+```
+GET /categories
+```
+
+### Response
+Status: 200 OK
+```JSON
+[
+  {
+    "id": 1,
+    "category": "4x",
+    "identifierID": "85OKv8p5Ow"
   }
 ]
 ```
@@ -324,19 +353,128 @@ DELETE /reviews/:review_id
 ### Response
 Status: 204 No Content
 
-## Get all categories
+## Add a collection
 ```
-GET /categories
+POST /collections
+```
+
+### Request
+```JSON
+{
+  "name": "Collection Name",
+  "isPrivate": false
+}
+```
+
+### Response
+Status: 201 Created
+```JSON
+{
+  "id": 1,
+  "userID": 1,
+  "name": "Collection Name",
+  "isPrivate": false,
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Get a collection
+```
+GET /collections/:collection_id
 ```
 
 ### Response
 Status: 200 OK
 ```JSON
-[
-  {
+{
+  "id": 1,
+  "name": "Collection Name",
+  "isPrivate": false,
+  "user": {
     "id": 1,
-    "category": "4x",
-    "identifierID": "85OKv8p5Ow"
-  }
-]
+    "username": "username",
+    "imgFileName": "<url-to-image>",
+    "url": "<base-url>/users/1"
+  },
+  "games": [
+    {
+      "id": 1,
+      "name": "Game Name",
+      "imgFileName": "<url-to-image>",
+      "url": "<base-url>/games/1"
+    }
+  ],
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Update a collection
+```
+PATCH /collections/:collection_id
+```
+
+### Request
+```JSON
+{
+  "name": "New Collection Name",
+  "isPrivate": true
+}
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "id": 1,
+  "userID": 1,
+  "name": "New Collection Name",
+  "isPrivate": true,
+  "url": "<base-url>/collections/1"
+}
+```
+
+## Add game to collection
+```
+PUT /collections/:collection_id/games/:game_id
+```
+
+### Response
+Status: 204 No Content
+
+## Remove game from collection
+```
+DELETE /collections/:collection_id/games/:game_id
+```
+
+### Response
+Status: 204 No Content
+
+## Delete a collection
+```
+DELETE /collections/:collection_id
+```
+
+### Response
+Status: 204 No Content
+
+## Get user collections
+```
+GET /users/:user_id/collections?gameID=:gameID
+```
+
+### Response
+Status: 200 OK
+```JSON
+{
+  "collections": [
+    {
+      "id": 1,
+      "userID": 1,
+      "name": "Collection Name",
+      "isPrivate": false,
+      "gameCount": 2,
+      "url": "<base-url>/collections/1"
+    }
+  ]
+}
 ```
