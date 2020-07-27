@@ -8,6 +8,7 @@ const usersRouter = require('./routes/users');
 const gamesRouter = require('./routes/games');
 const categoriesRouter = require('./routes/categories');
 const reviewsRouter = require('./routes/reviews');
+const collectionsRouter = require('./routes/collections');
 const cors = require('cors');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/users', usersRouter);
 app.use('/games', gamesRouter);
 app.use('/categories', categoriesRouter);
 app.use('/reviews', reviewsRouter);
+app.use('/collections', collectionsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
