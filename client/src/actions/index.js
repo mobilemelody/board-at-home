@@ -181,9 +181,11 @@ export const getGameReviews = () => {
 // Create actions for Collection state
 const errorCollection = createAction("ERROR_COLLECTION");
 const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
+const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
 
 const receiveCollection = createAction("RECEIVE_COLLECTION");
-const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE")
+const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
+const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 
 const setCollectionState = createAction("SET_COLLECTION_STATE");
 
@@ -220,7 +222,7 @@ export const updateCollection = (data) => {
         dispatch(receiveCollectionUpdated({
           resp: {
             payload: res,
-            collectionInfo: data,
+            data: data,
           }
         }));
       })
@@ -228,10 +230,32 @@ export const updateCollection = (data) => {
         dispatch(errorUpdateCollection({
           resp: {
             error: err,
-            collectionInfo: data,
+            data: data,
           }
         }));
       });
   }
 }
 
+// remove game from collection
+export const removeGameFromCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    return api.delete(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameRemoved({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorRemoveGame({
+          resp: {
+            error: err,
+            data: collection,
+          }
+        }));
+      });
+  }
+}

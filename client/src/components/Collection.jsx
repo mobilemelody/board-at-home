@@ -17,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import DotLoader from 'react-spinners/DotLoader';
 
 // Import Actions
-import { getCollection, getSetCollectionState, updateCollection } from '../actions/index'
+import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection } from '../actions/index'
 
 // Column names for table of games
 const tableColumns = [{
@@ -109,6 +109,11 @@ class _Collection extends React.Component {
     this.props.updateCollection(this.state);
   }
 
+  _removeGame(collection, gameID) {
+    this.props.removeGameFromCollection(collection, gameID);
+    this.props.getCollection(this.props.match.params.id);
+  }
+
   render() {
 
     const { collection } = this.props;
@@ -126,7 +131,7 @@ class _Collection extends React.Component {
         game.gameInfo = <a href={game.url}><img src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
-        game.remove = <IconButton aria-label="remove"><DeleteIcon/></IconButton>;
+        game.remove = <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton>;
       });
 
       let privacy = collection.data.isPrivate ? <Chip icon={<LockIcon/>} label="Private" variant="outlined" size="small" /> : <Chip icon={<PublicIcon/>} label="Public" variant="outlined" size="small" />
@@ -205,6 +210,6 @@ export const Collection = connect(state => {
   return { collection };
 }, dispatch => {
   return bindActionCreators({
-    getCollection, getSetCollectionState, updateCollection
+    getCollection, getSetCollectionState, updateCollection, removeGameFromCollection
   }, dispatch)
 })(_Collection)

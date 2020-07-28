@@ -16,19 +16,25 @@ export const collection = (state = collectionState, action) => {
       });
 
     case "ERROR_UPDATE_COLLECTION":
-    console.log('error updating', action.payload);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
         error: "Error updating collection"
       });
 
+    case "ERROR_REMOVE_GAME":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: "Error removing game"
+      });
+
     case "RECEIVE_COLLECTION":
       return Object.assign({}, state, {
-          isReceived: true,
-          isFetching: false,
-          error: null,
-          data: action.payload.resp.payload.data,
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        data: action.payload.resp.payload.data,
       });
 
     case "RECEIVE_COLLECTION_UPDATE":
@@ -37,7 +43,16 @@ export const collection = (state = collectionState, action) => {
         isFetching: false,
         notifType: "RECEIVE_COLLECTION_UPDATE",
         error: null,
-        data: action.payload.resp.collectionInfo
+        data: action.payload.resp.data
+      });
+
+    case "RECEIVE_GAME_REMOVE":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        notifType: "RECEIVE_GAME_REMOVE",
+        error: null,
+        data: action.payload.resp.data
       });
 
     case "SET_COLLECTION_STATE":
