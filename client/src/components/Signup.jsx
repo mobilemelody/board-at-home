@@ -70,7 +70,7 @@ class _Signup extends Component {
         this.setState({redirect: true})
     }
 
-        // Sets value for form
+    // Sets value for form
     _handleChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }
@@ -151,5 +151,5 @@ class _Signup extends Component {
 }
 
 export const Signup = connect(null, dispatch => {
-    return bindActionCreators({ userLoading
+    return bindActionCreators({ userLoading, userSignUp
 }, dispatch)})(_Signup)

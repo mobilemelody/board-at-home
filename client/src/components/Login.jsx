@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom";
-import { userLogin, userLoading } from "../actions"
+import { userLogin, userLoading, userReset } from "../actions"
 import {Form, Button, InputGroup} from 'react-bootstrap'
 import Typography from '@material-ui/core/Typography';
+import {Notifier} from './Notifier.jsx'
 
 class _Login extends Component {
     constructor(props) {
@@ -40,7 +41,12 @@ class _Login extends Component {
 
     render() {
         const { user } = this.props
+        let notifier
 
+        if(!user.isLoggedIn && user.error != null) {
+            notifier = <Notifier type="ERROR_LOGIN"/>
+            this.props.userReset()
+        }
         
         if (user.isLoggedIn) {
             return <Redirect to='/'/>
@@ -48,6 +54,7 @@ class _Login extends Component {
 
         return (
         <div className="Login">
+            {notifier}
             <Form onSubmit={this._login}>
             <Typography variant="h4">Login</Typography>
                 <hr/>
@@ -85,5 +92,5 @@ export const Login = connect(state => {
     return {user}
 }, dispatch => {
     return bindActionCreators({
-    userLogin, userLoading
+    userLogin, userLoading, userReset
 }, dispatch)})(_Login)

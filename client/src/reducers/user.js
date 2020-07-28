@@ -20,6 +20,11 @@ export const user = (state = userState, action) => {
         return Object.assign({}, state, {
             isReceived: true,
             isFetching: false,
+            isLoggedIn: false,
+            email: null,
+            userName: null,
+            id: null,
+            imgFileName: null, 
             // error: action.payload.data.err
             error: "Invalid login credentials"
         })
@@ -45,7 +50,7 @@ export const user = (state = userState, action) => {
         case "RECEIVE_USER_LOGIN":
         var resp = action.payload.data
 
-        console.log(resp)
+        console.log("login", resp)
 
         // Add token to localStorage
         localStorage.setItem("token", resp.user.token)

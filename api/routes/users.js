@@ -10,9 +10,64 @@ const saltRounds = 10;
 // router.use(<route>, require(<token middleware>))
 router.use('/check', require('../middleware'))
 
-// bcrypt.hash('Password1!', saltRounds, function(err, hash) {
-//   console.log(hash)
-// });
+
+
+
+router.post('/signup', function(req, res, next) {
+  // Check for username and password in req.body
+  if (req.body.username == null || req.body.password == null || req.body.email == null) {
+    return res.status(400).set({
+      "Content-Type": "application/json",
+    }).send({
+      status: 'error',
+      message: 'username, email, and password must be provided'
+    })
+  }
+
+  // hash password
+  bcrypt.hash(req.body.password, saltRounds, function(err, passwordHash) {
+
+    if (err) {
+      console.log(err)
+      return res.status(500).set({
+        "Content-Type": "application/json",
+      }).send({
+        status: 'fail',
+        message: err
+      })
+    }
+
+    // Create query
+    const insertUserQuery = {
+      text: 'INSERT INTO "User"(username, email, password) VALUES($1, $2, $3)',
+      values: [
+        req.body.username,
+        req.body.email,
+        passwordHash
+      ]
+    }
+
+    // Run insert user query
+    db.client.query(insertUserQuery, (err, result) => {
+      // return 500 internal error
+      if (err) {
+        console.log(err)
+        return res.status(500).set({
+          "Content-Type": "application/json",
+        }).send({
+          status: 'fail',
+          message: err
+        })
+      }
+
+      return res.status(200).set({
+        "Content-Type": "application/json",
+      }).send({
+        status: 'success',
+      });
+    });
+  });
+});
 
 router.get('/check', function(req, res, next) {
   // Valid token and valid user

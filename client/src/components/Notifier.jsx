@@ -26,6 +26,10 @@ class _Notifier extends Component {
         case 'ERROR_SIGNUP_EMAIL':
             NotificationManager.error("Try again", "Email and confirmed email must match",5000)
             break
+
+        case 'ERROR_LOGIN':
+            NotificationManager.error("Try again", "Invalid username/password",5000)
+            break
         
         case 'ERROR_GAMES':
             NotificationManager.error("Try again later", "Error Getting Games",5000)

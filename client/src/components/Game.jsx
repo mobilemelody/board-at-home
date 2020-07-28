@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { MDBContainer, MDBRating } from 'mdbreact';
+import { Redirect } from "react-router-dom";
 
 import {Reviews} from './Review'
 
@@ -27,8 +28,11 @@ class _Game extends React.Component {
 
     render() {
 
-        const { game } = this.props
-        // const { review }
+        const { game, user } = this.props
+
+        if (!user.isLoggedIn) {
+            return <Redirect to='/'/>
+        }
 
         return (
             <div className='Game'>
@@ -87,5 +91,6 @@ class _Game extends React.Component {
 
 export const Game = connect(state => {
     const { game } = state
-    return { game }
+    const { user } = state
+    return { game, user }
 }, null)(_Game)

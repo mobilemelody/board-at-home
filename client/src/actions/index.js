@@ -9,6 +9,7 @@ const errorUser = createAction("ERROR_USER")
 const fetchingUser = createAction("FETCHING_USER")
 const receiveUser = createAction("RECEIVE_USER")
 const receiveUserLogin = createAction("RECEIVE_USER_LOGIN")
+const receiveUserSignedUp = createAction("RECEIVE_USER_SIGNEDUP")
 const resetUser = createAction("RESET_USER")
 
 export const userLoading = () => {
@@ -20,7 +21,7 @@ export const userLoading = () => {
 export const userSignUp = (user) => {
     return (dispatch) => {
         return api.post("/users/signup", user)
-        .then(resp => dispatch(receiveUser(resp)))
+        .then(resp => dispatch(receiveUserSignedUp(resp)))
         .catch(err => dispatch(errorUser(err)))
     }
 }
@@ -45,6 +46,12 @@ export const userLogin = (username, password) => {
 }
 
 export const userLogout = () => {
+    return dispatch => {
+        dispatch(resetUser())
+    }
+}
+
+export const userReset = () => {
     return dispatch => {
         dispatch(resetUser())
     }
@@ -176,6 +183,7 @@ export const getGameReviews = () => {
         var game_id = game.data.id
         return api.get(`/games/${game_id}/reviews`)
         .then(res => {
+            console.log("user id", user.id)
             dispatch(receiveReviews({resp: {
                 payload: res,
                 userID: user.id

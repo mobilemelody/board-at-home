@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Redirect } from "react-router-dom";
 import {getGames, getSetGameState } from '../actions/index'
 
 import {Notifier} from './Notifier.jsx'
+import { Route, Switch, Link, Redirect} from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -12,8 +12,7 @@ import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {Button} from 'react-bootstrap'
-import { Link } from "react-router-dom";
-
+import {AddGame} from "./AddGame"
 
 const GamePageTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
@@ -146,7 +145,7 @@ class _Games extends React.Component {
 
         // Redirect to Home page if user logs out on games page
         if (!user.isLoggedIn) {
-            return <Redirect to='/'/>
+            return <Redirect to='/login'/>
         }
 
         if (this.state.viewGame) {
@@ -247,6 +246,9 @@ class _Games extends React.Component {
 
         return (
             <div className='Games'>
+                <Switch>
+                    <Route path="/games/add"><AddGame/></Route>
+                </Switch>
                 <Grid container spacing={3}>
                     {notifier}
                     <Grid item xs={12}><br/></Grid>
