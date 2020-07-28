@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { userLogin, userLogout, checkLoggedIn } from "../actions"
-import { Nav, Navbar, Form, FormControl, Button} from 'react-bootstrap'
-import DotLoader from 'react-spinners/DotLoader'
-import { Route, Switch, Link, Redirect} from 'react-router-dom'
+import { userLogin, userLoading, userLogout, checkLoggedIn } from "../actions"
+import { Nav, Navbar, Button} from 'react-bootstrap'
+import { Route, Switch, Redirect} from 'react-router-dom'
 import {NotificationContainer} from 'react-notifications'
 
 // CSS imports
@@ -35,6 +34,7 @@ class _App extends React.Component {
     var username = localStorage.getItem('username')
 
     if (token && username) {
+      this.props.userLoading()
       this.props.checkLoggedIn()
     }
   }
@@ -46,8 +46,7 @@ class _App extends React.Component {
   render() {
 
     const { user } = this.props
-    console.log(user)
-    const { game } = this.props
+    // console.log(user)
 
     let homeRedirect 
     let navbar
@@ -94,7 +93,6 @@ class _App extends React.Component {
     }
 
     return (
-      <div className="main-wrapper">
         <div className="App">
           <NotificationContainer key="app"/>
           {navbar}
@@ -107,7 +105,6 @@ class _App extends React.Component {
               {homeRedirect}
             </Switch> 
         </div>
-      </div>
     );
   }
 }
@@ -123,7 +120,7 @@ export const App = connect(state => {
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
-    userLogin, userLogout, checkLoggedIn
+    userLogin, userLogout, checkLoggedIn, userLoading
   }, dispatch)
 })(_App)
 

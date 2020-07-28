@@ -67,7 +67,7 @@ export const reviews = (state = reviewsState, action) => {
             // check for user review
             if (reviews.length > 0) {
                 for(const i in reviews) {
-                    if (userID == reviews[i].user.id) {
+                    if (userID === reviews[i].user.id) {
                         // Add to user review object and remove from reviews array
                         userReview = reviews[i]
                         userReviewed = true

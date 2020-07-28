@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { createStore, applyMiddleware } from 'redux'
-import { Base } from "./components/Base"
 import { App } from "./components/App"
 import reducers from "./reducers"
 import thunkMiddleware from 'redux-thunk'

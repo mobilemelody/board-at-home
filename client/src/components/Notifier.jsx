@@ -62,6 +62,9 @@ class _Notifier extends Component {
         case 'ERROR_UPDATE_REVIEW':
             NotificationManager.error('Try again later', "Error Updating Review")
             break
+
+        default:
+            break
         }
     }
     render() {

@@ -10,9 +10,6 @@ const saltRounds = 10;
 // router.use(<route>, require(<token middleware>))
 router.use('/check', require('../middleware'))
 
-
-
-
 router.post('/signup', function(req, res, next) {
   // Check for username and password in req.body
   if (req.body.username == null || req.body.password == null || req.body.email == null) {
@@ -28,7 +25,6 @@ router.post('/signup', function(req, res, next) {
   bcrypt.hash(req.body.password, saltRounds, function(err, passwordHash) {
 
     if (err) {
-      console.log(err)
       return res.status(500).set({
         "Content-Type": "application/json",
       }).send({
@@ -51,7 +47,6 @@ router.post('/signup', function(req, res, next) {
     db.client.query(insertUserQuery, (err, result) => {
       // return 500 internal error
       if (err) {
-        console.log(err)
         return res.status(500).set({
           "Content-Type": "application/json",
         }).send({

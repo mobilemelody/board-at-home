@@ -2,8 +2,6 @@
 import { createAction } from 'redux-actions'
 import api from "../lib/api"
 
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
-
 // Create actions for User state
 const errorUser = createAction("ERROR_USER")
 const fetchingUser = createAction("FETCHING_USER")
@@ -38,7 +36,6 @@ export const userLogin = (username, password) => {
     // dispatch triggers a state change
     return (dispatch) => {
         let data = {username, password}
-        console.log("login")
         return api.post("/users/login", data)
         .then(resp => dispatch(receiveUserLogin(resp)))
         .catch(err => dispatch(errorUser(err)))
@@ -61,8 +58,13 @@ export const userReset = () => {
 const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
-
 const setGameState = createAction("SET_GAME_STATE")
+
+export const gamesLoading = () => {
+    return dispatch => {
+        dispatch(fetchingGames())
+    }
+}
 
 export const getGames = () => {
     return (dispatch) => {
@@ -183,7 +185,6 @@ export const getGameReviews = () => {
         var game_id = game.data.id
         return api.get(`/games/${game_id}/reviews`)
         .then(res => {
-            console.log("user id", user.id)
             dispatch(receiveReviews({resp: {
                 payload: res,
                 userID: user.id

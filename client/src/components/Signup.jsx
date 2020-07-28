@@ -24,9 +24,6 @@ class _Signup extends Component {
         }
     }
 
-    componentDidMount() {
-    }
-
     _signUp(event) {
         event.preventDefault();
 
@@ -35,25 +32,24 @@ class _Signup extends Component {
 
         // check for state object being null
         Object.keys(form).forEach(key => {
-            if (form[key] == null && key != 'formError') {
+            if (form[key] == null && key !== 'formError') {
                 isNull = true
             }
         })
         // If null is present, trigger notification
         if (isNull) {
-            console.log("all fields required")
             this.setState({formError: "ERROR_SIGNUP_ALL_FIELDS"})
             return
         }
 
         // Check email and confirm email
-        if (form.email != form.emailConfirm) {
+        if (form.email !== form.emailConfirm) {
             this.setState({formError: "ERROR_SIGNUP_EMAIL"})
             return
         }
 
         // Check password and confirm password
-        if (form.password != form.passwordConfirm) {
+        if (form.password !== form.passwordConfirm) {
             this.setState({formError: "ERROR_SIGNUP_PASSWORD"})
             return
         }

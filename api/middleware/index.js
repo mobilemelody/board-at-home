@@ -38,8 +38,6 @@ module.exports = function(req, res, next) {
       })
     }
 
-    console.log("In middleware")
-
     // Else continue to route
     return next()
     })

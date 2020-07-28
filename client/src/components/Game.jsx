@@ -2,29 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { MDBContainer, MDBRating } from 'mdbreact';
 import { Redirect } from "react-router-dom";
 
 import {Reviews} from './Review'
 
 
-const RatingPage = () => {
-  return (
-    <MDBContainer>
-      <MDBRating feedback/>
-    </MDBContainer>
-  );
-};
-
 class _Game extends React.Component {
     constructor(props) {
         super(props)
     }
-
-    componentDidMount() {
-        
-    }
-
 
     render() {
 

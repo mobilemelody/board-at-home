@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom";
 import { userLogin, userLoading, userReset } from "../actions"
-import {Form, Button, InputGroup} from 'react-bootstrap'
+import {Form, Button} from 'react-bootstrap'
 import Typography from '@material-ui/core/Typography';
 import {Notifier} from './Notifier.jsx'
 
@@ -17,9 +17,6 @@ class _Login extends Component {
             username: null,
             password: null,
         }
-    }
-
-    componentDidMount() {
     }
 
     _login(event) {

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import {getGames, getSetGameState } from '../actions/index'
 
 import {Notifier} from './Notifier.jsx'
-import { Route, Switch, Link, Redirect} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -12,7 +12,6 @@ import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {Button} from 'react-bootstrap'
-import {AddGame} from "./AddGame"
 
 const GamePageTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">

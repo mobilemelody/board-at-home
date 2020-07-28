@@ -13,10 +13,12 @@ const userState = {
 
 // User action reducer handler
 export const user = (state = userState, action) => {
+    var resp;
+    
     switch(action.type) {
 
         case "ERROR_USER":
-        console.log(action.payload)
+        // console.log(action.payload)
         return Object.assign({}, state, {
             isReceived: true,
             isFetching: false,
@@ -35,7 +37,7 @@ export const user = (state = userState, action) => {
         })
 
         case "RECEIVE_USER":
-        var resp = action.payload.data
+        resp = action.payload.data
         return Object.assign({}, state, {
             isReceived: true,
             isFetching: false,
@@ -48,9 +50,7 @@ export const user = (state = userState, action) => {
         })
 
         case "RECEIVE_USER_LOGIN":
-        var resp = action.payload.data
-
-        console.log("login", resp)
+        resp = action.payload.data
 
         // Add token to localStorage
         localStorage.setItem("token", resp.user.token)
