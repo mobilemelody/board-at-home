@@ -149,7 +149,6 @@ class _Games extends React.Component {
         }
 
         if (this.state.viewGame) {
-            console.log("viewgame")
             return <Redirect push to='/game'/>
         }
 
@@ -246,9 +245,6 @@ class _Games extends React.Component {
 
         return (
             <div className='Games'>
-                <Switch>
-                    <Route path="/games/add"><AddGame/></Route>
-                </Switch>
                 <Grid container spacing={3}>
                     {notifier}
                     <Grid item xs={12}><br/></Grid>
@@ -256,7 +252,7 @@ class _Games extends React.Component {
                         <Typography variant="h3">Games</Typography>
                     </Grid>
                     <Grid item xs={2} className="GamesTitleRow">
-                        <Link to='/games/add'>
+                        <Link to='/gamesAdd'>
                             <Button 
                                 variant="info"
                                 size="sm"

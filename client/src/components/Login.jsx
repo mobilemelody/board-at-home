@@ -34,7 +34,7 @@ class _Login extends Component {
         this.props.userLogin(username, password)
     }
 
-        // Sets value for form
+    // Sets value for form
     _handleChange(event) {
         this.setState({[event.target.name]: event.target.value})
     }

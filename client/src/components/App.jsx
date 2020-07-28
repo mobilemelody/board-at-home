@@ -22,6 +22,7 @@ import { Login }  from './Login'
 import { Signup } from './Signup'
 import { Game } from './Game'
 import { Games } from './Games'
+import { AddGame } from './AddGame'
 
 class _App extends React.Component {
   constructor(props) {
@@ -64,7 +65,7 @@ class _App extends React.Component {
           href="#signup"
         >Sign up</Button>
       </Navbar>
-      homeRedirect = <Redirect to='/login'/>
+      homeRedirect = <Redirect from='/' to='/login'/>
     }
 
     if (user.isLoggedIn) {
@@ -80,10 +81,8 @@ class _App extends React.Component {
             }}
           >Logout</Button>
       </Navbar>
-
-      homeRedirect = <Redirect to='/games'/>
-
-      console.log("login redirected")
+      
+      homeRedirect = <Redirect from='/' to='/games'/>
     }
 
     if (user.isFetching) {
@@ -103,10 +102,9 @@ class _App extends React.Component {
               <Route path='/login'><Login/></Route>
               <Route path='/signup'><Signup/></Route>
               <Route path='/games'><Games/></Route>
+              <Route path="/gamesAdd"><AddGame/></Route>
               <Route path='/game'><Game/></Route>
-              <Route path= '/'>
-                {homeRedirect}
-              </Route>
+              {homeRedirect}
             </Switch> 
         </div>
       </div>
