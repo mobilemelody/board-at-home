@@ -7,6 +7,8 @@ const errorUser = createAction("ERROR_USER");
 const fetchingUser = createAction("FETCHING_USER");
 const receiveUser = createAction("RECEIVE_USER");
 const resetUser = createAction("RESET_USER");
+const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
+const errorUserReviews = createAction("ERROR_USER_REVIEWS");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -50,25 +52,34 @@ export const getSetGameState = (game) => {
 
 export const getUser = () => {
   return (dispatch) => {
-    // TODO: Make this dynamic
+    // TODO: Make this dynamic based on an auth token
     return api.get('/users/1')
       .then(resp => dispatch(receiveUser(resp.data)))
       .catch(err => dispatch(errorUser(err)))
   }
 }
 
-// Create actions for Review state
-const errorInsertReview = createAction("ERROR_INSERT_REVIEW")
-const errorDeleteReview = createAction("ERROR_DELETE_REVIEW")
-const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE")
-const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW")
+export const getUserReviews = () => {
+  return (dispatch) => {
+    // TODO: Make this dynamic based on an auth token
+    return api.get('/users/1/reviews')
+      .then(resp => dispatch(receiveUserReviews(resp.data)))
+      .catch(err => dispatch(errorUserReviews(err)))
+  }
+}
 
-const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING")
-const receiveReviews = createAction("RECEIVE_REVIEWS")
-const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE")
-const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT")
-const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE")
-const resetReviewNotif = createAction("RESET_NOTIF")
+// Create actions for Review state
+const errorInsertReview = createAction("ERROR_INSERT_REVIEW");
+const errorDeleteReview = createAction("ERROR_DELETE_REVIEW");
+const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE");
+const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW");
+
+const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING");
+const receiveReviews = createAction("RECEIVE_REVIEWS");
+const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE");
+const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT");
+const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE");
+const resetReviewNotif = createAction("RESET_NOTIF");
 
 export const getResetReviewNotif = () => {
   return (dispatch) => {

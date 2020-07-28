@@ -3,7 +3,7 @@
 const userState = {
   id: null,
   imgFileName: null,
-  userName: null,
+  username: null,
   isFetching: false,
   isReceived: false,
   isLoggedIn: false,
@@ -40,15 +40,18 @@ export const user = (state = userState, action) => {
         username,
         isReceived: true,
         isLoggedIn: true,
-        collections: collections,
+        collections,
       })
+
+    case "RECEIVE_USER_REVIEWS":
+      const reviews = action.payload.reviews;
+      return { ...state, reviews };
 
     case "RESET_USER":
       // Remove token if present
       if (localStorage.getItem('token')) {
         localStorage.removeItem('token')
       }
-
       return Object.assign({}, state, {})
 
     default:

@@ -25,9 +25,6 @@ class AddGameForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   createForm() {
     return (
       <form className="form" onSubmit={this.handleSubmit}>
@@ -220,7 +217,7 @@ class _AddGame extends React.Component {
   render() {
     let alert = '';
     if (this.state.gameName) {
-      alert = 
+      alert =
         <div className="alert alert-primary">
           {this.state.gameName} was added!
         </div>

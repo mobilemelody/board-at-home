@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUser } from '../actions/index';
+import { getUser, getUserReviews } from '../actions/index';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -9,6 +9,7 @@ import '../css/UserProfile.css';
 
 class _UserProfile extends React.Component {
   componentDidMount() {
+    this.props.getUserReviews();
     this.props.getUser();
   }
 
@@ -34,8 +35,11 @@ class _UserProfile extends React.Component {
           <Grid item xs={4}>
             <span className="heading">Reviews</span>
             <hr/>
-            <div className="review">This game was great. I really enjoy beating my kids at this game every time!</div>
-            <div>The game takes too long to finish.</div>
+            {
+              // user.reviews.map((review) => (
+              //   <div className="review">{review.comments}</div>
+              // ))
+            }
           </Grid>
         </Grid>
       </div>
@@ -48,6 +52,6 @@ export const UserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    getUser
+    getUser, getUserReviews,
   }, dispatch)
 })(_UserProfile);
