@@ -14,7 +14,7 @@ router.get('/:user_id/collections', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT "UserCollection".*, COALESCE(games.n, 0) AS "gameCount" FROM "UserCollection" LEFT JOIN (SELECT "userColllectionID", COUNT(*) AS n FROM "CollectionGame" GROUP BY "CollectionGame"."userColllectionID") games ON "UserCollection".id = games."userColllectionID" WHERE "UserCollection"."userID" = $1',
+    text: 'SELECT "UserCollection".*, "gameIDs", COALESCE(games.n, 0) AS "gameCount" FROM "UserCollection" LEFT JOIN (SELECT "userColllectionID", array_agg("CollectionGame"."gameID") as "gameIDs", COUNT(*) AS n FROM "CollectionGame" GROUP BY "CollectionGame"."userColllectionID") games ON "UserCollection".id = games."userColllectionID" WHERE "UserCollection"."userID" = $1',
     values: [req.params.user_id]
   }
 
