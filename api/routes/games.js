@@ -35,7 +35,7 @@ router.post('/', (req, res, next) => {
   const fields = dbUtils.gameFields;
 
   // Create array of field names for query
-  let queryFields = Object.keys(fields).map(e => fields[e]);
+  let query_fields = Object.keys(fields).map(e => fields[e]);
 
   // Validate data received
   if (!("name" in req.body)) {
@@ -52,12 +52,12 @@ router.post('/', (req, res, next) => {
   }
 
   // TODO: Add user details
-  queryFields.push('"isUserCreated"');
+  query_fields.push('"isUserCreated"');
   query.values.push(true);
-  queryFields.push('"identifierID"');
+  query_fields.push('"identifierID"');
   query.values.push("userId");
 
-  query.text = 'INSERT INTO "Game"(' + queryFields.join(', ') + ') VALUES' + dbUtils.expand(1, queryFields.length) + ' RETURNING *';
+  query.text = 'INSERT INTO "Game"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length) + ' RETURNING *';
 
   // Run query to add game
   db.client.query(query, (err, result) => {
@@ -202,7 +202,7 @@ router.post('/:game_id/reviews', (req, res) => {
   const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
-  let queryFields = Object.keys(fields).map(e => fields[e]);
+  let query_fields = Object.keys(fields).map(e => fields[e]);
 
   // Build query object
   let query = { text: '', values: [] };
@@ -222,14 +222,14 @@ router.post('/:game_id/reviews', (req, res) => {
   }
 
   // TODO: Add user details
-  queryFields.push('"userID"');
+  query_fields.push('"userID"');
   query.values.push(1);
 
   // Add game info
-  queryFields.push('"gameID"');
+  query_fields.push('"gameID"');
   query.values.push(parseInt(req.params.game_id));
 
-  query.text = 'INSERT INTO "Review"(' + queryFields.join(', ') + ') VALUES' + dbUtils.expand(1, queryFields.length)  + ' RETURNING *';
+  query.text = 'INSERT INTO "Review"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length)  + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {

@@ -16,7 +16,6 @@ router.post('/', (req, res) => {
       .send(err);
   }
 
-<<<<<<< HEAD
   // Build query object
   let query = { 
     text: 'INSERT INTO "UserCollection"("userID", name, "isPrivate") VALUES($1, $2, $3) RETURNING *', 
@@ -28,17 +27,6 @@ router.post('/', (req, res) => {
   query.values.push(req.body.name);
   query.values.push(req.body.isPrivate || false);
 
-=======
-  // TODO: Add user ID
-  let userID = 1;
-
-  // Build query object
-  let query = { 
-    text: 'INSERT INTO "UserCollection"("userID", name, "isPrivate") VALUES($1, $2, $3) RETURNING *', 
-    values: [userID, req.body.name, req.body.isPrivate || false] 
-  };
-
->>>>>>> development
   // Run query
   db.client.query(query, (err, result) => {
     if (err) {
@@ -90,36 +78,20 @@ router.patch('/:collection_id', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = { text: '', values: [] };
-<<<<<<< HEAD
   let query_fields = [];
 
   if ("name" in req.body) {
     query.values.push(req.body.name);
     query_fields.push('name = $' + query.values.length);
-=======
-  let queryFields = [];
-
-  if ("name" in req.body) {
-    query.values.push(req.body.name);
-    queryFields.push('name = $' + query.values.length);
->>>>>>> development
   }
 
   if ("isPrivate" in req.body) {
     query.values.push(req.body.isPrivate);
-<<<<<<< HEAD
     query_fields.push('"isPrivate" = $' + query.values.length);
   }
 
   // Check if no valid fields
   if (!query_fields.length) {
-=======
-    queryFields.push('"isPrivate" = $' + query.values.length);
-  }
-
-  // Check if no valid fields
-  if (!queryFields.length) {
->>>>>>> development
     let err = { "Error": "The request object is missing at least one valid field" };
     return res.status(400)
       .set({ "Content-Type": "application/json" })
@@ -127,11 +99,7 @@ router.patch('/:collection_id', (req, res) => {
   }
 
   query.values.push(parseInt(req.params.collection_id));
-<<<<<<< HEAD
   query.text = 'UPDATE "UserCollection" SET ' + query_fields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
-=======
-  query.text = 'UPDATE "UserCollection" SET ' + queryFields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
->>>>>>> development
 
   // Run query
   db.client.query(query, (err, result) => {

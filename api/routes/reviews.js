@@ -58,7 +58,7 @@ router.patch('/:review_id', (req, res) => {
   const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
-  let queryFields = [];
+  let query_fields = [];
 
   // Build query object
   let query = { text: '', values: [] };
@@ -78,12 +78,12 @@ router.patch('/:review_id', (req, res) => {
       }
 
       query.values.push(val);
-      queryFields.push(fields[field] + ' = $' + query.values.length);
+      query_fields.push(fields[field] + ' = $' + query.values.length);
     }
   }
 
   // Check if no valid fields
-  if (!queryFields.length) {
+  if (!query_fields.length) {
     let err = { "Error": "The request object is missing at least one valid field" };
     return res.status(400)
       .set({ "Content-Type": "application/json" })
@@ -91,7 +91,7 @@ router.patch('/:review_id', (req, res) => {
   }
 
   query.values.push(parseInt(req.params.review_id));
-  query.text = 'UPDATE "Review" SET ' + queryFields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
+  query.text = 'UPDATE "Review" SET ' + query_fields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {
