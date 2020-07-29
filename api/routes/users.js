@@ -32,12 +32,12 @@ router.get('/:user_id/collections', (req, res) => {
       return res.status(400).send(err);
     }
 
-    let collections = {};
-      collections.collections = result.rows.map(e => apiUtils.formatCollection(e, hostname));
+    let response = {};
+    response.collections = result.rows.map(e => apiUtils.formatCollection(e, hostname));
 
-      res.status(200)
-        .set({ "Content-Type": "application/json" })
-        .send(collections);
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(response);
   });
 
 });

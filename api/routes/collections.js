@@ -16,16 +16,14 @@ router.post('/', (req, res) => {
       .send(err);
   }
 
+  // TODO: Add user ID
+  let userID = 1;
+
   // Build query object
   let query = { 
     text: 'INSERT INTO "UserCollection"("userID", name, "isPrivate") VALUES($1, $2, $3) RETURNING *', 
-    values: [] 
+    values: [userID, req.body.name, req.body.isPrivate || false] 
   };
-
-  // TODO: Add user ID
-  query.values.push(1);
-  query.values.push(req.body.name);
-  query.values.push(req.body.isPrivate || false);
 
   // Run query
   db.client.query(query, (err, result) => {
@@ -78,20 +76,20 @@ router.patch('/:collection_id', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
   let query = { text: '', values: [] };
-  let query_fields = [];
+  let queryFields = [];
 
   if ("name" in req.body) {
     query.values.push(req.body.name);
-    query_fields.push('name = $' + query.values.length);
+    queryFields.push('name = $' + query.values.length);
   }
 
   if ("isPrivate" in req.body) {
     query.values.push(req.body.isPrivate);
-    query_fields.push('"isPrivate" = $' + query.values.length);
+    queryFields.push('"isPrivate" = $' + query.values.length);
   }
 
   // Check if no valid fields
-  if (!query_fields.length) {
+  if (!queryFields.length) {
     let err = { "Error": "The request object is missing at least one valid field" };
     return res.status(400)
       .set({ "Content-Type": "application/json" })
@@ -99,7 +97,7 @@ router.patch('/:collection_id', (req, res) => {
   }
 
   query.values.push(parseInt(req.params.collection_id));
-  query.text = 'UPDATE "UserCollection" SET ' + query_fields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
+  query.text = 'UPDATE "UserCollection" SET ' + queryFields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {
