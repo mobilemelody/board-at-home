@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 // import { MDBContainer, MDBRating } from 'mdbreact';
 
 import { Reviews } from './Review'
-import { CollectionDialog } from './CollectionDialog';
+import { AddToCollection } from './AddToCollection';
 
 
 // const RatingPage = () => {
@@ -27,7 +27,7 @@ class _Game extends React.Component {
         <Grid textAlign="left" item xs={12}>
           <Paper className="d-flex justify-content-between align-items-center">
             <h1>{game.data.name}</h1>
-            <CollectionDialog />
+            <AddToCollection />
           </Paper>
           <hr className='GameLine'></hr>
         </Grid>

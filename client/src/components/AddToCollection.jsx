@@ -15,7 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import AddIcon from '@material-ui/icons/AddCircle';
 import DotLoader from 'react-spinners/DotLoader';
 
-class _CollectionDialog extends React.Component {
+class _AddToCollection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,4 +93,4 @@ class _CollectionDialog extends React.Component {
   }
 }
 
-export const CollectionDialog = connect(null, null)(_CollectionDialog)
+export const AddToCollection = connect(null, null)(_AddToCollection)
