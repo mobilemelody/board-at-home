@@ -31,7 +31,6 @@ class _AddToCollection extends React.Component {
 
   componentDidMount() {
     this.props.getUserCollections();
-    console.log(this.props.rows);
   }
 
   _openDialog() {
@@ -69,6 +68,11 @@ class _AddToCollection extends React.Component {
       isPrivate: this.state.isPrivate
     };
     this.props.createCollection(collection);
+    this.setState({
+      name: '',
+      isPrivate: false
+    });
+    this.props.getUserCollections();
   }
 
   render() {
