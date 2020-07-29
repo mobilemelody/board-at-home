@@ -125,7 +125,7 @@ class _Collection extends React.Component {
     }
 
     if (collection.isReceived && !collection.error) {
-      let tableData = collection.data.games;
+      let tableData = collection.data.games || [];
       
       tableData.forEach(game => {
         game.gameInfo = <a href={game.url}><img src={game.imgFileName} height="50"/> {game.name}</a>;

@@ -290,7 +290,6 @@ export const getUserCollections = () => {
 export const addGameToCollection = (collection) => {
   return (dispatch, getState) => {
     const { game } = getState();
-    console.log(collection);
     return api.put(`/collections/${collection.id}/games/${game.data.id}`)
       .then(res => {
         dispatch(receiveGameAdded({
@@ -314,6 +313,10 @@ export const addGameToCollection = (collection) => {
 // remove game from collection
 export const removeGameFromCollection = (collection, gameID) => {
   return (dispatch, getState) => {
+    const { game } = getState();
+    if (!gameID) {
+      gameID = game.data.id;
+    }
     return api.delete(`/collections/${collection.id}/games/${gameID}`)
       .then(res => {
         dispatch(receiveGameRemoved({

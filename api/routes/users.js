@@ -24,16 +24,12 @@ router.get('/:user_id/collections', (req, res) => {
     query.values.push(req.query.gameID);
   }
 
+  query.text += ' ORDER BY "UserCollection".id';
+
   // Run query
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
-    } else if (!result.rows.length) {
-      err = { "Error": "This user does not have any collections" };
-      err.Error += "gameID" in req.query ? ' with this game' : '';
-      return res.status(404)
-        .set({ "Content-Type": "application/json" })
-        .send(err);
     }
 
     let collections = {};

@@ -69,7 +69,6 @@ export const collection = (state = collectionState, action) => {
       });
 
     case "RECEIVE_GAME_ADD":
-      console.log('add game to collection', action.payload.resp.data);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
@@ -119,7 +118,6 @@ export const collections = (state = collectionsState, action) => {
       });
 
     case "RECEIVE_USER_COLLECTIONS":
-      console.log('get collections', action.payload.resp.payload.data);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,

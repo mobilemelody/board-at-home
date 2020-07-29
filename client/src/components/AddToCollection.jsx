@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { Modal, Form } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
+import LockIcon from '@material-ui/icons/Lock';
 import DotLoader from 'react-spinners/DotLoader';
 
 import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections } from '../actions/index'
@@ -16,11 +17,11 @@ class _AddToCollection extends React.Component {
       isAdding: false,
       name: '',
       isPrivate: false,
-      collections: []
     };
 
     this._openDialog = this._openDialog.bind(this);
     this._closeDialog = this._closeDialog.bind(this);
+    this._handleCollectionChange = this._handleCollectionChange.bind(this);
     this._setFormAdd = this._setFormAdd.bind(this);
     this._setValue = this._setValue.bind(this);
     this._setSwitchValue = this._setSwitchValue.bind(this);
@@ -41,12 +42,13 @@ class _AddToCollection extends React.Component {
     this.setState({ open: false });
   }
 
-  _addGameToCollection(collection){
-    // TODO: save game to collection
-  }
-
-  _removeGameFromCollection() {
-    // TODO: remove game from collection
+  _handleCollectionChange(collection, checked) {
+    if (checked) {
+      this.props.removeGameFromCollection(collection, null);
+    } else {
+      this.props.addGameToCollection(collection);
+    }
+    this.props.getUserCollections();
   }
 
   _setFormAdd() {
@@ -63,30 +65,50 @@ class _AddToCollection extends React.Component {
   }
 
   _saveCollection() {
+    // Create collection from form values
     let collection = {
       name: this.state.name,
       isPrivate: this.state.isPrivate
     };
     this.props.createCollection(collection);
+    
+    // Reset form values
     this.setState({
       name: '',
       isPrivate: false
     });
+
+    // Refresh collections list
     this.props.getUserCollections();
   }
 
   render() {
 
-    let { collections } = this.props.state;
+    let { collections, game } = this.props.state;
 
     let addCollection = '';
     let collectionsList = [];
 
     if (collections.isReceived && !collections.error) {
+
+      // Create list of collections
       collectionsList = collections.data.collections.map(e => 
-        <Form.Check key={e.id} label={e.name} className="py-1" />
+        <Form.Check
+          ref={e.id}
+          key={e.id}
+          className="py-1"
+        >
+          <Form.Check.Input
+            checked={e.gameIDs.includes(game.data.id)}
+            onChange={() => { this._handleCollectionChange(e, e.gameIDs.includes(game.data.id)) }}
+          />
+          <Form.Check.Label>
+            {e.name} {e.isPrivate ? <LockIcon style={{ fontSize: '1rem' }} className="mb-1" /> : ''}
+          </Form.Check.Label>
+        </Form.Check>
       );
 
+      // Form to add new collection
       if (this.state.isAdding) {
         addCollection =
           <Form inline>
@@ -122,6 +144,7 @@ class _AddToCollection extends React.Component {
       }
     }
 
+    // Modal dialog content
     let body =
       <div>
         <Button variant="contained" startIcon={<AddIcon/>} size="small" onClick={this._openDialog}>
@@ -152,8 +175,8 @@ class _AddToCollection extends React.Component {
 }
 
 export const AddToCollection = connect(state => {
-  const { collection, collections } = state;
-  return { state: { collection, collections } };
+  const { collection, collections, game } = state;
+  return { state: { collection, collections, game } };
 }, dispatch => {
   return bindActionCreators({
     addGameToCollection, removeGameFromCollection, createCollection, getUserCollections
