@@ -181,11 +181,15 @@ export const getGameReviews = () => {
 // Create actions for Collection state
 const errorCollection = createAction("ERROR_COLLECTION");
 const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
+const errorAddGame = createAction("ERROR_ADD_GAME");
 const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
+const errorUserCollections = createAction("ERROR_USER_COLLECTIONS");
 
 const receiveCollection = createAction("RECEIVE_COLLECTION");
 const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
+const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
+const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
 
 const setCollectionState = createAction("SET_COLLECTION_STATE");
 
@@ -231,6 +235,29 @@ export const updateCollection = (data) => {
           resp: {
             error: err,
             data: data,
+          }
+        }));
+      });
+  }
+}
+
+// add game to collection
+export const addGameToCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    return api.put(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameAdded({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorAddGame({
+          resp: {
+            error: err,
+            data: collection,
           }
         }));
       });
