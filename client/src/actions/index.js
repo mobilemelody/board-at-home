@@ -180,12 +180,14 @@ export const getGameReviews = () => {
 
 // Create actions for Collection state
 const errorCollection = createAction("ERROR_COLLECTION");
+const errorAddCollection = createAction("ERROR_ADD_COLLECTION");
 const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
 const errorAddGame = createAction("ERROR_ADD_GAME");
 const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
 const errorUserCollections = createAction("ERROR_USER_COLLECTIONS");
 
 const receiveCollection = createAction("RECEIVE_COLLECTION");
+const receiveCollectionAdded = createAction("RECEIVE_COLLECTION_ADD");
 const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
 const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
@@ -211,6 +213,32 @@ export const getCollection = (id) => {
 export const getSetCollectionState = (collection) => {
   return (dispatch) => {
     return dispatch(setCollectionState(collection))
+  }
+}
+
+// Create a new collection
+export const createCollection = (collection) => {
+  return (dispatch, getState) => {
+    // TODO: Add user info to request
+    const { user } = getState();
+
+    return api.post(`/collections`, collection)
+      .then(res => {
+        dispatch(receiveCollectionAdded({
+          resp: {
+            payload: res,
+            collection: collection,
+          }
+        }))
+      })
+      .catch(err => {
+        dispatch(errorAddCollection({
+          resp: {
+            error: err,
+            collection: collection,
+          }
+        }))
+      });
   }
 }
 
@@ -241,10 +269,29 @@ export const updateCollection = (data) => {
   }
 }
 
-// add game to collection
-export const addGameToCollection = (collection, gameID) => {
+// get user collections
+export const getUserCollections = () => {
   return (dispatch, getState) => {
-    return api.put(`/collections/${collection.id}/games/${gameID}`)
+    const { user } = getState();
+    return api.get(`/users/${user.id}/collections`)
+      .then(res => {
+        dispatch(receiveUserCollections({
+          resp: {
+            payload: res,
+            userID: user.id
+          }
+        }));
+      })
+      .catch(err => dispatch(errorUserCollections(err)));
+  }
+}
+
+// add game to collection
+export const addGameToCollection = (collection) => {
+  return (dispatch, getState) => {
+    const { game } = getState();
+    console.log(collection);
+    return api.put(`/collections/${collection.id}/games/${game.data.id}`)
       .then(res => {
         dispatch(receiveGameAdded({
           resp: {

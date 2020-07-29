@@ -15,6 +15,13 @@ export const collection = (state = collectionState, action) => {
         error: "Error fetching collection"
       });
 
+    case "ERROR_ADD_COLLECTION":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: "Error adding collection"
+      });
+
     case "ERROR_UPDATE_COLLECTION":
       return Object.assign({}, state, {
         isReceived: true,
@@ -44,6 +51,14 @@ export const collection = (state = collectionState, action) => {
         data: action.payload.resp.payload.data,
       });
 
+    case "RECEIVE_COLLECTION_ADD":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        data: action.payload.resp.payload.data,
+      });
+
     case "RECEIVE_COLLECTION_UPDATE":
       return Object.assign({}, state, {
         isReceived: true,
@@ -54,6 +69,7 @@ export const collection = (state = collectionState, action) => {
       });
 
     case "RECEIVE_GAME_ADD":
+      console.log('add game to collection', action.payload.resp.data);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
@@ -80,6 +96,37 @@ export const collection = (state = collectionState, action) => {
           data: action.payload,
       });
     
+    default:
+      return state;
+  }
+}
+
+const collectionsState = {
+  isSet: false,
+  isFetching: false,
+  isReceived: false,
+  error: null,
+  data: {},
+}
+
+export const collections = (state = collectionsState, action) => {
+  switch(action.type) {
+    case "ERROR_USER_COLLECTIONS":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: "Error fetching collections"
+      });
+
+    case "RECEIVE_USER_COLLECTIONS":
+      console.log('get collections', action.payload.resp.payload.data);
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        data: action.payload.resp.payload.data,
+      });
+
     default:
       return state;
   }
