@@ -15,6 +15,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
 import CloseIcon from '@material-ui/icons/Close';
 import DotLoader from 'react-spinners/DotLoader';
+import { AddToCollectionSearch } from './AddToCollectionSearch';
 
 // Import Actions
 import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection } from '../actions/index'
@@ -128,7 +129,8 @@ class _Collection extends React.Component {
       let tableData = collection.data.games || [];
       
       tableData.forEach(game => {
-        game.gameInfo = <a href={game.url}><img src={game.imgFileName} height="50"/> {game.name}</a>;
+        // TODO: Add game page url
+        game.gameInfo = <a><img src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
         game.remove = <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton>;
@@ -182,7 +184,7 @@ class _Collection extends React.Component {
               {userInfo}
             </Col>
             <Col>
-              <Button variant="contained" startIcon={<AddIcon/>} size="large" className="float-md-right">Add Game</Button>
+              <div className="float-md-right"><AddToCollectionSearch/></div>
             </Col>
           </Row>
           <BootstrapTable

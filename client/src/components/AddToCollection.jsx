@@ -46,7 +46,7 @@ class _AddToCollection extends React.Component {
     if (checked) {
       this.props.removeGameFromCollection(collection, null);
     } else {
-      this.props.addGameToCollection(collection);
+      this.props.addGameToCollection(collection, null);
     }
     this.props.getUserCollections();
   }

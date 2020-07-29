@@ -287,10 +287,13 @@ export const getUserCollections = () => {
 }
 
 // add game to collection
-export const addGameToCollection = (collection) => {
+export const addGameToCollection = (collection, gameID) => {
   return (dispatch, getState) => {
     const { game } = getState();
-    return api.put(`/collections/${collection.id}/games/${game.data.id}`)
+    if (!gameID) {
+      gameID = game.data.id;
+    }
+    return api.put(`/collections/${collection.id}/games/${gameID}`)
       .then(res => {
         dispatch(receiveGameAdded({
           resp: {
