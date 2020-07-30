@@ -5,8 +5,30 @@ const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.status(200).send({message: 'suhh dude'});
+router.get('/:id', (req, res, next) => {
+  const getUserDataQuery = 'SELECT * FROM "User" WHERE "User".id = $1';
+
+  const query = {
+    text: getUserDataQuery,
+    values: [req.params.id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      console.error(`Error querying user profile: ${err.message}`);
+
+      return res.status(500).send('Internal server error');
+    }
+
+    if (!result.rows[0]) {
+      return res.status(404).send('Not found');
+    }
+
+    // Remove password from userData that we return to UI
+    const { password, ...userData } = result.rows[0];
+
+    return res.status(200).send(userData);
+  });
 });
 
 /* Get user collections */
@@ -30,6 +52,12 @@ router.get('/:user_id/collections', (req, res) => {
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
+    } else if (!result.rows.length) {
+      err = { "Error": "This user does not have any collections" };
+      err.Error += "gameID" in req.query ? ' with this game' : '';
+      return res.status(404)
+        .set({ "Content-Type": "application/json" })
+        .send(err);
     }
 
     let response = {};
