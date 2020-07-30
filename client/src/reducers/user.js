@@ -9,6 +9,7 @@ const userState = {
   isLoggedIn: false,
   error: null,
   collections: [],
+  reviews: [],
 }
 
 // User action reducer handler
@@ -34,14 +35,15 @@ export const user = (state = userState, action) => {
       // Add token to localStorage
       localStorage.setItem("token", token)
 
-      return Object.assign({}, state, {
+      return {
+        ...state,
         id,
         imgFileName,
         username,
         isReceived: true,
         isLoggedIn: true,
-        collections,
-      })
+        collections
+      };
 
     case "RECEIVE_USER_REVIEWS":
       const reviews = action.payload.reviews;

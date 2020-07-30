@@ -9,8 +9,8 @@ import '../css/UserProfile.css';
 
 class _UserProfile extends React.Component {
   componentDidMount() {
-    this.props.getUserReviews();
     this.props.getUser();
+    this.props.getUserReviews();
   }
 
   render() {
@@ -36,9 +36,9 @@ class _UserProfile extends React.Component {
             <span className="heading">Reviews</span>
             <hr/>
             {
-              // user.reviews.map((review) => (
-              //   <div className="review">{review.comments}</div>
-              // ))
+              user.reviews.map((review) => (
+                <div key={review.id} className="review">{review.comments}</div>
+              ))
             }
           </Grid>
         </Grid>
@@ -52,6 +52,6 @@ export const UserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    getUser, getUserReviews,
+    getUser, getUserReviews
   }, dispatch)
 })(_UserProfile);

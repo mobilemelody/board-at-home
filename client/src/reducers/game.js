@@ -1,104 +1,103 @@
 
 const gameState = {
-    isFetching: false,
-    isReceived: false,
-    isSet: false,
-    error: null,
-    data: {},
+  isFetching: false,
+  isReceived: false,
+  isSet: false,
+  error: null,
+  data: {},
 }
 
 export const game = (state = gameState, action) => {
-    switch(action.type) {
-        case "ERROR_GAME":
-        return Object.assign({}, state, {
-            isReceived: true,
-            isFetching: false,
-            // error: action.payload.data.err
-            error: "Error fetching game"
-        })
+  switch (action.type) {
+    case "ERROR_GAME":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        // error: action.payload.data.err
+        error: "Error fetching game"
+      });
 
-        case "FETCHING_GAME":
-        return Object.assign({}, state, {
-            isFetching: true,
-            isSet: true
-        })
+    case "FETCHING_GAME":
+      return Object.assign({}, state, {
+        isFetching: true,
+        isSet: true
+      })
 
-        case "RECEIVE_GAME":
+    case "RECEIVE_GAME":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        data: action.payload.data.game,
+      })
 
-        return Object.assign({}, state, {
-            isReceived: true,
-            isFetching: false,
-            error: null,
-            data: action.payload.data.game,
-        })
+    case "SET_GAME_STATE":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        isSet: true,
+        error: null,
+        data: action.payload,
+      })
 
-        case "SET_GAME_STATE":
-        return Object.assign({}, state, {
-            isReceived: true,
-            isFetching: false,
-            isSet: true,
-            error: null,
-            data: action.payload,
-        })
+    case "RESET_GAME":
+      return Object.assign({}, state, {
+        isFetching: false,
+        isReceived: false,
+        isSet: false,
+        error: null,
+        data: {},
+      })
 
-        case "RESET_GAME":
-        return Object.assign({}, state, {
-            isFetching: false,
-            isReceived: false,
-            isSet: false,
-            error: null,
-            data: {},
-        })
-        
-        default:
-        return state
-    }
+    default:
+      return state
+  }
 }
 
 const gamesState = {
-    isSet: false,
-    isFetching: false,
-    isReceived: false,
-    error: null,
-    rows: [],
+  isSet: false,
+  isFetching: false,
+  isReceived: false,
+  error: null,
+  rows: [],
 }
 
 export const games = (state = gamesState, action) => {
-    switch(action.type) {
-        case "ERROR_GAMES":
-        return Object.assign({}, state, {
-            isSet: true,
-            isReceived: true,
-            isFetching: false,
-            // error: action.payload.data.err
-            error: "Error fetching game"
-        })
+  switch (action.type) {
+    case "ERROR_GAMES":
+      return Object.assign({}, state, {
+        isSet: true,
+        isReceived: true,
+        isFetching: false,
+        // error: action.payload.data.err
+        error: "Error fetching game"
+      })
 
-        case "FETCHING_GAMES":
-        return Object.assign({}, state, {
-            isFetching: true,
-            isSet: true, 
-        })
+    case "FETCHING_GAMES":
+      return Object.assign({}, state, {
+        isFetching: true,
+        isSet: true,
+      })
 
-        case "RECEIVE_GAMES":
-        return Object.assign({}, state, {
-            isReceived: true,
-            isFetching: false,
-            error: null,
-            rows: action.payload.data,
-        })
+    case "RECEIVE_GAMES":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        rows: action.payload.data,
+      })
 
-        case "RESET_GAMES":
-        return Object.assign({}, state, {
-            isSet: false,
-            isFetching: false,
-            isReceived: false,
-            error: null,
-            rows: {},
-        })
-        
-        default:
-        return state
-    }
+    case "RESET_GAMES":
+      return Object.assign({}, state, {
+        isSet: false,
+        isFetching: false,
+        isReceived: false,
+        error: null,
+        rows: {},
+      })
+
+    default:
+      return state
+  }
 }
 
