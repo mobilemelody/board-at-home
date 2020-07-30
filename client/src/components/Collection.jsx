@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { Notifier } from './Notifier.jsx';
-import { Container, Row, Col, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,7 +14,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
 import CloseIcon from '@material-ui/icons/Close';
-import DotLoader from 'react-spinners/DotLoader';
+
 import { AddToCollectionSearch } from './AddToCollectionSearch';
 
 // Import Actions
@@ -111,8 +111,13 @@ class _Collection extends React.Component {
   }
 
   _removeGame(collection, gameID) {
-    this.props.removeGameFromCollection(collection, gameID);
-    this.props.getCollection(this.props.match.params.id);
+    this.props.removeGameFromCollection(collection, gameID)
+      .then(res => {
+        this.props.getCollection(collection.id);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -122,7 +127,10 @@ class _Collection extends React.Component {
     let body = <div></div>;
 
     if (!collection.isReceived) {
-      body = <div className="d-flex justify-content-center"><DotLoader/></div>;
+      body =
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" />
+        </div>;
     }
 
     if (collection.isReceived && !collection.error) {

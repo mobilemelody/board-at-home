@@ -191,6 +191,8 @@ const receiveCollectionAdded = createAction("RECEIVE_COLLECTION_ADD");
 const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
 const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
+
+const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
 const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
 
 const setCollectionState = createAction("SET_COLLECTION_STATE");

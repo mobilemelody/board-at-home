@@ -36,16 +36,27 @@ class _AddToCollectionSearch extends React.Component {
 
   _addToCollection(id) {
     let collection = this.props.state.collection.data;
-    this.props.addGameToCollection(collection, id);
-    this.props.getCollection(collection.id);
-    this.props.getGames();
+    this.props.addGameToCollection(collection, id)
+      .then(res => {
+        this.props.getCollection(collection.id);
+        this.props.getGames();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    
   }
 
   _removeFromCollection(id) {
     let collection = this.props.state.collection.data;
-    this.props.removeGameFromCollection(collection, id);
-    this.props.getCollection(collection.id);
-    this.props.getGames();
+    this.props.removeGameFromCollection(collection, id)
+      .then(res => {
+        this.props.getCollection(collection.id);
+        this.props.getGames();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {

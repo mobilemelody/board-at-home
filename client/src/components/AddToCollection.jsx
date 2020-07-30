@@ -5,7 +5,6 @@ import { Modal, Form } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
 import LockIcon from '@material-ui/icons/Lock';
-import DotLoader from 'react-spinners/DotLoader';
 
 import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections } from '../actions/index'
 
@@ -44,11 +43,22 @@ class _AddToCollection extends React.Component {
 
   _handleCollectionChange(collection, checked) {
     if (checked) {
-      this.props.removeGameFromCollection(collection, null);
+      this.props.removeGameFromCollection(collection, null)
+        .then(res => {
+          this.props.getUserCollections();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     } else {
-      this.props.addGameToCollection(collection, null);
+      this.props.addGameToCollection(collection, null)
+        .then(res => {
+          this.props.getUserCollections();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-    this.props.getUserCollections();
   }
 
   _setFormAdd() {
@@ -70,16 +80,19 @@ class _AddToCollection extends React.Component {
       name: this.state.name,
       isPrivate: this.state.isPrivate
     };
-    this.props.createCollection(collection);
-    
+    this.props.createCollection(collection)
+      .then(res => {
+        this.props.getUserCollections();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     // Reset form values
     this.setState({
       name: '',
       isPrivate: false
     });
-
-    // Refresh collections list
-    this.props.getUserCollections();
   }
 
   render() {
@@ -88,6 +101,7 @@ class _AddToCollection extends React.Component {
 
     let addCollection = '';
     let collectionsList = [];
+    let modalBody;
 
     if (collections.isReceived && !collections.error) {
 
@@ -142,6 +156,12 @@ class _AddToCollection extends React.Component {
             Add Collection
           </Button>
       }
+
+      modalBody =
+        <div>
+          {collectionsList}
+          {addCollection}
+        </div>
     }
 
     // Modal dialog content
@@ -155,8 +175,7 @@ class _AddToCollection extends React.Component {
             <Modal.Title>Add to Collection</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {collectionsList}
-            {addCollection}
+            {modalBody}
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this._closeDialog} color="primary">
