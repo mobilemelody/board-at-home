@@ -1,38 +1,55 @@
 // React Redux Imports and Axios
-import { createAction } from 'redux-actions';
-import api from "../lib/api";
-
-// Create actions for User state
-const errorUser = createAction("ERROR_USER");
-const fetchingUser = createAction("FETCHING_USER");
-const receiveUser = createAction("RECEIVE_USER");
-const resetUser = createAction("RESET_USER");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
 }
 
-export const userLogin = (username, password) => {
-  // dispatch triggers a state change
-  return dispatch => {
-    let data = { username, password };
+export const userSignUp = (user) => {
+    return (dispatch) => {
+        return api.post("/users/signup", user)
+        .then(resp => dispatch(receiveUserSignedUp(resp)))
+        .catch(err => dispatch(errorUser(err)))
+}
 
-    return api.post("/user/login", data)
-      .then(resp => dispatch(receiveUser(resp)))
-      .catch(err => dispatch(errorUser(err)));
-  }
+export const checkLoggedIn = () => {
+    return (dispatch) => {
+        return api.get("/users/check")
+        .then(resp => dispatch(receiveUser(resp)))
+        .catch(err => dispatch(errorUser(err)))
+    }
+}
+
+export const userLogin = (username, password) => {
+    // dispatch triggers a state change
+    return (dispatch) => {
+        let data = {username, password}
+        return api.post("/users/login", data)
+        .then(resp => dispatch(receiveUserLogin(resp)))
+        .catch(err => dispatch(errorUser(err)))
+    }
 }
 
 export const userLogout = () => {
   return dispatch => dispatch(resetUser());
 }
 
+export const userReset = () => {
+    return dispatch => {
+        dispatch(resetUser())
+    }
+}
+
 // Create actions for Game state
 const errorGames = createAction("ERROR_GAMES")
 // const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
-
 const setGameState = createAction("SET_GAME_STATE")
+
+export const gamesLoading = () => {
+    return dispatch => {
+        dispatch(fetchingGames())
+    }
+}
 
 export const getGames = () => {
   return (dispatch) => {
