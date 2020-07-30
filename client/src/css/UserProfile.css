@@ -21,6 +21,19 @@
   border-top: 2px solid #dee2e6;
 }
 
+.UserProfile .num-collections {
+  padding-top: 8px;
+}
+
 .UserProfile .review {
-  padding-bottom: 8px;
+  padding-bottom: 16px;
+}
+
+.UserProfile .review__name {
+  font-weight: bolder;
+}
+
+.UserProfile .review__overall-rating {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }

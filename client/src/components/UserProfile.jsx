@@ -24,14 +24,9 @@ class _UserProfile extends React.Component {
             <Paper className='profileImgWrapper'>
               <img alt='profile img' src={user.imgFileName}/>
             </Paper>
+            <div className="num-collections">Number of collections: 12 </div>
           </Grid>
-          <Grid item md={4} xs={4}>
-            <span className="heading">Profile</span>
-            <hr/>
-            <div>Email: piezasj@oregonstate.edu</div>
-            <div>Number of collections: 12</div>
-          </Grid>
-          <Grid item md={4} xs={4}>
+          <Grid item md={8} xs={8}>
             <span className="heading">Reviews</span>
             <hr/>
             {
@@ -39,9 +34,9 @@ class _UserProfile extends React.Component {
                 <div key={review.id} className="review">
                   <div>
                     <span className="review__name">{review.name}</span>
-                    <span>{review.overallRating}</span>
+                    <div className="review__overall-rating">User score: {review.overallRating}</div>
                   </div>
-                  <div>{review.comments}</div>
+                  <div className="review__comments">{review.comments}</div>
                 </div>
               ))
             }
