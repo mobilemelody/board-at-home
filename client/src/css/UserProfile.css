@@ -26,7 +26,13 @@
 }
 
 .UserProfile .review {
-  padding-bottom: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+}
+
+.UserProfile .review.review-odd {
+  background-color: #eee;
 }
 
 .UserProfile .review__name {

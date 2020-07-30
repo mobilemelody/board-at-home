@@ -31,7 +31,7 @@ class _UserProfile extends React.Component {
             <hr/>
             {
               user.reviews.map((review) => (
-                <div key={review.id} className="review">
+                <div key={review.id} className={`review ${review.id % 2 > 0 && 'review-odd'}`}>
                   <div>
                     <span className="review__name">{review.name}</span>
                     <div className="review__overall-rating">User score: {review.overallRating}</div>
