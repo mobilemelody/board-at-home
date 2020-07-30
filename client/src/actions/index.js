@@ -29,6 +29,24 @@ export const userLogout = () => {
   return dispatch => dispatch(resetUser());
 }
 
+export const getUser = () => {
+  return (dispatch) => {
+    // TODO: Make this dynamic based on an auth token
+    return api.get('/users/1')
+      .then(resp => dispatch(receiveUser(resp.data)))
+      .catch(err => dispatch(errorUser(err)))
+  }
+}
+
+export const getUserReviews = () => {
+  return (dispatch) => {
+    // TODO: Make this dynamic based on an auth token
+    return api.get('/users/1/reviews')
+      .then(resp => dispatch(receiveUserReviews(resp.data)))
+      .catch(err => dispatch(errorUserReviews(err)))
+  }
+}
+
 // Create actions for Game state
 const errorGames = createAction("ERROR_GAMES")
 // const fetchingGames = createAction("FETCHING_GAMES")
@@ -47,24 +65,6 @@ export const getGames = () => {
 export const getSetGameState = (game) => {
   return (dispatch) => {
     return dispatch(setGameState(game))
-  }
-}
-
-export const getUser = () => {
-  return (dispatch) => {
-    // TODO: Make this dynamic based on an auth token
-    return api.get('/users/1')
-      .then(resp => dispatch(receiveUser(resp.data)))
-      .catch(err => dispatch(errorUser(err)))
-  }
-}
-
-export const getUserReviews = () => {
-  return (dispatch) => {
-    // TODO: Make this dynamic based on an auth token
-    return api.get('/users/1/reviews')
-      .then(resp => dispatch(receiveUserReviews(resp.data)))
-      .catch(err => dispatch(errorUserReviews(err)))
   }
 }
 

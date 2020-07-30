@@ -19,25 +19,30 @@ class _UserProfile extends React.Component {
     return (
       <div className="UserProfile">
         <Grid container spacing={1}>
-          <Grid item xs={4}>
+          <Grid item md={4} xs={4}>
             <Typography variant='h5'>{user.username}</Typography>
             <Paper className='profileImgWrapper'>
               <img alt='profile img' src={user.imgFileName}/>
             </Paper>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item md={4} xs={4}>
             <span className="heading">Profile</span>
             <hr/>
             <div>Email: piezasj@oregonstate.edu</div>
-            <Grid item xs={4}/>
             <div>Number of collections: 12</div>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item md={4} xs={4}>
             <span className="heading">Reviews</span>
             <hr/>
             {
               user.reviews.map((review) => (
-                <div key={review.id} className="review">{review.comments}</div>
+                <div key={review.id} className="review">
+                  <div>
+                    <span className="review__name">{review.name}</span>
+                    <span>{review.overallRating}</span>
+                  </div>
+                  <div>{review.comments}</div>
+                </div>
               ))
             }
           </Grid>

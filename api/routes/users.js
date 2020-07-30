@@ -36,7 +36,7 @@ router.get('/:user_id/collections', (req, res) => {
 
   let query = {
     text: 'SELECT "UserCollection".*, COALESCE(games.n, 0) AS "gameCount" FROM "UserCollection" LEFT JOIN (SELECT "userColllectionID", COUNT(*) AS n FROM "CollectionGame" GROUP BY "CollectionGame"."userColllectionID") games ON "UserCollection".id = games."userColllectionID" WHERE "UserCollection"."userID" = $1',
-    values: [req.params.id]
+    values: [req.params.user_id]
   }
 
   // Add game filter if needed
