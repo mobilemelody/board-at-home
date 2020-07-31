@@ -38,6 +38,8 @@ module.exports = function(req, res, next) {
       })
     }
 
+    console.log("here")
+
     // Else continue to route
     return next()
     })

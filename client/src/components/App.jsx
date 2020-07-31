@@ -93,18 +93,18 @@ class _App extends React.Component {
     }
 
     return (
-        <div className="App">
-          <NotificationContainer key="app"/>
-          {navbar}
-            <Switch>
-              <Route path='/login'><Login/></Route>
-              <Route path='/signup'><Signup/></Route>
-              <Route path='/games'><Games/></Route>
-              <Route path="/gamesAdd"><AddGame/></Route>
-              <Route path='/game'><Game/></Route>
-              {homeRedirect}
-            </Switch> 
-        </div>
+          <div className="App">
+            <NotificationContainer key="app"/>
+            {navbar}
+              <Switch>
+                <Route path='/login'><Login/></Route>
+                <Route path='/signup'><Signup/></Route>
+                <Route path='/games'><Games/></Route>
+                <Route path="/gamesAdd"><AddGame/></Route>
+                <Route path='/game'><Game/></Route>
+                {homeRedirect}
+              </Switch> 
+          </div>
     );
   }
 }

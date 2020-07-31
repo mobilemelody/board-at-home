@@ -132,24 +132,8 @@ class _Games extends React.Component {
             description: game.description,
         })
         this.setState({viewGame: true})
+        console.log("set game")
     }
-
-  _setGame(game) {
-    this.props.getSetGameState({
-      id: game.id,
-      isUserCreated: game.isUserCreated,
-      identifierID: game.identifierID,
-      name: game.name,
-      publisher: game.publisher,
-      year: game.year,
-      minPlaytime: game.minPlaytime,
-      minPlayers: game.minPlayers,
-      maxPlayers: game.maxPlayers,
-      minAge: game.minAge,
-      imgFileName: game.imgFileName,
-      description: game.description,
-    })
-  }
 
   render() {
     const { user } = this.props
@@ -263,6 +247,7 @@ class _Games extends React.Component {
     })
 
     return (
+      <div className="Games">
       <Grid container spacing={3}>
         {notifier}
         <Grid item xs={12}><br /></Grid>
@@ -291,6 +276,7 @@ class _Games extends React.Component {
           </div>
         </Grid>
       </Grid>
+      </div>
     )
   }
 }
