@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLoading, userLogout, checkLoggedIn } from "../actions"
-import { Nav, Navbar, Button} from 'react-bootstrap'
-import { Route, Switch, Redirect} from 'react-router-dom'
-import {NotificationContainer} from 'react-notifications'
+import { Nav, Navbar, Button } from 'react-bootstrap'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { NotificationContainer } from 'react-notifications'
 
 // CSS imports
 import '../css/App.css'
@@ -17,7 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { css } from "@emotion/core";
 
 // Component imports
-import { Login }  from './Login'
+import { Login } from './Login'
 import { Signup } from './Signup'
 import { Game } from './Game'
 import { Games } from './Games'
@@ -29,7 +29,7 @@ class _App extends React.Component {
     this._userLogout = this._userLogout.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     var token = localStorage.getItem('token')
     var username = localStorage.getItem('username')
 
@@ -39,7 +39,7 @@ class _App extends React.Component {
     }
   }
 
-  _userLogout(){
+  _userLogout() {
     this.props.userLogout()
   }
 
@@ -48,23 +48,23 @@ class _App extends React.Component {
     const { user } = this.props
     // console.log(user)
 
-    let homeRedirect 
+    let homeRedirect
     let navbar
 
     if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
       navbar =
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">Board At Home</Navbar.Brand>
-        <Nav className="mr-auto"/>
-        <Button
-          href="#login"
-        >Login</Button>
-        <Button
-          href="#signup"
-        >Sign up</Button>
-      </Navbar>
-      homeRedirect = <Redirect from='/' to='/login'/>
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
+          <Nav className="mr-auto" />
+          <Button
+            href="#login"
+          >Login</Button>
+          <Button
+            href="#signup"
+          >Sign up</Button>
+        </Navbar>
+      homeRedirect = <Redirect from='/' to='/login' />
     }
 
     if (user.isLoggedIn) {
@@ -79,9 +79,9 @@ class _App extends React.Component {
               this._userLogout()
             }}
           >Logout</Button>
-      </Navbar>
-      
-      homeRedirect = <Redirect from='/' to='/games'/>
+        </Navbar>
+
+      homeRedirect = <Redirect from='/' to='/games' />
     }
 
     if (user.isFetching) {
@@ -91,20 +91,19 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
         </Navbar>
     }
-
     return (
-          <div className="App">
-            <NotificationContainer key="app"/>
-            {navbar}
-              <Switch>
-                <Route path='/login'><Login/></Route>
-                <Route path='/signup'><Signup/></Route>
-                <Route path='/games'><Games/></Route>
-                <Route path="/gamesAdd"><AddGame/></Route>
-                <Route path='/game'><Game/></Route>
-                {homeRedirect}
-              </Switch> 
-          </div>
+      <div className="App">
+        <NotificationContainer key="app" />
+        {navbar}
+        <Switch>
+          <Route path='/login'><Login /></Route>
+          <Route path='/signup'><Signup /></Route>
+          <Route path='/games'><Games /></Route>
+          <Route path="/gamesAdd"><AddGame /></Route>
+          <Route path='/game'><Game /></Route>
+          {homeRedirect}
+        </Switch>
+      </div>
     );
   }
 }
@@ -114,7 +113,7 @@ class _App extends React.Component {
 export const App = connect(state => {
   const { user } = state
   const { game } = state
-  return { user, game}
+  return { user, game }
 
   // bindActionCreators turns an object whose values are action creators, into an object with the same keys,
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.

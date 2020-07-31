@@ -120,7 +120,7 @@ class AddGameForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let values = {...this.state};
+    let values = { ...this.state };
     if (values.categories) {
       values.categories = values.categories.map(e => e.value);
     }
@@ -139,24 +139,24 @@ class AddGameForm extends React.Component {
           "Content-Type": "application/json"
         },
       })
-      .then(res => res.json())
-      .then(res => {
-        let returnData = res.data.returnData;
-        let signedRequest = returnData.signedRequest;
-        let url = returnData.url;
-        fetch(signedRequest, {
-          method: 'PUT',
-          body: values.image,
-          headers: {
-            "Content-Type": imageData.fileType
-          },
-        })
+        .then(res => res.json())
         .then(res => {
-          // Save values to database
-          values.image = url;
-          this.saveToDB(values);
+          let returnData = res.data.returnData;
+          let signedRequest = returnData.signedRequest;
+          let url = returnData.url;
+          fetch(signedRequest, {
+            method: 'PUT',
+            body: values.image,
+            headers: {
+              "Content-Type": imageData.fileType
+            },
+          })
+            .then(res => {
+              // Save values to database
+              values.image = url;
+              this.saveToDB(values);
+            })
         })
-      })
     } else {
       this.saveToDB(values);
     }
@@ -171,11 +171,11 @@ class AddGameForm extends React.Component {
         "Content-Type": "application/json"
       },
     })
-    .then(res => res.json())
-    .then(res => {
-      // TODO: Go to new game page
-      this.props.handleSubmit(res.name);
-    })
+      .then(res => res.json())
+      .then(res => {
+        // TODO: Go to new game page
+        this.props.handleSubmit(res.name);
+      })
   }
 
   render() {
@@ -220,7 +220,7 @@ class _AddGame extends React.Component {
   render() {
     let alert = '';
     if (this.state.gameName) {
-      alert = 
+      alert =
         <div className="alert alert-primary">
           {this.state.gameName} was added!
         </div>

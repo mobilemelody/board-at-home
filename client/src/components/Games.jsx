@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {getGames, getSetGameState } from '../actions/index'
+import { getGames, getSetGameState } from '../actions/index'
 
-import {Notifier} from './Notifier.jsx'
-import {Link, Redirect} from 'react-router-dom'
+import { Notifier } from './Notifier.jsx'
+import { Link, Redirect } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import {Button} from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -104,36 +104,37 @@ const GamesPaginationOptions = {
 
 
 class _Games extends React.Component {
-    constructor(props) {
-        super(props)
-        this._setGame = this._setGame.bind(this)
-        this.state = {
-            viewGame: false
-        }
+  constructor(props) {
+    super(props)
+    this._setGame = this._setGame.bind(this)
+    this.state = {
+      viewGame: false
     }
+  }
 
-    componentDidMount() {
-        this.props.getGames()
-    }
+  componentDidMount() {
+    this.props.getGames()
+  }
 
-    _setGame(game) {
-        this.props.getSetGameState({
-            id: game.id,
-            isUserCreated: game.isUserCreated,
-            identifierID: game.identifierID,
-            name: game.name,
-            publisher: game.publisher,
-            year: game.year,
-            minPlaytime: game.minPlaytime,
-            minPlayers: game.minPlayers,
-            maxPlayers: game.maxPlayers,
-            minAge: game.minAge,
-            imgFileName: game.imgFileName,
-            description: game.description,
-        })
-        this.setState({viewGame: true})
-        console.log("set game")
-    }
+  _setGame(game) {
+    this.props.getSetGameState({
+      id: game.id,
+      isUserCreated: game.isUserCreated,
+      identifierID: game.identifierID,
+      name: game.name,
+      publisher: game.publisher,
+      year: game.year,
+      minPlaytime: game.minPlaytime,
+      minPlayers: game.minPlayers,
+      maxPlayers: game.maxPlayers,
+      minAge: game.minAge,
+      imgFileName: game.imgFileName,
+      description: game.description,
+      categories: game.categories,
+    })
+    this.setState({ viewGame: true })
+    console.log("set game")
+  }
 
   render() {
     const { user } = this.props
@@ -144,16 +145,16 @@ class _Games extends React.Component {
 
     // Redirect to Home page if user logs out on games page
     if (!user.isLoggedIn) {
-        return <Redirect to='/login'/>
+      return <Redirect to='/login' />
     }
 
     if (this.state.viewGame) {
-        return <Redirect push to='/game'/>
+      return <Redirect push to='/game' />
     }
 
     // Create error notification
     if (games.error !== null) {
-        notifier = <Notifier type="ERROR_GAMES"/>
+      notifier = <Notifier type="ERROR_GAMES" />
     }
 
     // Create error notification
@@ -169,6 +170,16 @@ class _Games extends React.Component {
 
     // Push reviews to table data
     games.rows.forEach(function (game) {
+      var categories = []
+
+      game.categories.forEach(function (category) {
+        categories.push(
+          <Grid item xs={12}>
+            {category}
+          </Grid>
+        )
+      })
+
       tableData.push({
         // Hidden columns that show in expand renderer
         id: game.id,
@@ -183,6 +194,7 @@ class _Games extends React.Component {
         minAge: game.minAge,
         imgFileName: game.imgFileName,
         description: game.description,
+        categories: game.categories,
         viewer:
           <Grid container spacing={1}>
             <Grid item xs={4}>
@@ -224,7 +236,7 @@ class _Games extends React.Component {
             <Grid item xs={3}>
               <div className="CategoriesWrapper">
                 <Grid item xs={12}><br /><br />Categories<hr /></Grid>
-                <p>Not yet implemented</p>
+                {categories}
               </div>
             </Grid>
             <Grid item xs={12}>
@@ -248,34 +260,34 @@ class _Games extends React.Component {
 
     return (
       <div className="Games">
-      <Grid container spacing={3}>
-        {notifier}
-        <Grid item xs={12}><br /></Grid>
-        <Grid item xs={10} className="GamesTitleRow">
-          <Typography variant="h3">Games</Typography>
+        <Grid container spacing={3}>
+          {notifier}
+          <Grid item xs={12}><br /></Grid>
+          <Grid item xs={10} className="GamesTitleRow">
+            <Typography variant="h3">Games</Typography>
+          </Grid>
+          <Grid item xs={2} className="GamesTitleRow">
+            <Link to='/gamesAdd'>
+              <Button
+                variant="info"
+                size="sm"
+              >Add New Game</Button>
+            </Link>
+          </Grid>
+          <Grid item xs={12} className="GamesTableRow">
+            <div className="GamesTable">
+              <BootstrapTable
+                keyField="id"
+                data={tableData}
+                columns={GamesColumns}
+                rowEvents={rowEvents}
+                // expandRow={ OtherReviewsExpandRow }
+                bordered={false}
+                pagination={paginationFactory(GamesPaginationOptions)}
+              />
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={2} className="GamesTitleRow">
-          <Link to='/gamesAdd'>
-            <Button
-              variant="info"
-              size="sm"
-            >Add New Game</Button>
-          </Link>
-        </Grid>
-        <Grid item xs={12} className="GamesTableRow">
-          <div className="GamesTable">
-            <BootstrapTable
-              keyField="id"
-              data={tableData}
-              columns={GamesColumns}
-              rowEvents={rowEvents}
-              // expandRow={ OtherReviewsExpandRow }
-              bordered={false}
-              pagination={paginationFactory(GamesPaginationOptions)}
-            />
-          </div>
-        </Grid>
-      </Grid>
       </div>
     )
   }
@@ -283,8 +295,8 @@ class _Games extends React.Component {
 
 export const Games = connect(state => {
   const { user } = state
-  const { games } = state 
-  return { user, games}
+  const { games } = state
+  return { user, games }
 }, dispatch => {
   return bindActionCreators({
     getSetGameState, getGames
