@@ -24,6 +24,10 @@
   margin-bottom: auto;
 }
 
+.App .Game .Category {
+  font-size: 12px !important;
+}
+
 .App .Games .GamesTable .react-bootstrap-table .table th {
   visibility: hidden !important;
   height: 0px;
