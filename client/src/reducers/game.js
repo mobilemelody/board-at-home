@@ -102,3 +102,48 @@ export const games = (state = gamesState, action) => {
   }
 }
 
+const recommendationsState = {
+  isSet: false,
+  isFetching: false,
+  isReceived: false,
+  error: null,
+  rows: [],
+}
+
+export const recommendations = (state = recommendationsState, action) => {
+  switch (action.type) {
+    case "ERROR_RECOMMENDATIONS":
+      return Object.assign({}, state, {
+        isSet: true,
+        isReceived: true,
+        isFetching: false,
+        error: "Error fetching recommendations"
+      });
+
+    case "FETCHING_RECOMMENDATIONS":
+      return Object.assign({}, state, {
+        isFetching: true,
+        isSet: true,
+      });
+
+    case "RECEIVE_RECOMMENDATIONS":
+      return Object.assign({}, state, {
+        isReceived: true,
+        isFetching: false,
+        error: null,
+        rows: action.payload.data,
+      });
+
+    case "RESET_RECOMMENDATIONS":
+      return Object.assign({}, state, {
+        isSet: false,
+        isFetching: false,
+        isReceived: false,
+        error: null,
+        rows: {},
+      });
+
+    default:
+      return state;
+  }
+}
