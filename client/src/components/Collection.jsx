@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Notifier } from './Notifier.jsx';
-import { Container, Row, Col, Form, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,6 +16,7 @@ import PublicIcon from '@material-ui/icons/Public';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { AddToCollectionSearch } from './AddToCollectionSearch';
+import { Login } from './Login';
 
 // Import Actions
 import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection } from '../actions/index'
@@ -124,17 +125,37 @@ class _Collection extends React.Component {
   render() {
 
     const { collection } = this.props;
+    const { user } = this.props;
+
+    // Show loading spinner if fetching user and/or collection
+    if ((user.isFetching && !user.isReceived) || !collection.isReceived) {
+      return (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner animation="border" />
+        </div>
+      );
+    }
+
+    // Show login form if not logged in
+    if (!user.isLoggedIn) {
+      return <Login />
+    }
 
     let body = <div></div>;
 
-    if (!collection.isReceived) {
-      body =
-        <div className="d-flex justify-content-center">
-          <Spinner animation="border" />
-        </div>;
-    }
+    if (collection.isReceived && !collection.error && user.isReceived && !user.error) {
 
-    if (collection.isReceived && !collection.error) {
+      const belongsToUser = collection.data.user.id === user.id
+
+      // Check privacy setting
+      if (collection.data.isPrivate && !belongsToUser) {
+        return (
+          <Alert variant="danger">
+            You are not authorized to view this collection
+          </Alert>
+        );
+      }
+
       let tableData = collection.data.games || [];
       
       tableData.forEach(game => {
@@ -142,7 +163,7 @@ class _Collection extends React.Component {
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
         game.overallRating = game.overallRating ? parseFloat(game.overallRating).toFixed(1) : '--';
-        game.remove = <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton>;
+        game.remove = belongsToUser ? <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton> : '';
       });
 
       let privacy = collection.data.isPrivate ? <Chip icon={<LockIcon/>} label="Private" variant="outlined" size="small" /> : <Chip icon={<PublicIcon/>} label="Public" variant="outlined" size="small" />
@@ -178,11 +199,17 @@ class _Collection extends React.Component {
           </Form>
         );
       } else {
-        header = <h1>{collection.data.name} { privacy } <IconButton aria-label="edit" onClick={() => {this._setFormEdit(collection.data)}}><EditIcon/></IconButton></h1>;
+        header = <h1>{collection.data.name} { privacy } {belongsToUser ? <IconButton aria-label="edit" onClick={() => {this._setFormEdit(collection.data)}}><EditIcon/></IconButton> : ''}</h1>;
       }
 
       let userInfo = (
         <a href={`/#/users/${collection.data.user.id}`} className="d-inline-flex align-items-center"><Avatar src={collection.data.user.imgFileName} className="mr-1" /> {collection.data.user.username}</a>
+      );
+
+      const addGames = (
+        <Col>
+          <div className="float-md-right"><AddToCollectionSearch/></div>
+        </Col>
       );
 
       body = (
@@ -192,9 +219,7 @@ class _Collection extends React.Component {
               {header}
               {userInfo}
             </Col>
-            <Col>
-              <div className="float-md-right"><AddToCollectionSearch/></div>
-            </Col>
+            {belongsToUser ? addGames : ''}
           </Row>
           <BootstrapTable
             keyField="id"
@@ -205,7 +230,9 @@ class _Collection extends React.Component {
         </div>
       );
     } else if (collection.error) {
-      body = <div className="alert alert-danger">{collection.error}</div>;
+      body = <Alert variant="danger">{collection.error}</Alert>;
+    } else if (user.error) {
+      body = <Alert variant="danger">{collection.error}</Alert>;
     }
 
     return (
@@ -217,8 +244,12 @@ class _Collection extends React.Component {
 }
 
 export const Collection = connect((state, ownProps) => {
-  const { collection } = state;
-  return { collection: collection, collectionId: ownProps.match.params.collectionId };
+  const { collection, user } = state;
+  return {
+    collection: collection,
+    user: user,
+    collectionId: ownProps.match.params.collectionId
+  };
 }, dispatch => {
   return bindActionCreators({
     getCollection, getSetCollectionState, updateCollection, removeGameFromCollection

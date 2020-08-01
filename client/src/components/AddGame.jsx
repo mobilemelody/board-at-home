@@ -1,6 +1,8 @@
 import React from 'react';
 import Select from 'react-select';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { Spinner } from 'react-bootstrap';
+import { Login } from './Login';
 
 const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
 
@@ -216,6 +218,23 @@ class _AddGame extends React.Component {
   }
 
   render() {
+
+    const { user } = this.props;
+
+    // Show loading spinner if fetching user
+    if (user.isFetching && !user.isReceived) {
+      return (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner animation="border" />
+        </div>
+      );
+    }
+
+    // Show login form if not logged in
+    if (!user.isLoggedIn) {
+      return <Login />
+    }
+
     let alert = '';
     if (this.state.gameName) {
       alert =
@@ -233,4 +252,7 @@ class _AddGame extends React.Component {
 
 }
 
-export const AddGame = connect(null, null)(_AddGame)
+export const AddGame = connect(state => {
+  const { user } = state;
+  return { user };
+}, null)(_AddGame)
