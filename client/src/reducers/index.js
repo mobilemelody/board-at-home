@@ -6,8 +6,8 @@ import { combineReducers } from 'redux'
 
 // Combine all reducers to make store
 const reducers = combineReducers({
-    user, game, games, reviews, collection, collections
-    // review
+  user, game, games, reviews, collection, collections
+  // review
 })
 
 export default reducers

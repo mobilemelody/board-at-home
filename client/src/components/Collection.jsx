@@ -73,7 +73,7 @@ class _Collection extends React.Component {
   }
 
   componentDidMount() {
-    let { collectionId } = this.props;
+    const { collectionId } = this.props;
     this.props.getCollection(collectionId);
     this.setState({
       id: collectionId,

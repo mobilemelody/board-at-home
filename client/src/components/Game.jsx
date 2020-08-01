@@ -39,7 +39,7 @@ class _Game extends React.Component {
 
       body =
         <Grid container spacing={3}>
-          <Grid textAlign="left" item xs={12}>
+          <Grid textalign="left" item xs={12}>
             <Paper className="d-flex justify-content-between align-items-center">
               <h1>{game.data.name}</h1>
               <AddToCollection />
