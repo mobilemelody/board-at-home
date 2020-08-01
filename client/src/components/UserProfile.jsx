@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUser, getUserReviews } from '../actions/index';
+import { getUser, getUserReviews, getUserCollections } from '../actions/index';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -10,13 +10,16 @@ import '../css/UserProfile.css';
 class _UserProfile extends React.Component {
   componentDidMount() {
     this.props.getUser();
-    this.props.getUserReviews();
+  }
+
+  allFetched = (user) => {
+    return user.isReceived && user.isReviewsReceived;
   }
 
   render() {
     const { user } = this.props
 
-    return user.isReceived && (
+    return this.allFetched(user) && (
       <div className="UserProfile">
         <Grid container spacing={1}>
           <Grid item md={4} xs={4}>
@@ -24,14 +27,15 @@ class _UserProfile extends React.Component {
             <Paper className='profileImgWrapper'>
               <img alt='profile img' src={user.imgFileName}/>
             </Paper>
-            <div className="num-collections">Number of collections: 12 </div>
+            <div className="email">Email: {user.email}</div>
+            <div className="num-collections">Number of collections: {user.collections.length} </div>
           </Grid>
           <Grid item md={8} xs={8}>
             <span className="heading">Reviews</span>
             <hr/>
             {
-              user.reviews.map((review) => (
-                <div key={review.id} className={`review ${review.id % 2 > 0 && 'review-odd'}`}>
+              user.reviews.map((review, idx) => (
+                <div key={review.id} className={`review ${idx % 2 > 0 && 'review-odd'}`}>
                   <div>
                     <span className="review__name">{review.name}</span>
                     <div className="review__overall-rating">User score: {review.overallRating}</div>
@@ -52,6 +56,6 @@ export const UserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    getUser, getUserReviews
+    getUser, getUserReviews, getUserCollections
   }, dispatch)
 })(_UserProfile);

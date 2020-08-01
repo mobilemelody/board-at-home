@@ -47,11 +47,24 @@ export const userLogout = () => {
 }
 
 export const getUser = () => {
-  return (dispatch) => {
-    // TODO: Make this dynamic based on an auth token
-    return api.get('/users/1')
-      .then(resp => dispatch(receiveUser(resp)))
+  return (dispatch, getState) => {
+    // const { user } = getState()
+    return api.get(`/users/4`)
+      .then(res => dispatch(receiveUser(res)))
       .catch(err => dispatch(errorUser(err)))
+      .then(() => api.get(`/users/4/reviews`))
+      .then(res => dispatch(receiveUserReviews(res)))
+      .catch(err => dispatch(errorUserReviews(err)))
+      .then(() => api.get(`/users/4/collections`))
+      .then(res => {
+        dispatch(receiveUserCollections({
+          resp: {
+            payload: res,
+            userID: 4
+          }
+        }));
+      })
+      .catch(err => dispatch(errorUserCollections(err)));
   }
 }
 
@@ -240,7 +253,7 @@ const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
 const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 
-const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
+// const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
 const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
 
 const setCollectionState = createAction("SET_COLLECTION_STATE");
@@ -270,7 +283,7 @@ export const getSetCollectionState = (collection) => {
 export const createCollection = (collection) => {
   return (dispatch, getState) => {
     // TODO: Add user info to request
-    const { user } = getState();
+    // const { user } = getState();
 
     return api.post(`/collections`, collection)
       .then(res => {

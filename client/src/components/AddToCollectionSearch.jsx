@@ -5,7 +5,7 @@ import { Modal, FormControl, InputGroup, ListGroup } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
 import SearchIcon from '@material-ui/icons/Search';
-import DotLoader from 'react-spinners/DotLoader';
+// import DotLoader from 'react-spinners/DotLoader';
 
 import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index'
 
@@ -44,7 +44,7 @@ class _AddToCollectionSearch extends React.Component {
       .catch(err => {
         console.log(err);
       });
-    
+
   }
 
   _removeFromCollection(id) {
@@ -70,9 +70,9 @@ class _AddToCollectionSearch extends React.Component {
       // Create list of games
       // TODO: Remove manual limit on results
       let gamesInCollection = collection.data.games.map(e => e.id);
-      gamesList = games.rows.slice(0, 10).map(e => 
+      gamesList = games.rows.slice(0, 10).map(e =>
         <ListGroup.Item key={e.id}>
-          <a href={e.url}><img src={e.imgFileName} height="50"/> {e.name}</a>
+          <a href={e.url}><img alt="game cover" src={e.imgFileName} height="50"/> {e.name}</a>
           <div className="float-md-right">
             {gamesInCollection.includes(e.id) ?
               <Button variant="contained" onClick={() => {this._removeFromCollection(e.id)}}>Remove Game</Button>:

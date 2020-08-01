@@ -7,6 +7,8 @@ const userState = {
   email: null,
   isFetching: false,
   isReceived: false,
+  isReviewsReceived: false,
+  isCollectionsReceived: false,
   isLoggedIn: false,
   error: null,
   collections: [],
@@ -25,7 +27,7 @@ export const user = (state = userState, action) => {
         collections: [],
         isLoggedIn: false,
         email: null,
-        username: null,
+        userName: null,
         id: null,
         imgFileName: null,
         error: "Invalid login credentials"
@@ -38,7 +40,6 @@ export const user = (state = userState, action) => {
 
     case "RECEIVE_USER":
       resp = action.payload.data
-      console.log(resp);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
@@ -51,15 +52,27 @@ export const user = (state = userState, action) => {
       })
 
     case "RECEIVE_USER_REVIEWS":
-        const reviews = action.payload.reviews;
-        return { ...state, reviews };
+      const reviews = action.payload.data.reviews;
+      return {
+        ...state,
+        isReviewsReceived: true,
+        reviews
+      };
+
+      case "RECEIVE_USER_COLLECTIONS":
+        const collections = action.payload.resp.payload.data.collections;
+        return {
+          ...state,
+          isCollectionsReceived: true,
+          collections,
+        };
 
     case "RECEIVE_USER_LOGIN":
       resp = action.payload.data
 
       // Add token to localStorage
-      localStorage.setItem("token", resp.user.token)
-      localStorage.setItem("username", resp.user.username)
+      localStorage.setItem("token", resp.token)
+      localStorage.setItem("username", resp.username)
 
       return Object.assign({}, state, {
         isReceived: true,

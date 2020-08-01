@@ -15,7 +15,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-notifications/lib/notifications.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { css } from "@emotion/core";
 
 // Component imports
 import { Login } from './Login'

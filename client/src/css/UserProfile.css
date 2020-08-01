@@ -21,6 +21,10 @@
   border-top: 2px solid #dee2e6;
 }
 
+.UserProfile .email {
+  padding-top: 8px;
+}
+
 .UserProfile .num-collections {
   padding-top: 8px;
 }
