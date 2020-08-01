@@ -28,6 +28,13 @@
   text-align: center;
 }
 
+.App .Login {
+  width: 400px;
+  align-content: center;
+  padding-top: 10%;
+  margin: auto;
+}
+
 .App-link {
   color: #61dafb;
 }

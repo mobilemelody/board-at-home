@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import { createStore, applyMiddleware } from 'redux'
-import { Base } from "./components/Base"
+import { App } from "./components/App"
 import reducers from "./reducers"
 import thunkMiddleware from 'redux-thunk'
 import * as serviceWorker from './serviceWorker';
@@ -18,7 +18,7 @@ ReactDOM.render(
   // Makes store available via any child component that calls connect()
   <Provider store={store}>
     <Router>
-      <Route component={Base} />
+      <Route component={App} />
     </Router>
   </Provider>,
   document.getElementById('root')

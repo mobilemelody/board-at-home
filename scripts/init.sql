@@ -235,6 +235,7 @@ ALTER SEQUENCE public."Review_id_seq" OWNED BY public."Review".id;
 CREATE TABLE public."User" (
     id integer NOT NULL,
     username text NOT NULL,
+    email text NOT NULL,
     password text NOT NULL,
     "imgFileName" text
 );

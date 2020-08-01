@@ -1,8 +1,7 @@
-INSERT INTO "User"(
-	id, username, password, "imgFileName")
-	VALUES (1, 'testUser', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg'),
-	(2, 'IGInfluencer', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test2.jpeg'), 
-	(3, 'BoardFlipper', 'password', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test3.jpg');
+INSERT INTO "User"(username, email, password, "imgFileName")
+	VALUES ('username', 'username@test.com', '$2b$10$E.VIGoocLv6z4TrYqgxp7.YdycOWL03WH6GIQmKrYLOWwUmukEFja', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test.jpg'),
+	('IGInfluencer', 'test2@test.com', '$2b$10$uX/eF4I.GknSwtCEWCaicOOnG24tFbaJPVSvsEXLcyn/c50y98KCK', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test2.jpeg'), 
+	('BoardFlipper', 'test3@test.com', '$2b$10$uX/eF4I.GknSwtCEWCaicOOnG24tFbaJPVSvsEXLcyn/c50y98KCK', 'https://boardathome.s3.us-east-2.amazonaws.com/user/test3.jpg');
 
 INSERT INTO "Game"
 ("id","isUserCreated","identifierID","name","year","description","imgFileName","minAge","maxPlaytime","minPlaytime","maxPlayers","minPlayers","publisher")
