@@ -7,6 +7,7 @@ const gameState = {
   data: {},
 }
 
+
 export const game = (state = gameState, action) => {
   switch (action.type) {
     case "ERROR_GAME":

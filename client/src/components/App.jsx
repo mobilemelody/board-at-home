@@ -1,13 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { userLogin, userLogout } from "../actions";
-import { Navbar, Nav, NavLink } from 'react-bootstrap';
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { userLogin, userLoading, userLogout, checkLoggedIn } from "../actions"
+import { Nav, Navbar, Button } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
-import DotLoader from 'react-spinners/DotLoader';
-import {NotificationContainer} from 'react-notifications';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { NotificationContainer } from 'react-notifications'
 
 // CSS imports
 import '../css/App.css';
@@ -16,10 +14,17 @@ import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-notifications/lib/notifications.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { css } from "@emotion/core";
 
-import { Login }  from './Login';
-import { Game } from './Game';
-import { Games } from './Games';
+// Component imports
+import { Login } from './Login'
+import { Signup } from './Signup'
+import { Game } from './Game'
+import { Games } from './Games'
+import { AddGame } from './AddGame'
+import { Collection } from './Collection'
+import { UserProfile } from './UserProfile'
 
 class _App extends React.Component {
   constructor(props) {
@@ -27,28 +32,40 @@ class _App extends React.Component {
     this._userLogout = this._userLogout.bind(this)
   }
 
-  componentDidMount(){
-    // Add method to check if user is already logged in by checking token in localStorage
+  componentDidMount() {
+    const token = localStorage.getItem('token')
+    const username = localStorage.getItem('username')
+
+    if (token && username) {
+      this.props.userLoading()
+      this.props.checkLoggedIn()
+    }
   }
 
-  _userLogout(){
+  _userLogout() {
     this.props.userLogout()
   }
 
   render() {
     const { user } = this.props
-    const { game } = this.props
 
-    let body = <div className="blank"/>
-    let navbar = <div className="blank"/>
+    let homeRedirect
+    let navbar
 
     if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
       navbar =
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="/">Board At Home</Navbar.Brand>
-      </Navbar>
-      body = <Login/>
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
+          <Nav className="mr-auto" />
+          <Button
+            href="#login"
+          >Login</Button>
+          <Button
+            href="#signup"
+          >Sign up</Button>
+        </Navbar>
+      homeRedirect = <Redirect from='/' to='/login' />
     }
 
     if (user.isLoggedIn) {
@@ -56,24 +73,19 @@ class _App extends React.Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
-            <LinkContainer to="/features">
-              <NavLink>Games</NavLink>
-            </LinkContainer>
+            <Nav.Link href="#games">Games</Nav.Link>
             <LinkContainer to="/profile/">
-              <NavLink>Profile</NavLink>
+              <Nav.Link>Profile</Nav.Link>
             </LinkContainer>
           </Nav>
-          {/* <Form inline>
-            <FormControl type="text" plac<Route path='/profile/:id'><UserProfile/></Route>eholder="Search" className="mr-sm-2" />
-            <Button variant="outline-info">Search</Button>
-          </Form> */}
-      </Navbar>
+          <Button
+            onClick={() => {
+              this._userLogout()
+            }}
+          >Logout</Button>
+        </Navbar>
 
-      if (game.isSet) {
-        body = <div className='Game'><Game/></div>
-      } else {
-        body = <div className='Games'><Games/></div>
-      }
+      homeRedirect = <Redirect from='/' to='/games' />
     }
 
     if (user.isFetching) {
@@ -82,20 +94,21 @@ class _App extends React.Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
         </Navbar>
-      body = <DotLoader/>
     }
-
-    else if (user.error !== null && !user.isLoggedIn) {
-      // Display error message for logging in
-      // Call a function/add component to show error and reprompt for login
-      body = <p>{user.error}</p>
-    }
-
     return (
       <div className="App">
-        <NotificationContainer key="app"/>
+        <NotificationContainer key="app" />
         {navbar}
-        {body}
+        <Switch>
+          <Route path='/login'><Login /></Route>
+          <Route path='/signup'><Signup /></Route>
+          <Route path='/games'><Games /></Route>
+          <Route path="/gamesAdd"><AddGame /></Route>
+          <Route path='/game'><Game /></Route>
+          <Route path='/collections/:collectionId' component={Collection} />
+          <Route path='/profile'><UserProfile/></Route>
+          {homeRedirect}
+        </Switch>
       </div>
     );
   }
@@ -112,7 +125,7 @@ export const App = connect(state => {
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
-    userLogin, userLogout
+    userLogin, userLogout, checkLoggedIn, userLoading
   }, dispatch)
 })(_App)
 

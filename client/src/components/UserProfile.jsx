@@ -16,7 +16,7 @@ class _UserProfile extends React.Component {
   render() {
     const { user } = this.props
 
-    return (
+    return user.isReceived && (
       <div className="UserProfile">
         <Grid container spacing={1}>
           <Grid item md={4} xs={4}>

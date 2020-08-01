@@ -1,12 +1,14 @@
 // React Redux Imports and Axios
-import { createAction } from 'redux-actions';
-import api from "../lib/api";
+import { createAction } from 'redux-actions'
+import api from "../lib/api"
 
 // Create actions for User state
-const errorUser = createAction("ERROR_USER");
-const fetchingUser = createAction("FETCHING_USER");
-const receiveUser = createAction("RECEIVE_USER");
-const resetUser = createAction("RESET_USER");
+const errorUser = createAction("ERROR_USER")
+const fetchingUser = createAction("FETCHING_USER")
+const receiveUser = createAction("RECEIVE_USER")
+const receiveUserLogin = createAction("RECEIVE_USER_LOGIN")
+const receiveUserSignedUp = createAction("RECEIVE_USER_SIGNEDUP")
+const resetUser = createAction("RESET_USER")
 const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
 const errorUserReviews = createAction("ERROR_USER_REVIEWS");
 
@@ -14,14 +16,29 @@ export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
 }
 
+export const userSignUp = (user) => {
+  return (dispatch) => {
+    return api.post("/users/signup", user)
+      .then(resp => dispatch(receiveUserSignedUp(resp)))
+      .catch(err => dispatch(errorUser(err)))
+  }
+}
+
+export const checkLoggedIn = () => {
+  return (dispatch) => {
+    return api.get("/users/check")
+      .then(resp => dispatch(receiveUser(resp)))
+      .catch(err => dispatch(errorUser(err)))
+  }
+}
+
 export const userLogin = (username, password) => {
   // dispatch triggers a state change
-  return dispatch => {
-    let data = { username, password };
-
-    return api.post("/user/login", data)
-      .then(resp => dispatch(receiveUser(resp)))
-      .catch(err => dispatch(errorUser(err)));
+  return (dispatch) => {
+    let data = { username, password }
+    return api.post("/users/login", data)
+      .then(resp => dispatch(receiveUserLogin(resp)))
+      .catch(err => dispatch(errorUser(err)))
   }
 }
 
@@ -45,14 +62,25 @@ export const getUserReviews = () => {
       .then(resp => dispatch(receiveUserReviews(resp.data)))
       .catch(err => dispatch(errorUserReviews(err)))
   }
+};
+
+export const userReset = () => {
+  return dispatch => {
+    dispatch(resetUser())
+  }
 }
 
 // Create actions for Game state
 const errorGames = createAction("ERROR_GAMES")
-// const fetchingGames = createAction("FETCHING_GAMES")
+const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
-
 const setGameState = createAction("SET_GAME_STATE")
+
+export const gamesLoading = () => {
+  return dispatch => {
+    dispatch(fetchingGames())
+  }
+}
 
 export const getGames = () => {
   return (dispatch) => {
@@ -198,5 +226,166 @@ export const getGameReviews = () => {
   }
 }
 
+// Create actions for Collection state
+const errorCollection = createAction("ERROR_COLLECTION");
+const errorAddCollection = createAction("ERROR_ADD_COLLECTION");
+const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
+const errorAddGame = createAction("ERROR_ADD_GAME");
+const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
+const errorUserCollections = createAction("ERROR_USER_COLLECTIONS");
 
+const receiveCollection = createAction("RECEIVE_COLLECTION");
+const receiveCollectionAdded = createAction("RECEIVE_COLLECTION_ADD");
+const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
+const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
+const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 
+const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
+const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
+
+const setCollectionState = createAction("SET_COLLECTION_STATE");
+
+export const getCollection = (id) => {
+  return (dispatch, getState) => {
+    let collection_id = id;
+    return api.get(`/collections/${collection_id}`)
+      .then(res => {
+        dispatch(receiveCollection({
+          resp: {
+            payload: res
+          }
+        }));
+      })
+      .catch(err => dispatch(errorCollection(err)));
+  }
+}
+
+export const getSetCollectionState = (collection) => {
+  return (dispatch) => {
+    return dispatch(setCollectionState(collection))
+  }
+}
+
+// Create a new collection
+export const createCollection = (collection) => {
+  return (dispatch, getState) => {
+    // TODO: Add user info to request
+    const { user } = getState();
+
+    return api.post(`/collections`, collection)
+      .then(res => {
+        dispatch(receiveCollectionAdded({
+          resp: {
+            payload: res,
+            collection: collection,
+          }
+        }))
+      })
+      .catch(err => {
+        dispatch(errorAddCollection({
+          resp: {
+            error: err,
+            collection: collection,
+          }
+        }))
+      });
+  }
+}
+
+// update collection info
+export const updateCollection = (data) => {
+  return (dispatch, getState) => {
+    let collectionData = {
+      name: data.name,
+      isPrivate: data.isPrivate
+    };
+    return api.patch(`/collections/${data.id}`, collectionData)
+      .then(res => {
+        dispatch(receiveCollectionUpdated({
+          resp: {
+            payload: res,
+            data: data,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorUpdateCollection({
+          resp: {
+            error: err,
+            data: data,
+          }
+        }));
+      });
+  }
+}
+
+// get user collections
+export const getUserCollections = () => {
+  return (dispatch, getState) => {
+    const { user } = getState();
+    return api.get(`/users/${user.id}/collections`)
+      .then(res => {
+        dispatch(receiveUserCollections({
+          resp: {
+            payload: res,
+            userID: user.id
+          }
+        }));
+      })
+      .catch(err => dispatch(errorUserCollections(err)));
+  }
+}
+
+// add game to collection
+export const addGameToCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    const { game } = getState();
+    if (!gameID) {
+      gameID = game.data.id;
+    }
+    return api.put(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameAdded({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorAddGame({
+          resp: {
+            error: err,
+            data: collection,
+          }
+        }));
+      });
+  }
+}
+
+// remove game from collection
+export const removeGameFromCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    const { game } = getState();
+    if (!gameID) {
+      gameID = game.data.id;
+    }
+    return api.delete(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameRemoved({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorRemoveGame({
+          resp: {
+            error: err,
+            data: collection,
+          }
+        }));
+      });
+  }
+}

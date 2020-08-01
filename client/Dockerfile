@@ -2,7 +2,7 @@ FROM mhart/alpine-node:10
 
 WORKDIR /client
 
-COPY package*.json /client/
+COPY package.json /client/
 
 RUN yarn
 
