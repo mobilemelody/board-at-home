@@ -46,11 +46,9 @@ router.get('/check', function(req, res, next) {
       "Content-Type": "application/json",
     }).send({
       status: 'success',
-      user: {
-        id: result.rows[0].id,
-        username: result.rows[0].username,
-        email: result.rows[0].email,
-      }
+      id: result.rows[0].id,
+      username: result.rows[0].username,
+      email: result.rows[0].email,
     });
   });
 });
@@ -111,30 +109,28 @@ router.post('/login', function(req, res, next) {
       }
 
       // Create token with username
-      var token = jwt.sign({username: result.rows[0].username}, secret)
+      const token = jwt.sign({username: result.rows[0].username}, secret)
 
       return res.status(200).set({
         "Content-Type": "application/json",
       }).send({
         status: 'success',
-        user: {
-          id: result.rows[0].id,
-          username: result.rows[0].username,
-          email: result.rows[0].email,
-          token: token
-        }
+        id: result.rows[0].id,
+        username: result.rows[0].username,
+        email: result.rows[0].email,
+        token
       });
     });
   });
 });
 
 /* GET users listing. */
-router.get('/:id', (req, res, next) => {
+router.get('/:user_id', (req, res, next) => {
   const getUserDataQuery = 'SELECT * FROM "User" WHERE "User".id = $1';
 
   const query = {
     text: getUserDataQuery,
-    values: [req.params.id]
+    values: [req.params.user_id]
   }
 
   db.client.query(query, (err, result) => {
@@ -187,7 +183,34 @@ router.get('/:user_id/collections', (req, res) => {
   });
 });
 
-router.post('/signup', function(req, res, next) {
+router.get('/:user_id/reviews', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  const reviewsQuery = 'SELECT "Review".id, "Review"."overallRating", "Review".comments, "Game".name FROM "Review"'
+   + ' JOIN "User" ON "Review"."userID" = "User".id'
+   + ' JOIN "Game" ON "Review"."gameID" = "Game".id'
+   + ' WHERE "User".id = $1 AND "Review"."overallRating" IS NOT NULL';
+
+  const query = {
+    text: reviewsQuery,
+    values: [req.params.user_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    const response = {};
+    response.reviews = result.rows.map(data => apiUtils.formatReview(data, hostname));
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(response);
+  });
+});
+
+router.post('/signup', function(req, res) {
   // Check for username and password in req.body
   if (req.body.username == null || req.body.password == null || req.body.email == null) {
     return res.status(400).set({
@@ -200,7 +223,6 @@ router.post('/signup', function(req, res, next) {
 
   // hash password
   bcrypt.hash(req.body.password, saltRounds, function(err, passwordHash) {
-
     if (err) {
       return res.status(500).set({
         "Content-Type": "application/json",

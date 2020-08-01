@@ -2,7 +2,7 @@ FROM mhart/alpine-node:10
 
 WORKDIR /api
 
-COPY package*.json /api/
+COPY package.json /api/
 
 RUN npm install
 

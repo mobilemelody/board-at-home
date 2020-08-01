@@ -1,6 +1,3 @@
-.App {  
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -65,7 +62,6 @@
 .App .Game .GameLine {
   height: 2px !important;
   color: #dddddd;
-  /* border-top: 1.5px; */
 }
 
 .App .Game .Img {

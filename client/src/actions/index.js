@@ -9,6 +9,8 @@ const receiveUser = createAction("RECEIVE_USER")
 const receiveUserLogin = createAction("RECEIVE_USER_LOGIN")
 const receiveUserSignedUp = createAction("RECEIVE_USER_SIGNEDUP")
 const resetUser = createAction("RESET_USER")
+const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
+const errorUserReviews = createAction("ERROR_USER_REVIEWS");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -44,6 +46,37 @@ export const userLogout = () => {
   return dispatch => dispatch(resetUser());
 }
 
+export const getUser = () => {
+  return (dispatch, getState) => {
+    const { user } = getState()
+    return api.get(`/users/${user.id}`)
+      .then(res => dispatch(receiveUser(res)))
+      .catch(err => dispatch(errorUser(err)))
+      .then(() => api.get(`/users/${user.id}/reviews`))
+      .then(res => dispatch(receiveUserReviews(res)))
+      .catch(err => dispatch(errorUserReviews(err)))
+      .then(() => api.get(`/users/${user.id}/collections`))
+      .then(res => {
+        dispatch(receiveUserCollections({
+          resp: {
+            payload: res,
+            userID: 4
+          }
+        }));
+      })
+      .catch(err => dispatch(errorUserCollections(err)));
+  }
+}
+
+export const getUserReviews = () => {
+  return (dispatch) => {
+    // TODO: Make this dynamic based on an auth token
+    return api.get('/users/1/reviews')
+      .then(resp => dispatch(receiveUserReviews(resp.data)))
+      .catch(err => dispatch(errorUserReviews(err)))
+  }
+};
+
 export const userReset = () => {
   return dispatch => {
     dispatch(resetUser())
@@ -77,17 +110,17 @@ export const getSetGameState = (game) => {
 }
 
 // Create actions for Review state
-const errorInsertReview = createAction("ERROR_INSERT_REVIEW")
-const errorDeleteReview = createAction("ERROR_DELETE_REVIEW")
-const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE")
-const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW")
+const errorInsertReview = createAction("ERROR_INSERT_REVIEW");
+const errorDeleteReview = createAction("ERROR_DELETE_REVIEW");
+const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE");
+const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW");
 
-const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING")
-const receiveReviews = createAction("RECEIVE_REVIEWS")
-const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE")
-const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT")
-const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE")
-const resetReviewNotif = createAction("RESET_NOTIF")
+const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING");
+const receiveReviews = createAction("RECEIVE_REVIEWS");
+const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE");
+const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT");
+const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE");
+const resetReviewNotif = createAction("RESET_NOTIF");
 
 export const getResetReviewNotif = () => {
   return (dispatch) => {
@@ -220,7 +253,7 @@ const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
 const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 
-const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
+// const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
 const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
 
 const setCollectionState = createAction("SET_COLLECTION_STATE");
@@ -250,7 +283,7 @@ export const getSetCollectionState = (collection) => {
 export const createCollection = (collection) => {
   return (dispatch, getState) => {
     // TODO: Add user info to request
-    const { user } = getState();
+    // const { user } = getState();
 
     return api.post(`/collections`, collection)
       .then(res => {

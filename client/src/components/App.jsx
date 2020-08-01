@@ -3,18 +3,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLoading, userLogout, checkLoggedIn } from "../actions"
 import { Nav, Navbar, Button } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { NotificationContainer } from 'react-notifications'
 
 // CSS imports
-import '../css/App.css'
-import '../css/Games.css'
+import '../css/App.css';
+import '../css/Games.css';
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-notifications/lib/notifications.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { css } from "@emotion/core";
 
 // Component imports
 import { Login } from './Login'
@@ -23,6 +23,7 @@ import { Game } from './Game'
 import { Games } from './Games'
 import { AddGame } from './AddGame'
 import { Collection } from './Collection'
+import { UserProfile } from './UserProfile'
 
 class _App extends React.Component {
   constructor(props) {
@@ -45,7 +46,6 @@ class _App extends React.Component {
   }
 
   render() {
-
     const { user } = this.props
 
     let homeRedirect
@@ -73,6 +73,9 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="#games">Games</Nav.Link>
+            <LinkContainer to="/profile/">
+              <Nav.Link>Profile</Nav.Link>
+            </LinkContainer>
           </Nav>
           <Button
             onClick={() => {
@@ -102,6 +105,7 @@ class _App extends React.Component {
           <Route path="/gamesAdd"><AddGame /></Route>
           <Route path='/game'><Game /></Route>
           <Route path='/collections/:collectionId' component={Collection} />
+          <Route path='/profile'><UserProfile/></Route>
           {homeRedirect}
         </Switch>
       </div>

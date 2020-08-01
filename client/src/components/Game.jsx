@@ -9,10 +9,6 @@ import { AddToCollection } from './AddToCollection';
 
 
 class _Game extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
 
     const { game, user } = this.props

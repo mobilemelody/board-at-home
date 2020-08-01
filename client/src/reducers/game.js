@@ -16,7 +16,7 @@ export const game = (state = gameState, action) => {
         isFetching: false,
         // error: action.payload.data.err
         error: "Error fetching game"
-      })
+      });
 
     case "FETCHING_GAME":
       return Object.assign({}, state, {
@@ -25,7 +25,6 @@ export const game = (state = gameState, action) => {
       })
 
     case "RECEIVE_GAME":
-
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
