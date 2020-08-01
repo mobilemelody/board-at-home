@@ -38,6 +38,10 @@ module.exports = {
       collection.gameCount = parseInt(input.gameCount);
     }
 
+    if ("gameIDs" in input) {
+      collection.gameIDs = input.gameIDs ? input.gameIDs.map(e => parseInt(e)) : [];
+    }
+
     collection.url = hostname + '/collections/' + collection.id;
     return collection;
 

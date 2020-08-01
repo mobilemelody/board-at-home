@@ -206,5 +206,166 @@ export const getGameReviews = () => {
   }
 }
 
+// Create actions for Collection state
+const errorCollection = createAction("ERROR_COLLECTION");
+const errorAddCollection = createAction("ERROR_ADD_COLLECTION");
+const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
+const errorAddGame = createAction("ERROR_ADD_GAME");
+const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
+const errorUserCollections = createAction("ERROR_USER_COLLECTIONS");
 
+const receiveCollection = createAction("RECEIVE_COLLECTION");
+const receiveCollectionAdded = createAction("RECEIVE_COLLECTION_ADD");
+const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
+const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
+const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 
+const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
+const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
+
+const setCollectionState = createAction("SET_COLLECTION_STATE");
+
+export const getCollection = (id) => {
+  return (dispatch, getState) => {
+    let collection_id = id;
+    return api.get(`/collections/${collection_id}`)
+      .then(res => {
+        dispatch(receiveCollection({
+          resp: {
+            payload: res
+          }
+        }));
+      })
+      .catch(err => dispatch(errorCollection(err)));
+  }
+}
+
+export const getSetCollectionState = (collection) => {
+  return (dispatch) => {
+    return dispatch(setCollectionState(collection))
+  }
+}
+
+// Create a new collection
+export const createCollection = (collection) => {
+  return (dispatch, getState) => {
+    // TODO: Add user info to request
+    const { user } = getState();
+
+    return api.post(`/collections`, collection)
+      .then(res => {
+        dispatch(receiveCollectionAdded({
+          resp: {
+            payload: res,
+            collection: collection,
+          }
+        }))
+      })
+      .catch(err => {
+        dispatch(errorAddCollection({
+          resp: {
+            error: err,
+            collection: collection,
+          }
+        }))
+      });
+  }
+}
+
+// update collection info
+export const updateCollection = (data) => {
+  return (dispatch, getState) => {
+    let collectionData = {
+      name: data.name,
+      isPrivate: data.isPrivate
+    };
+    return api.patch(`/collections/${data.id}`, collectionData)
+      .then(res => {
+        dispatch(receiveCollectionUpdated({
+          resp: {
+            payload: res,
+            data: data,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorUpdateCollection({
+          resp: {
+            error: err,
+            data: data,
+          }
+        }));
+      });
+  }
+}
+
+// get user collections
+export const getUserCollections = () => {
+  return (dispatch, getState) => {
+    const { user } = getState();
+    return api.get(`/users/${user.id}/collections`)
+      .then(res => {
+        dispatch(receiveUserCollections({
+          resp: {
+            payload: res,
+            userID: user.id
+          }
+        }));
+      })
+      .catch(err => dispatch(errorUserCollections(err)));
+  }
+}
+
+// add game to collection
+export const addGameToCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    const { game } = getState();
+    if (!gameID) {
+      gameID = game.data.id;
+    }
+    return api.put(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameAdded({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorAddGame({
+          resp: {
+            error: err,
+            data: collection,
+          }
+        }));
+      });
+  }
+}
+
+// remove game from collection
+export const removeGameFromCollection = (collection, gameID) => {
+  return (dispatch, getState) => {
+    const { game } = getState();
+    if (!gameID) {
+      gameID = game.data.id;
+    }
+    return api.delete(`/collections/${collection.id}/games/${gameID}`)
+      .then(res => {
+        dispatch(receiveGameRemoved({
+          resp: {
+            payload: res,
+            data: collection,
+          }
+        }));
+      })
+      .catch(err => {
+        dispatch(errorRemoveGame({
+          resp: {
+            error: err,
+            data: collection,
+          }
+        }));
+      });
+  }
+}

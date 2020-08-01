@@ -22,6 +22,7 @@ import { Signup } from './Signup'
 import { Game } from './Game'
 import { Games } from './Games'
 import { AddGame } from './AddGame'
+import { Collection } from './Collection'
 
 class _App extends React.Component {
   constructor(props) {
@@ -100,6 +101,7 @@ class _App extends React.Component {
           <Route path='/games'><Games /></Route>
           <Route path="/gamesAdd"><AddGame /></Route>
           <Route path='/game'><Game /></Route>
+          <Route path='/collections/:collectionId' component={Collection} />
           {homeRedirect}
         </Switch>
       </div>

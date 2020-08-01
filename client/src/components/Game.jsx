@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
 
 import { Reviews } from './Review'
+import { AddToCollection } from './AddToCollection';
 
 
 class _Game extends React.Component {
@@ -38,9 +39,10 @@ class _Game extends React.Component {
 
       body =
         <Grid container spacing={3}>
-          <Grid textAlign="left" item xs={12}>
-            <Paper>
+          <Grid textalign="left" item xs={12}>
+            <Paper className="d-flex justify-content-between align-items-center">
               <h1>{game.data.name}</h1>
+              <AddToCollection />
             </Paper>
             <hr className='GameLine'></hr>
           </Grid>
