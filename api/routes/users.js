@@ -46,11 +46,9 @@ router.get('/check', function(req, res, next) {
       "Content-Type": "application/json",
     }).send({
       status: 'success',
-      user: {
-        id: result.rows[0].id,
-        username: result.rows[0].username,
-        email: result.rows[0].email,
-      }
+      id: result.rows[0].id,
+      username: result.rows[0].username,
+      email: result.rows[0].email,
     });
   });
 });
@@ -111,18 +109,16 @@ router.post('/login', function(req, res, next) {
       }
 
       // Create token with username
-      var token = jwt.sign({username: result.rows[0].username}, secret)
+      const token = jwt.sign({username: result.rows[0].username}, secret)
 
       return res.status(200).set({
         "Content-Type": "application/json",
       }).send({
         status: 'success',
-        user: {
-          id: result.rows[0].id,
-          username: result.rows[0].username,
-          email: result.rows[0].email,
-          token: token
-        }
+        id: result.rows[0].id,
+        username: result.rows[0].username,
+        email: result.rows[0].email,
+        token
       });
     });
   });

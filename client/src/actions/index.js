@@ -50,7 +50,7 @@ export const getUser = () => {
   return (dispatch) => {
     // TODO: Make this dynamic based on an auth token
     return api.get('/users/1')
-      .then(resp => dispatch(receiveUser(resp.data)))
+      .then(resp => dispatch(receiveUser(resp)))
       .catch(err => dispatch(errorUser(err)))
   }
 }

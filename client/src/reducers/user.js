@@ -3,7 +3,7 @@
 const userState = {
   id: null,
   imgFileName: null,
-  username: null,
+  userName: null,
   email: null,
   isFetching: false,
   isReceived: false,
@@ -38,16 +38,21 @@ export const user = (state = userState, action) => {
 
     case "RECEIVE_USER":
       resp = action.payload.data
+      console.log(resp);
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
         isLoggedIn: true,
         error: null,
-        id: resp.user.id,
-        imgFileName: resp.user.imgFileName,
-        userName: resp.user.username,
-        email: resp.user.email
+        id: resp.id,
+        imgFileName: resp.imgFileName,
+        userName: resp.username,
+        email: resp.email,
       })
+
+    case "RECEIVE_USER_REVIEWS":
+        const reviews = action.payload.reviews;
+        return { ...state, reviews };
 
     case "RECEIVE_USER_LOGIN":
       resp = action.payload.data
@@ -61,10 +66,10 @@ export const user = (state = userState, action) => {
         isFetching: false,
         isLoggedIn: true,
         error: null,
-        id: resp.user.id,
-        imgFileName: resp.user.imgFileName,
-        userName: resp.user.username,
-        email: resp.user.email
+        id: resp.id,
+        imgFileName: resp.imgFileName,
+        userName: resp.username,
+        email: resp.email
       })
 
     case "RESET_USER":

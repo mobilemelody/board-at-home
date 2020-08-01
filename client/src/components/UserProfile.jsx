@@ -20,7 +20,7 @@ class _UserProfile extends React.Component {
       <div className="UserProfile">
         <Grid container spacing={1}>
           <Grid item md={4} xs={4}>
-            <Typography variant='h5'>{user.username}</Typography>
+            <Typography variant='h5'>{user.userName}</Typography>
             <Paper className='profileImgWrapper'>
               <img alt='profile img' src={user.imgFileName}/>
             </Paper>
