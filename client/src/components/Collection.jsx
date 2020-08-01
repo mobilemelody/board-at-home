@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux';
 import { Notifier } from './Notifier.jsx';
 import { Container, Row, Col, Form, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
@@ -73,9 +73,10 @@ class _Collection extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getCollection(this.props.match.params.id);
+    let { collectionId } = this.props;
+    this.props.getCollection(collectionId);
     this.setState({
-      id: this.props.collection.data.id,
+      id: collectionId,
       name: this.props.collection.data.name,
       isPrivate: this.props.collection.data.isPrivate
     });
@@ -137,10 +138,10 @@ class _Collection extends React.Component {
       let tableData = collection.data.games || [];
       
       tableData.forEach(game => {
-        // TODO: Add game page url
-        game.gameInfo = <a><img src={game.imgFileName} height="50"/> {game.name}</a>;
+        game.gameInfo = <a href={`/#/games/${game.id}`}><img src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
+        game.overallRating = game.overallRating ? parseFloat(game.overallRating).toFixed(1) : '--';
         game.remove = <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton>;
       });
 
@@ -181,7 +182,7 @@ class _Collection extends React.Component {
       }
 
       let userInfo = (
-        <a href={collection.data.user.url} className="d-inline-flex align-items-center"><Avatar src={collection.data.user.imgFileName} className="mr-1" /> {collection.data.user.username}</a>
+        <a href={`/#/users/${collection.data.user.id}`} className="d-inline-flex align-items-center"><Avatar src={collection.data.user.imgFileName} className="mr-1" /> {collection.data.user.username}</a>
       );
 
       body = (
@@ -215,9 +216,9 @@ class _Collection extends React.Component {
   }
 }
 
-export const Collection = connect(state => {
+export const Collection = connect((state, ownProps) => {
   const { collection } = state;
-  return { collection };
+  return { collection: collection, collectionId: ownProps.match.params.collectionId };
 }, dispatch => {
   return bindActionCreators({
     getCollection, getSetCollectionState, updateCollection, removeGameFromCollection
