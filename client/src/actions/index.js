@@ -48,14 +48,14 @@ export const userLogout = () => {
 
 export const getUser = () => {
   return (dispatch, getState) => {
-    // const { user } = getState()
-    return api.get(`/users/4`)
+    const { user } = getState()
+    return api.get(`/users/${user.id}`)
       .then(res => dispatch(receiveUser(res)))
       .catch(err => dispatch(errorUser(err)))
-      .then(() => api.get(`/users/4/reviews`))
+      .then(() => api.get(`/users/${user.id}/reviews`))
       .then(res => dispatch(receiveUserReviews(res)))
       .catch(err => dispatch(errorUserReviews(err)))
-      .then(() => api.get(`/users/4/collections`))
+      .then(() => api.get(`/users/${user.id}/collections`))
       .then(res => {
         dispatch(receiveUserCollections({
           resp: {
