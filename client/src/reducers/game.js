@@ -82,7 +82,6 @@ export const games = (state = gamesState, action) => {
       })
 
     case "RECEIVE_GAMES":
-      console.log(action.payload)
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,

@@ -30,8 +30,8 @@ class _App extends React.Component {
   }
 
   componentDidMount() {
-    var token = localStorage.getItem('token')
-    var username = localStorage.getItem('username')
+    const token = localStorage.getItem('token')
+    const username = localStorage.getItem('username')
 
     if (token && username) {
       this.props.userLoading()
@@ -46,7 +46,6 @@ class _App extends React.Component {
   render() {
 
     const { user } = this.props
-    // console.log(user)
 
     let homeRedirect
     let navbar

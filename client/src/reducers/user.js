@@ -17,7 +17,6 @@ export const user = (state = userState, action) => {
 
   switch (action.type) {
     case "ERROR_USER":
-      // console.log(action.payload)
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
@@ -26,7 +25,6 @@ export const user = (state = userState, action) => {
         userName: null,
         id: null,
         imgFileName: null,
-        // error: action.payload.data.err
         error: "Invalid login credentials"
       })
 

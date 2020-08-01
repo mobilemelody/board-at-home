@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../db');
 const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const secret = "secret"
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -24,7 +24,6 @@ router.get('/check', function(req, res, next) {
   db.client.query(getUserQuery, (err, result) => {
     // return 500 internal error
     if (err) {
-      console.log(err)
       return res.status(500).set({
         "Content-Type": "application/json",
       }).send({
@@ -82,7 +81,6 @@ router.post('/login', function(req, res, next) {
   db.client.query(getUserQuery, (err, result) => {
     // return 500 internal error
     if (err) {
-      console.log(err)
       return res.status(500).set({
         "Content-Type": "application/json",
       }).send({
@@ -114,8 +112,6 @@ router.post('/login', function(req, res, next) {
 
       // Create token with username
       var token = jwt.sign({username: result.rows[0].username}, secret)
-
-      console.log("success")
 
       return res.status(200).set({
         "Content-Type": "application/json",

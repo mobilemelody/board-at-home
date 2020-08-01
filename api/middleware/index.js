@@ -1,11 +1,11 @@
 module.exports = function(req, res, next) {
-    var jwt = require('jsonwebtoken')
+    const jwt = require('jsonwebtoken')
 
     // Bearer token and username
-    const bearer_header = req.headers.authorization // Bearer <token>
+    const bearerHeader = req.headers.authorization // Bearer <token>
     const from = req.headers.from
 
-    if (bearer_header == null || from == null) {
+    if (bearerHeader == null || from == null) {
         return res.status(400).set({
             "Content-Type": "application/json",
         }).send({ 
@@ -14,11 +14,11 @@ module.exports = function(req, res, next) {
     }
 
     // Split token from bearer header
-    const bearer = bearer_header.split(' ')
-    const bearer_token = bearer[1] // <token>
+    const bearer = bearerHeader.split(' ')
+    const bearerToken = bearer[1] // <token>
 
     // Verify token
-    jwt.verify(bearer_token, 'secret', function(err, decoded) {
+    jwt.verify(bearerToken, 'secret', function(err, decoded) {
     if (err != null) {
         return res.status(400).set({
             "Content-Type": "application/json",
@@ -37,8 +37,6 @@ module.exports = function(req, res, next) {
         message: 'invalid username-token combination',
       })
     }
-
-    console.log("here")
 
     // Else continue to route
     return next()

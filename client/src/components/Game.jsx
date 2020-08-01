@@ -15,8 +15,7 @@ class _Game extends React.Component {
   render() {
 
     const { game, user } = this.props
-    console.log(game)
-    var body
+    let body
 
     if (!user.isLoggedIn) {
       return <Redirect to='/' />

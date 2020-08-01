@@ -133,7 +133,6 @@ class _Games extends React.Component {
       categories: game.categories,
     })
     this.setState({ viewGame: true })
-    console.log("set game")
   }
 
   render() {

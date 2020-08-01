@@ -141,9 +141,7 @@ class AddGameForm extends React.Component {
       })
         .then(res => res.json())
         .then(res => {
-          let returnData = res.data.returnData;
-          let signedRequest = returnData.signedRequest;
-          let url = returnData.url;
+          const { signedRequest, url } = res.data.returnData;
           fetch(signedRequest, {
             method: 'PUT',
             body: values.image,
