@@ -3,9 +3,9 @@ module.exports = function(req, res, next) {
 
     // Bearer token and username
     const bearerHeader = req.headers.authorization // Bearer <token>
-    const from = req.headers.from
+    const id = req.headers.from
 
-    if (bearerHeader == null || from == null) {
+    if (bearerHeader == null || id == null) {
         return res.status(400).set({
             "Content-Type": "application/json",
         }).send({ 
@@ -18,7 +18,7 @@ module.exports = function(req, res, next) {
     const bearerToken = bearer[1] // <token>
 
     // Verify token
-    jwt.verify(bearerToken, 'secret', function(err, decoded) {
+    jwt.verify(bearerToken, 'FsT8VApMlKjmCgUPKIrv', function(err, decoded) {
     if (err != null) {
         return res.status(400).set({
             "Content-Type": "application/json",
@@ -29,7 +29,7 @@ module.exports = function(req, res, next) {
     }
 
     // If valid token, but username doesn't match
-    if (decoded.username !== from) {
+    if (decoded.id !== parseInt(id)) {
     return res.status(400).set({
         "Content-Type": "application/json",
       }).send({
