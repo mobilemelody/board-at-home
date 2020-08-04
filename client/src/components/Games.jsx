@@ -24,17 +24,20 @@ const GamePageTotal = (from, to, size) => (
 const GamesColumns = [{
   dataField: 'id',
   text: '',
-  hidden: true
+  hidden: true,
+  searchable: false,
 }, {
   dataField: 'isUserCreated',
   classes: 'isUserCreated',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'identifierID',
   classes: 'identifierID',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'name',
   classes: 'name',
@@ -44,6 +47,7 @@ const GamesColumns = [{
   dataField: 'publisher',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'year',
   text: '',
@@ -52,26 +56,32 @@ const GamesColumns = [{
   dataField: 'minAge',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'minPlaytime',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'maxPlaytime',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'minPlayers',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'maxPlayers',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'imgFileName',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'description',
   text: '',
@@ -79,6 +89,10 @@ const GamesColumns = [{
 }, {
   dataField: 'viewer',
   text: '',
+}, {
+  dataField: 'categories',
+  text: '',
+  hidden: true,
 }]
 
 // Set custom pagination
