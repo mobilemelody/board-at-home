@@ -60,7 +60,7 @@ class _UserProfile extends React.Component {
         <Grid container justify="flex-start" className="collections" spacing={1}>
           {
             user.collections.map((collection) => (
-              <Grid item md={3} xs={3}>
+              <Grid item md={3} xs={12}>
                 <LinkContainer to={`/collections/${collection.id}`}>
                   <div className="collection-container">
                     <BoardGameCollection/>

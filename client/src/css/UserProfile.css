@@ -53,9 +53,6 @@
 }
 
 .collections .collection-container {
-  border: 1px solid #000;
-  height: 250px;
-  width: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
