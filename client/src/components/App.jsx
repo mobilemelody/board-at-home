@@ -24,6 +24,7 @@ import { Games } from './Games'
 import { AddGame } from './AddGame'
 import { Collection } from './Collection'
 import { UserProfile } from './UserProfile'
+import { Recommendations } from './Recommendations'
 
 class _App extends React.Component {
   constructor(props) {
@@ -76,6 +77,9 @@ class _App extends React.Component {
             <LinkContainer to="/profile/">
               <Nav.Link>Profile</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/games/recommendations/">
+              <Nav.Link>Recommendations</Nav.Link>
+            </LinkContainer>
           </Nav>
           <Button
             onClick={() => {
@@ -101,6 +105,7 @@ class _App extends React.Component {
         <Switch>
           <Route path='/login'><Login /></Route>
           <Route path='/signup'><Signup /></Route>
+          <Route path='/games/recommendations' component={Recommendations} />
           <Route path='/games'><Games /></Route>
           <Route path="/gamesAdd"><AddGame /></Route>
           <Route path='/game'><Game /></Route>
