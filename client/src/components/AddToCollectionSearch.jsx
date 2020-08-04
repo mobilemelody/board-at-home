@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
-import { Modal, FormControl, InputGroup, ListGroup } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
-import SearchIcon from '@material-ui/icons/Search';
 
 import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index';
 
