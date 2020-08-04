@@ -4,7 +4,7 @@ const db = require('../db');
 const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
 const jwt = require('jsonwebtoken');
-const secret = "FsT8VApMlKjmCgUPKIrv"
+const dotenv = require('dotenv')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -110,7 +110,7 @@ router.post('/login', function(req, res, next) {
       }
 
       // Create token with username
-      const token = jwt.sign({id: result.rows[0].id}, secret)
+      const token = jwt.sign({id: result.rows[0].id}, process.env.PrivateKey)
 
       return res.status(200).set({
         "Content-Type": "application/json",

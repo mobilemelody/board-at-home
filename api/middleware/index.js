@@ -1,5 +1,6 @@
 module.exports = function(req, res, next) {
     const jwt = require('jsonwebtoken')
+    const dotenv = require('dotenv')
 
     // Bearer token and username
     const bearerHeader = req.headers.authorization // Bearer <token>
@@ -18,7 +19,7 @@ module.exports = function(req, res, next) {
     const bearerToken = bearer[1] // <token>
 
     // Verify token
-    jwt.verify(bearerToken, 'FsT8VApMlKjmCgUPKIrv', function(err, decoded) {
+    jwt.verify(bearerToken, process.env.PrivateKey, function(err, decoded) {
     if (err != null) {
         return res.status(400).set({
             "Content-Type": "application/json",

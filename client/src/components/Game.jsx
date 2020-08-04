@@ -10,8 +10,6 @@ import { getGame, gameLoading } from '../actions/index'
 
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
-import queryString from 'query-string';
-
 
 class _Game extends React.Component {
 

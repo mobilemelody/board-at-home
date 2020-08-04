@@ -113,9 +113,7 @@ router.post('/', (req, res, next) => {
         })
         .send(game);
     }
-
   });
-
 });
 
 /* Upload game image to S3 */
