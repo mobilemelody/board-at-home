@@ -296,7 +296,6 @@ class _Games extends React.Component {
             data={tableData}
             columns={GamesColumns}
             search
-            rowEvents={rowEvents}
           >
             {
               props =>
@@ -321,6 +320,7 @@ class _Games extends React.Component {
                       {...props.baseProps}
                       pagination={paginationFactory(GamesPaginationOptions)}
                       bordered={false}
+                      rowEvents={rowEvents}
                     />
                   </div>
                 </Grid>
