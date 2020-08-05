@@ -5,6 +5,9 @@ import { getUser, checkLoggedIn, getUserReviews, getUserCollections } from '../a
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Rating from '@material-ui/lab/Rating';
+import { LinkContainer } from 'react-router-bootstrap';
+import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
 import { Redirect } from 'react-router-dom'
 import { Spinner } from 'react-bootstrap';
@@ -59,13 +62,39 @@ class _UserProfile extends React.Component {
                 <div key={review.id} className={`review ${idx % 2 > 0 && 'review-odd'}`}>
                   <div>
                     <span className="review__name">{review.name}</span>
-                    <div className="review__overall-rating">User score: {review.overallRating}</div>
+                    <Rating
+                      className="review__overall-rating"
+                      name="overallRating"
+                      value={review.overallRating}
+                      readOnly
+                      size="small"
+                    />
                   </div>
                   <div className="review__comments">{review.comments}</div>
                 </div>
               ))
             }
           </Grid>
+        </Grid>
+        <span className="heading">Collections</span>
+        <hr/>
+        <Grid container justify="flex-start" className="collections" spacing={1}>
+          {
+            user.collections.map((collection) => (
+              <Grid item md={3} xs={12}>
+                <LinkContainer to={`/collections/${collection.id}`}>
+                  <div className="collection-container">
+                    <BoardGameCollection/>
+                    <div className="collection-name">{collection.name}</div>
+                    <div className="overlay"></div>
+                    <div className="collection-details">
+                      <div className="overlay-title">Number of games: {collection.gameCount}</div>
+                    </div>
+                  </div>
+                </LinkContainer>
+              </Grid>
+            ))
+          }
         </Grid>
       </div>
     );
