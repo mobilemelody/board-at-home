@@ -10,7 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import paginationFactory from 'react-bootstrap-table2-paginator'
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button, Spinner } from 'react-bootstrap'
 
 const GamePageTotal = (from, to, size) => (
@@ -23,17 +24,20 @@ const GamePageTotal = (from, to, size) => (
 const GamesColumns = [{
   dataField: 'id',
   text: '',
-  hidden: true
+  hidden: true,
+  searchable: false,
 }, {
   dataField: 'isUserCreated',
   classes: 'isUserCreated',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'identifierID',
   classes: 'identifierID',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'name',
   classes: 'name',
@@ -43,6 +47,7 @@ const GamesColumns = [{
   dataField: 'publisher',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'year',
   text: '',
@@ -51,26 +56,32 @@ const GamesColumns = [{
   dataField: 'minAge',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'minPlaytime',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'maxPlaytime',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'minPlayers',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'maxPlayers',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'imgFileName',
   text: '',
   hidden: true,
+  searchable: false,
 }, {
   dataField: 'description',
   text: '',
@@ -78,6 +89,10 @@ const GamesColumns = [{
 }, {
   dataField: 'viewer',
   text: '',
+}, {
+  dataField: 'categories',
+  text: '',
+  hidden: true,
 }]
 
 // Set custom pagination
@@ -139,6 +154,7 @@ class _Games extends React.Component {
   render() {
     const { user } = this.props
     const { games } = this.props
+    const { SearchBar } = Search;
 
     let tableData = []
     let notifier
@@ -275,30 +291,42 @@ class _Games extends React.Component {
         <Grid container spacing={3}>
           {notifier}
           <Grid item xs={12}><br /></Grid>
-          <Grid item xs={10} className="GamesTitleRow">
-            <Typography variant="h3">Games</Typography>
-          </Grid>
-          <Grid item xs={2} className="GamesTitleRow">
-            <Link to='/gamesAdd'>
-              <Button
-                variant="info"
-                size="sm"
-              >Add New Game</Button>
-            </Link>
-          </Grid>
-          <Grid item xs={12} className="GamesTableRow">
-            <div className="GamesTable">
-              <BootstrapTable
-                keyField="id"
-                data={tableData}
-                columns={GamesColumns}
-                rowEvents={rowEvents}
-                // expandRow={ OtherReviewsExpandRow }
-                bordered={false}
-                pagination={paginationFactory(GamesPaginationOptions)}
-              />
-            </div>
-          </Grid>
+          <ToolkitProvider
+            keyField="id"
+            data={tableData}
+            columns={GamesColumns}
+            search
+            rowEvents={rowEvents}
+          >
+            {
+              props =>
+              <>
+                <Grid item xs={2} className="GamesTitleRow">
+                  <Typography variant="h3">Games</Typography>
+                </Grid>
+                <Grid item xs={8} className="GamesSearchBarContainer">
+                  <SearchBar {...props.searchProps} placeholder="Search for a game" className="GamesSearchBar"/>
+                </Grid>
+                <Grid item xs={2} className="AddNewGame">
+                  <Link to='/gamesAdd'>
+                    <Button
+                      variant="info"
+                      size="sm"
+                    >Add New Game</Button>
+                  </Link>
+                </Grid>
+                <Grid item xs={12} className="GamesTableRow">
+                  <div className="GamesTable">
+                    <BootstrapTable
+                      {...props.baseProps}
+                      pagination={paginationFactory(GamesPaginationOptions)}
+                      bordered={false}
+                    />
+                  </div>
+                </Grid>
+              </>
+            }
+          </ToolkitProvider>
         </Grid>
       </div>
     )
