@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 import { Notifier } from './Notifier.jsx';
 import { Container, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
@@ -15,7 +16,6 @@ import PublicIcon from '@material-ui/icons/Public';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { AddToCollectionSearch } from './AddToCollectionSearch';
-import { Login } from './Login';
 
 // Import Actions
 import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection } from '../actions/index'
@@ -137,7 +137,7 @@ class _Collection extends React.Component {
 
     // Show login form if not logged in
     if (!user.isLoggedIn) {
-      return <Login />
+      return <Redirect to="/login" />;
     }
 
     let body = <div></div>;

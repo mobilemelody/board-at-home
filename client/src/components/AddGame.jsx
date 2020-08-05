@@ -3,7 +3,6 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
-import { Login } from './Login';
 
 const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
 
@@ -230,7 +229,7 @@ class _AddGame extends React.Component {
 
     // Show login form if not logged in
     if (!user.isLoggedIn) {
-      return <Login />
+      return <Redirect to="/login" />
     }
 
     if (this.state.gameId) {
