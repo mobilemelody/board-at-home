@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { Login } from './Login';
 
@@ -170,8 +171,8 @@ class AddGameForm extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        // TODO: Go to new game page
-        this.props.handleSubmit(res.name);
+        // Go to new game page
+        this.props.handleSubmit(res.id);
       })
   }
 
@@ -191,14 +192,14 @@ class _AddGame extends React.Component {
     super(props);
     this.state = {
       categoryList: [],
-      gameName: ''
+      gameId: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(name) {
-    this.setState({ gameName: name });
+  handleSubmit(id) {
+    this.setState({ gameId: id });
   }
 
   componentDidMount() {
@@ -232,12 +233,8 @@ class _AddGame extends React.Component {
       return <Login />
     }
 
-    let alert = '';
-    if (this.state.gameName) {
-      alert =
-        <div className="alert alert-primary">
-          {this.state.gameName} was added!
-        </div>
+    if (this.state.gameId) {
+      return <Redirect push to={'/game/'+this.state.gameId} />
     }
     return (
       <div>
