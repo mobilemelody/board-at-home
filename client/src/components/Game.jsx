@@ -1,21 +1,47 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
+import { Spinner } from 'react-bootstrap';
+import { getGame, gameLoading } from '../actions/index'
 
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
 
-
 class _Game extends React.Component {
+
+  constructor(props) {
+    super(props)
+  }
+
   render() {
 
     const { game, user } = this.props
     let body
 
-    if (!user.isLoggedIn) {
-      return <Redirect to='/' />
+    if (user.isNew) {
+      return (
+      <div className="spinner-wrapper">
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" />
+        </div>
+      </div>
+      )
+    }
+
+    // if user state is not fetching, not received, and not new
+    // at this point, there is no token & id in localStorage, so route should redirect to login
+    if(!user.isReceived && !user.isFetching && !user.isNew) {
+      return <Redirect to='/login' />
+    }
+
+    // No game from games state, fetch game
+    if (!game.isFetching && !game.isReceived) {
+      this.props.gameLoading()
+      this.props.getGame(this.props.match.params.id)
     }
 
     if (game.isReceived) {
@@ -103,4 +129,8 @@ export const Game = connect(state => {
   const { game } = state
   const { user } = state
   return { game, user }
-}, null)(_Game)
+}, dispatch => {
+  return bindActionCreators({
+    getGame, gameLoading
+  }, dispatch)
+})(_Game)

@@ -33,6 +33,10 @@
   height: 0px;
 }
 
+.App .spinner-wrapper {
+  padding-top: 20px;
+}
+
 .App .Games .GamesTitleRow {
   padding-bottom: 0px;
 }

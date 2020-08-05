@@ -6,14 +6,14 @@ const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000'
 axios.interceptors.request.use((config) => {
     // Get Items from localStorage and pass to config header
     let token = localStorage.getItem("token")
-    let username = localStorage.getItem("username")
+    let id = localStorage.getItem("userID")
 
     if (token) {
         config.headers['Authorization'] = `Bearer ${ token }`
     }
 
-    if (username) {
-        config.headers['From'] = username
+    if (id) {
+        config.headers['From'] = parseInt(id)
     }
 
     return config

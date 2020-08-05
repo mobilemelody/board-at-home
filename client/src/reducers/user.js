@@ -7,6 +7,7 @@ const userState = {
   email: null,
   isFetching: false,
   isReceived: false,
+  isNew: true,
   isReviewsReceived: false,
   isCollectionsReceived: false,
   isLoggedIn: false,
@@ -20,6 +21,20 @@ export const user = (state = userState, action) => {
   let resp;
 
   switch (action.type) {
+    case "ERROR_USER_CHECK":
+    return Object.assign({}, state, {
+      isReceived: true,
+      isFetching: false,
+      collections: [],
+      isLoggedIn: false,
+      email: null,
+      isNew: false,
+      userName: null,
+      id: null,
+      imgFileName: null,
+      error: "Invalid token + id"
+    })
+
     case "ERROR_USER":
       return Object.assign({}, state, {
         isReceived: true,
@@ -27,6 +42,7 @@ export const user = (state = userState, action) => {
         collections: [],
         isLoggedIn: false,
         email: null,
+        isNew: false,
         userName: null,
         id: null,
         imgFileName: null,
@@ -45,6 +61,7 @@ export const user = (state = userState, action) => {
         isFetching: false,
         isLoggedIn: true,
         error: null,
+        isNew: false,
         id: resp.id,
         imgFileName: resp.imgFileName,
         userName: resp.username,
@@ -72,13 +89,14 @@ export const user = (state = userState, action) => {
 
       // Add token to localStorage
       localStorage.setItem("token", resp.token)
-      localStorage.setItem("username", resp.username)
+      localStorage.setItem("userID", resp.id)
 
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
         isLoggedIn: true,
         error: null,
+        isNew: false,
         id: resp.id,
         imgFileName: resp.imgFileName,
         userName: resp.username,
@@ -91,8 +109,8 @@ export const user = (state = userState, action) => {
         localStorage.removeItem('token')
       }
 
-      if (localStorage.getItem('username')) {
-        localStorage.removeItem('username')
+      if (localStorage.getItem('userID')) {
+        localStorage.removeItem('userID')
       }
 
       return Object.assign({}, state, {
@@ -104,6 +122,12 @@ export const user = (state = userState, action) => {
         isReceived: false,
         isLoggedIn: false,
         error: null,
+        isNew: false,
+      })
+
+    case "UNSET_NEW":
+      return Object.assign({}, state, {
+        isNew: false,
       })
 
     default:

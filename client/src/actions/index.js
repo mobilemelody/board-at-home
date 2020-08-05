@@ -11,6 +11,8 @@ const receiveUserSignedUp = createAction("RECEIVE_USER_SIGNEDUP")
 const resetUser = createAction("RESET_USER")
 const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
 const errorUserReviews = createAction("ERROR_USER_REVIEWS");
+const errorUserCheck = createAction("ERROR_USER_CHECK");
+const unsetUserIsNew = createAction("UNSET_NEW");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -28,7 +30,7 @@ export const checkLoggedIn = () => {
   return (dispatch) => {
     return api.get("/users/check")
       .then(resp => dispatch(receiveUser(resp)))
-      .catch(err => dispatch(errorUser(err)))
+      .catch(err => dispatch(errorUserCheck(err)))
   }
 }
 
@@ -42,6 +44,10 @@ export const userLogin = (username, password) => {
   }
 }
 
+export const userUnsetIsNew = () => {
+  return dispatch => dispatch(unsetUserIsNew());
+}
+
 export const userLogout = () => {
   return dispatch => dispatch(resetUser());
 }
@@ -49,10 +55,7 @@ export const userLogout = () => {
 export const getUser = () => {
   return (dispatch, getState) => {
     const { user } = getState()
-    return api.get(`/users/${user.id}`)
-      .then(res => dispatch(receiveUser(res)))
-      .catch(err => dispatch(errorUser(err)))
-      .then(() => api.get(`/users/${user.id}/reviews`))
+    return api.get(`/users/${user.id}/reviews`)
       .then(res => dispatch(receiveUserReviews(res)))
       .catch(err => dispatch(errorUserReviews(err)))
       .then(() => api.get(`/users/${user.id}/collections`))
@@ -60,7 +63,7 @@ export const getUser = () => {
         dispatch(receiveUserCollections({
           resp: {
             payload: res,
-            userID: 4
+            userID: user.id
           }
         }));
       })
@@ -83,7 +86,7 @@ export const userReset = () => {
   }
 }
 
-// Create actions for Game state
+// Create actions for Games state
 const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
@@ -103,9 +106,47 @@ export const getGames = () => {
   }
 }
 
+// Game actions
+const errorGame = createAction("ERROR_GAME")
+const fetchingGame = createAction("FETCHING_GAME")
+const receiveGame = createAction("RECEIVE_GAME")
+
+export const gameLoading = () => {
+  return dispatch => {
+    dispatch(fetchingGame())
+  }
+}
+
+export const getGame = (gameID) => {
+  return (dispatch) => {
+    return api.get(`/games/${gameID}`)
+      .then(resp => dispatch(receiveGame(resp)))
+      .catch(err => dispatch(errorGame(err)))
+  }
+}
+
 export const getSetGameState = (game) => {
   return (dispatch) => {
     return dispatch(setGameState(game))
+  }
+}
+
+// Create actions for Recommendations state
+const errorRecommendations = createAction("ERROR_RECOMMENDATIONS")
+const fetchingRecommendations = createAction("FETCHING_RECOMMENDATIONS")
+const receiveRecommendations = createAction("RECEIVE_RECOMMENDATIONS")
+
+export const recommendationsLoading = () => {
+  return dispatch => {
+    dispatch(fetchingRecommendations())
+  }
+}
+
+export const getRecommendations = () => {
+  return (dispatch) => {
+    return api.get('/games/recommendations')
+      .then(resp => dispatch(receiveRecommendations(resp)))
+      .catch(err => dispatch(errorRecommendations(err)))
   }
 }
 

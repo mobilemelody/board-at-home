@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getGames, getSetGameState } from '../actions/index'
+import { getRecommendations, getSetGameState } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
 import { Link, Redirect } from 'react-router-dom'
@@ -10,9 +10,10 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
-import paginationFactory from 'react-bootstrap-table2-paginator'
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Button, Spinner } from 'react-bootstrap'
+
+import { Login } from './Login'
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -24,20 +25,17 @@ const GamePageTotal = (from, to, size) => (
 const GamesColumns = [{
   dataField: 'id',
   text: '',
-  hidden: true,
-  searchable: false,
+  hidden: true
 }, {
   dataField: 'isUserCreated',
   classes: 'isUserCreated',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'identifierID',
   classes: 'identifierID',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'name',
   classes: 'name',
@@ -47,7 +45,6 @@ const GamesColumns = [{
   dataField: 'publisher',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'year',
   text: '',
@@ -56,32 +53,26 @@ const GamesColumns = [{
   dataField: 'minAge',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'minPlaytime',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'maxPlaytime',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'minPlayers',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'maxPlayers',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'imgFileName',
   text: '',
   hidden: true,
-  searchable: false,
 }, {
   dataField: 'description',
   text: '',
@@ -89,10 +80,6 @@ const GamesColumns = [{
 }, {
   dataField: 'viewer',
   text: '',
-}, {
-  dataField: 'categories',
-  text: '',
-  hidden: true,
 }]
 
 // Set custom pagination
@@ -118,18 +105,17 @@ const GamesPaginationOptions = {
 };
 
 
-class _Games extends React.Component {
+class _Recommendations extends React.Component {
   constructor(props) {
     super(props)
     this._setGame = this._setGame.bind(this)
     this.state = {
-      viewGame: false,
-      gameID: null,
+      viewGame: false
     }
   }
 
   componentDidMount() {
-    this.props.getGames()
+    this.props.getRecommendations();
   }
 
   _setGame(game) {
@@ -148,45 +134,35 @@ class _Games extends React.Component {
       description: game.description,
       categories: game.categories,
     })
-    this.setState({ viewGame: true, gameID: game.id })
+    this.setState({ viewGame: true })
   }
 
   render() {
     const { user } = this.props
-    const { games } = this.props
-    const { SearchBar } = Search;
+    const { recommendations } = this.props
 
     let tableData = []
     let notifier
 
-    // At beginning of user state, check to see if user state action has been dispatched
-    if (user.isNew) {
+    if ((user.isFetching && !user.isReceived) || !recommendations || !recommendations.isReceived) {
       return (
-      <div className="spinner-wrapper">
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content-center mt-5">
           <Spinner animation="border" />
         </div>
-      </div>
-      )
+      );
     }
 
-    // if user state is not fetching, not received, and not new
-    // at this point, there is no token & id in localStorage, so route should redirect to login
-    if(!user.isReceived && !user.isFetching && !user.isNew) {
-      return <Redirect to='/login' />
+    // Redirect to Home page if user logs out on games page
+    if (!user.isLoggedIn) {
+      return <Login />
     }
 
     if (this.state.viewGame) {
-      return <Redirect push to={'/game/'+this.state.gameID} />
+      return <Redirect push to='/game' />
     }
 
     // Create error notification
-    if (games.error !== null) {
-      notifier = <Notifier type="ERROR_GAMES" />
-    }
-
-    // Create error notification
-    if (games.error !== null) {
+    if (recommendations.error !== null) {
       notifier = <Notifier type="ERROR_GAMES" />
     }
 
@@ -196,8 +172,13 @@ class _Games extends React.Component {
       }
     }
 
-    // Push reviews to table data
-    games.rows.forEach(function (game) {
+    // Display message if no recommendations
+    if (recommendations.rows.length === 0) {
+      notifier = <Notifier type="NO_RECOMMENDATIONS" />
+    }
+
+    // Push games to table data
+    recommendations.rows.forEach(function (game) {
       var categories = []
 
       game.categories.forEach(function (category) {
@@ -291,54 +272,34 @@ class _Games extends React.Component {
         <Grid container spacing={3}>
           {notifier}
           <Grid item xs={12}><br /></Grid>
-          <ToolkitProvider
-            keyField="id"
-            data={tableData}
-            columns={GamesColumns}
-            search
-            rowEvents={rowEvents}
-          >
-            {
-              props =>
-              <>
-                <Grid item xs={2} className="GamesTitleRow">
-                  <Typography variant="h3">Games</Typography>
-                </Grid>
-                <Grid item xs={8} className="GamesSearchBarContainer">
-                  <SearchBar {...props.searchProps} placeholder="Search for a game" className="GamesSearchBar"/>
-                </Grid>
-                <Grid item xs={2} className="AddNewGame">
-                  <Link to='/gamesAdd'>
-                    <Button
-                      variant="info"
-                      size="sm"
-                    >Add New Game</Button>
-                  </Link>
-                </Grid>
-                <Grid item xs={12} className="GamesTableRow">
-                  <div className="GamesTable">
-                    <BootstrapTable
-                      {...props.baseProps}
-                      pagination={paginationFactory(GamesPaginationOptions)}
-                      bordered={false}
-                    />
-                  </div>
-                </Grid>
-              </>
-            }
-          </ToolkitProvider>
+          <Grid item xs={10} className="GamesTitleRow">
+            <Typography variant="h3">Recommendations</Typography>
+          </Grid>
+          <Grid item xs={12} className="GamesTableRow">
+            <div className="GamesTable">
+              <BootstrapTable
+                keyField="id"
+                data={tableData}
+                columns={GamesColumns}
+                rowEvents={rowEvents}
+                // expandRow={ OtherReviewsExpandRow }
+                bordered={false}
+                pagination={paginationFactory(GamesPaginationOptions)}
+              />
+            </div>
+          </Grid>
         </Grid>
       </div>
     )
   }
 }
 
-export const Games = connect(state => {
+export const Recommendations = connect(state => {
   const { user } = state
-  const { games } = state
-  return { user, games }
+  const { recommendations } = state
+  return { user, recommendations }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState, getGames
+    getSetGameState, getRecommendations
   }, dispatch)
-})(_Games)
+})(_Recommendations)
