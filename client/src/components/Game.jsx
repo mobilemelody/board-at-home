@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
-import { getGame, gameLoading } from '../actions/index'
+import { getGame, gameLoading, resetGame } from '../actions/index'
 
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
@@ -15,6 +15,22 @@ class _Game extends React.Component {
 
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
+    this.unlisten = this.props.history.listen((location, action) => {
+      this.props.resetGame()
+      this.props.gameLoading()
+      this.props.getGame(this.props.match.params.id)
+    });
+
+    this.props.resetGame()
+    this.props.gameLoading()
+    this.props.getGame(this.props.match.params.id)
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
   }
 
   render() {
@@ -36,12 +52,6 @@ class _Game extends React.Component {
     // at this point, there is no token & id in localStorage, so route should redirect to login
     if(!user.isReceived && !user.isFetching && !user.isNew) {
       return <Redirect to='/login' />
-    }
-
-    // No game from games state, fetch game
-    if (!game.isFetching && !game.isReceived) {
-      this.props.gameLoading()
-      this.props.getGame(this.props.match.params.id)
     }
 
     if (game.isReceived) {
@@ -131,6 +141,6 @@ export const Game = connect(state => {
   return { game, user }
 }, dispatch => {
   return bindActionCreators({
-    getGame, gameLoading
+    getGame, gameLoading, resetGame
   }, dispatch)
 })(_Game)
