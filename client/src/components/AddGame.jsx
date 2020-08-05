@@ -27,9 +27,6 @@ class AddGameForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-  }
-
   createForm() {
     return (
       <form className="form" onSubmit={this.handleSubmit}>

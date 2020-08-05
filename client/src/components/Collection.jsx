@@ -8,7 +8,6 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 import BootstrapTable from 'react-bootstrap-table-next';
-import AddIcon from '@material-ui/icons/AddCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LockIcon from '@material-ui/icons/Lock';
@@ -157,9 +156,9 @@ class _Collection extends React.Component {
       }
 
       let tableData = collection.data.games || [];
-      
+
       tableData.forEach(game => {
-        game.gameInfo = <a href={`/#/games/${game.id}`}><img src={game.imgFileName} height="50"/> {game.name}</a>;
+        game.gameInfo = <a href={`/#/games/${game.id}`}><img alt="game cover" src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
         game.overallRating = game.overallRating ? parseFloat(game.overallRating).toFixed(1) : '--';

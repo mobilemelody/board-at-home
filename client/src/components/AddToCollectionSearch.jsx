@@ -1,13 +1,52 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
-import { Modal, FormControl, InputGroup, ListGroup } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
-import SearchIcon from '@material-ui/icons/Search';
-import DotLoader from 'react-spinners/DotLoader';
 
-import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index'
+import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index';
+
+// Column names for table of games
+const tableColumns = [{
+  dataField: 'id',
+  text: 'Game ID',
+  hidden: true,
+  searchable: false
+}, {
+  dataField: 'name',
+  text: '',
+  hidden: true
+}, {
+  dataField: 'gameInfo',
+  text: 'Search results:',
+  searchable: false,
+  headerStyle: { fontWeight: 'bold' }
+}, {
+  dataField: 'actionButton',
+  text: '',
+  searchable: false,
+  align: 'center',
+  style: { verticalAlign: 'middle' }
+}];
+
+// Set custom pagination
+const GamesPaginationOptions = {
+  paginationSize: 5,
+  pageStartIndex: 1,
+  hideSizePerPage: true,
+  hidePageListOnlyOnePage: true,
+  withFirstAndLast: false,
+  alwaysShowAllBtns: true,
+  showTotal: false,
+  disablePageTitle: true,
+  sizePerPageList: [{
+    text: '5', value: 5
+  }]
+};
 
 class _AddToCollectionSearch extends React.Component {
   constructor(props) {
@@ -44,7 +83,7 @@ class _AddToCollectionSearch extends React.Component {
       .catch(err => {
         console.log(err);
       });
-    
+
   }
 
   _removeFromCollection(id) {
@@ -62,36 +101,30 @@ class _AddToCollectionSearch extends React.Component {
   render() {
 
     let { collection, games } = this.props.state;
+    const { SearchBar } = Search;
 
     let gamesList = [];
 
     if (games.isReceived && !games.error) {
 
       // Create list of games
-      // TODO: Remove manual limit on results
       let gamesInCollection = collection.data.games.map(e => e.id);
-      gamesList = games.rows.slice(0, 10).map(e => 
-        <ListGroup.Item key={e.id}>
-          <a href={e.url}><img src={e.imgFileName} height="50"/> {e.name}</a>
-          <div className="float-md-right">
-            {gamesInCollection.includes(e.id) ?
-              <Button variant="contained" onClick={() => {this._removeFromCollection(e.id)}}>Remove Game</Button>:
-              <Button variant="outlined" onClick={() => {this._addToCollection(e.id)}}>Add Game</Button>}
-          </div>
-        </ListGroup.Item>
-      );
-    }
+      gamesList = games.rows.map(e => {
+        return {
+          id: e.id,
+          name: e.name,
+          gameInfo: <a href={e.url}><img alt="game cover" src={e.imgFileName} height="50"/> {e.name}</a>,
+          actionButton: (
+            <div className="float-md-right">
+              {gamesInCollection.includes(e.id) ?
+                <Button variant="contained" onClick={() => {this._removeFromCollection(e.id)}}>Remove Game</Button>:
+                <Button variant="outlined" onClick={() => {this._addToCollection(e.id)}}>Add Game</Button>}
+            </div>
+          )
+        }
+      });
 
-    // TODO: Implement search
-    let search =
-      <InputGroup>
-        <FormControl
-          placeholder="Search for a game"
-        />
-        <InputGroup.Append>
-          <Button variant="outlined"><SearchIcon/></Button>
-        </InputGroup.Append>
-      </InputGroup>;
+    }
 
     // Modal dialog content
     let body =
@@ -99,16 +132,27 @@ class _AddToCollectionSearch extends React.Component {
         <Button variant="contained" startIcon={<AddIcon/>} size="large" onClick={this._openDialog}>
           Add Games
         </Button>
-        <Modal show={this.state.open} onHide={this._closeDialog}>
+        <Modal size="lg" show={this.state.open} onHide={this._closeDialog}>
           <Modal.Header closeButton>
             <Modal.Title>Add Games</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="py-2">{search}</div>
-            <div className="pt-2">
-              <strong>Search results:</strong>
-              <ListGroup variant="flush">{gamesList}</ListGroup>
-            </div>
+            <ToolkitProvider
+              keyField="id"
+              data={ gamesList }
+              columns={ tableColumns }
+              search
+            >
+            {props => {
+              props.baseProps.pagination = paginationFactory(GamesPaginationOptions);
+              props.baseProps.bordered = false;
+              return (
+                <div>
+                  <SearchBar {...props.searchProps} />
+                  <BootstrapTable { ...props.baseProps } className="table-borderless" />
+                </div>
+              )}}
+            </ToolkitProvider>
           </Modal.Body>
         </Modal>
       </div>;

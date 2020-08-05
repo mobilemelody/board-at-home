@@ -15,15 +15,15 @@ const S3_BUCKET = process.env.Bucket;
 /* Get all games */
 router.get('/', (req, res, next) => {
   const getGamesQuery = 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
-  ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
-  ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+  ' LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+  ' LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
   ' GROUP BY "Game".id ORDER BY "Game".id';
 
   db.client.query(getGamesQuery, (err, result) => {
     if (err) {
       return res.status(400).send(err);
     }
-    res.status(200).send(result.rows);
+    res.status(200).send(result.rows.map(e => apiUtils.formatGame(e)));
   });
 });
 
@@ -113,9 +113,7 @@ router.post('/', (req, res, next) => {
         })
         .send(game);
     }
-
   });
-
 });
 
 /* Upload game image to S3 */
@@ -143,12 +141,40 @@ router.post('/sign-s3', (req, res) => {
   });
 });
 
+/* Get game recommendations */
+router.get('/recommendations', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  // TODO: Get user ID from auth header
+  let userID = 1;
+
+  // Build query object
+  let query = { 
+    text: 'SELECT "Game".*, array_agg(DISTINCT("GameCategorySelect".category)) as categories, SUM("similarUsers"."numGames") AS "score" FROM "Review" LEFT JOIN "Game" ON "Review"."gameID" = "Game".id LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID" LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id LEFT JOIN ( SELECT "Review"."userID", COUNT(*) AS "numGames" FROM "Review" WHERE "Review"."gameID" IN ( SELECT "Game".id FROM "Game" JOIN "Review" ON "Game".id = "Review"."gameID" WHERE "Review"."userID" = $1 AND "Review"."overallRating" >= 4 ) AND "Review"."overallRating" >= 4 AND "Review"."userID" != $1 GROUP BY "Review"."userID" ORDER BY "numGames" ) AS "similarUsers" ON "Review"."userID" = "similarUsers"."userID" WHERE "Review"."userID" = "similarUsers"."userID" AND "Review"."gameID" NOT IN ( SELECT "gameID" FROM "Review" WHERE "userID" = $1 ) AND "Review"."overallRating" >= 4 GROUP BY "Game".id ORDER BY "score" DESC',
+    values: [userID]
+  };
+
+  // Run query
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    res.status(200)
+      .set({
+        "Content-Type": "application/json"
+      })
+      .send(result.rows.map(e => apiUtils.formatGame(e)));
+  });
+
+});
+
 /* Get game information by id */
 router.get('/:game_id', (req, res) => {
   const query = {
     text: 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
-      ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
-      ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+      ' LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+      ' LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
       ' WHERE "Game".id = $1' +
       ' GROUP BY "Game".id',
     values: [req.params.game_id]
@@ -167,7 +193,7 @@ router.get('/:game_id', (req, res) => {
       return res.status(404).send('Not found');
     }
 
-    return res.status(200).send(game);
+    return res.status(200).send(apiUtils.formatGame(game));
   });
 });
 

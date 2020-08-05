@@ -63,6 +63,10 @@ class _Notifier extends Component {
 				NotificationManager.error('Try again later', "Error Updating Review")
 				break
 
+			case 'NO_RECOMMENDATIONS':
+				NotificationManager.error('Try reviewing some more games', "No recommendations")
+				break
+
 			default:
 				break
 		}
