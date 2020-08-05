@@ -131,6 +131,25 @@ export const getSetGameState = (game) => {
   }
 }
 
+// Create actions for Recommendations state
+const errorRecommendations = createAction("ERROR_RECOMMENDATIONS")
+const fetchingRecommendations = createAction("FETCHING_RECOMMENDATIONS")
+const receiveRecommendations = createAction("RECEIVE_RECOMMENDATIONS")
+
+export const recommendationsLoading = () => {
+  return dispatch => {
+    dispatch(fetchingRecommendations())
+  }
+}
+
+export const getRecommendations = () => {
+  return (dispatch) => {
+    return api.get('/games/recommendations')
+      .then(resp => dispatch(receiveRecommendations(resp)))
+      .catch(err => dispatch(errorRecommendations(err)))
+  }
+}
+
 // Create actions for Review state
 const errorInsertReview = createAction("ERROR_INSERT_REVIEW");
 const errorDeleteReview = createAction("ERROR_DELETE_REVIEW");

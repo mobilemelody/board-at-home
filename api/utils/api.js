@@ -85,4 +85,13 @@ module.exports = {
     collection.url = hostname + '/collections/' + collection.id;
     return collection;
   },
+
+  // Formats game object replacing [null] with empty array
+  formatGame: function (input) {
+    let game = {...input};
+    if (game.categories[0] === null) {
+      game.categories = [];
+    }
+    return game;
+  }
 }

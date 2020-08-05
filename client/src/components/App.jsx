@@ -14,7 +14,7 @@ import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-notifications/lib/notifications.css';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 
 // Component imports
 import { Login } from './Login'
@@ -24,6 +24,7 @@ import { Games } from './Games'
 import { AddGame } from './AddGame'
 import { Collection } from './Collection'
 import { UserProfile } from './UserProfile'
+import { Recommendations } from './Recommendations'
 
 class _App extends React.Component {
   constructor(props) {
@@ -82,6 +83,9 @@ class _App extends React.Component {
             <LinkContainer to="/profile">
               <Nav.Link>Profile</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/games/recommendations/">
+              <Nav.Link>Recommendations</Nav.Link>
+            </LinkContainer>
           </Nav>
           <Button
             variant='info'
@@ -108,6 +112,7 @@ class _App extends React.Component {
         <Switch>
           <Route path='/login'component={Login}/>
           <Route path='/signup' component={Signup}/>
+          <Route path='/games/recommendations' component={Recommendations} />
           <Route path='/games' component={Games}/>
           <Route path="/gamesAdd" component={AddGame}/>
           <Route path='/game/:id' component={Game}/>
