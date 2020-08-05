@@ -110,10 +110,17 @@ export const getGames = () => {
 const errorGame = createAction("ERROR_GAME")
 const fetchingGame = createAction("FETCHING_GAME")
 const receiveGame = createAction("RECEIVE_GAME")
+const resetGameState = createAction("RESET_GAME")
 
 export const gameLoading = () => {
   return dispatch => {
     dispatch(fetchingGame())
+  }
+}
+
+export const resetGame = () => {
+  return dispatch => {
+    dispatch(resetGameState())
   }
 }
 
@@ -277,6 +284,14 @@ export const getGameReviews = () => {
       .catch(err => {
         dispatch(errorReceiveReviews(err))
       });
+  }
+}
+
+const resetReviewState = createAction("RESET_REVIEW")
+
+export const resetReview = () => {
+  return (dispatch) => {
+    dispatch(resetReviewState())
   }
 }
 

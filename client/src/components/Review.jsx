@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 // Import Actions
-import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif } from '../actions/index'
+import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif, resetReview } from '../actions/index'
 
-import { Form, Button, InputGroup } from 'react-bootstrap'
+import { Form, Button, InputGroup, Spinner } from 'react-bootstrap'
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -335,6 +335,7 @@ class _Reviews extends React.Component {
 
   // Get reviews when component loads
   componentDidMount() {
+    this.props.resetReview()
     this.props.getGameReviews()
   }
 
@@ -409,11 +410,21 @@ class _Reviews extends React.Component {
 
   render() {
 
-    const { reviews } = this.props
+    const { reviews, user } = this.props
 
     var formDisabled = false
     var tableData = []
     var notifier = <div />
+
+    if (user.isNew || user.isFetching) {
+      return (
+        <div className="spinner-wrapper">
+          <div className="d-flex justify-content-center">
+            <Spinner animation="border" />
+          </div>
+        </div>
+      )
+    }
 
     if (reviews.userReviewed && !this.state.editReview) {
       formDisabled = true
@@ -752,10 +763,10 @@ class _Reviews extends React.Component {
 }
 
 export const Reviews = connect(state => {
-  const { reviews } = state
-  return { reviews }
+  const { reviews, user } = state
+  return { reviews, user  }
 }, dispatch => {
   return bindActionCreators({
-    getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif
+    getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif, resetReview
   }, dispatch)
 })(_Reviews)

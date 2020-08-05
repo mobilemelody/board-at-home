@@ -133,21 +133,6 @@ class _Games extends React.Component {
   }
 
   _setGame(game) {
-    this.props.getSetGameState({
-      id: game.id,
-      isUserCreated: game.isUserCreated,
-      identifierID: game.identifierID,
-      name: game.name,
-      publisher: game.publisher,
-      year: game.year,
-      minPlaytime: game.minPlaytime,
-      minPlayers: game.minPlayers,
-      maxPlayers: game.maxPlayers,
-      minAge: game.minAge,
-      imgFileName: game.imgFileName,
-      description: game.description,
-      categories: game.categories,
-    })
     this.setState({ viewGame: true, gameID: game.id })
   }
 
@@ -158,6 +143,7 @@ class _Games extends React.Component {
 
     let tableData = []
     let notifier
+    let setGame = this._setGame // gives access to this._setGame in bootstrap table
 
     // At beginning of user state, check to see if user state action has been dispatched
     if (user.isNew) {
@@ -188,12 +174,6 @@ class _Games extends React.Component {
     // Create error notification
     if (games.error !== null) {
       notifier = <Notifier type="ERROR_GAMES" />
-    }
-
-    const rowEvents = {
-      onClick: (e, row, rowIndex) => {
-        this._setGame(row)
-      }
     }
 
     // Push reviews to table data
@@ -277,6 +257,7 @@ class _Games extends React.Component {
             </Grid>
             <Grid item xs={12}>
               <Button
+                onClick={() => setGame(game)}
                 variant="info"
                 size="sm"
                 type="submit"
