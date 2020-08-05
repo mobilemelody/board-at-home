@@ -10,7 +10,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
 import { Redirect } from 'react-router-dom'
-import { Spinner } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
@@ -53,6 +53,13 @@ class _UserProfile extends React.Component {
             </Paper>
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
+            <div className="button-container">
+              <Button
+              variant='info'
+              >
+                Edit Profile
+              </Button>
+            </div>
           </Grid>
           <Grid item md={8} xs={8}>
             <span className="heading">Reviews</span>
