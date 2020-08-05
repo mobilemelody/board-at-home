@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Button } from 'react-bootstrap'
+import { Button, Spinner } from 'react-bootstrap'
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -108,7 +108,8 @@ class _Games extends React.Component {
     super(props)
     this._setGame = this._setGame.bind(this)
     this.state = {
-      viewGame: false
+      viewGame: false,
+      gameID: null,
     }
   }
 
@@ -132,7 +133,7 @@ class _Games extends React.Component {
       description: game.description,
       categories: game.categories,
     })
-    this.setState({ viewGame: true })
+    this.setState({ viewGame: true, gameID: game.id })
   }
 
   render() {
@@ -142,13 +143,25 @@ class _Games extends React.Component {
     let tableData = []
     let notifier
 
-    // Redirect to Home page if user logs out on games page
-    if (!user.isLoggedIn) {
+    // At beginning of user state, check to see if user state action has been dispatched
+    if (user.isNew) {
+      return (
+      <div className="spinner-wrapper">
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" />
+        </div>
+      </div>
+      )
+    }
+
+    // if user state is not fetching, not received, and not new
+    // at this point, there is no token & id in localStorage, so route should redirect to login
+    if(!user.isReceived && !user.isFetching && !user.isNew) {
       return <Redirect to='/login' />
     }
 
     if (this.state.viewGame) {
-      return <Redirect push to='/game' />
+      return <Redirect push to={'/game/'+this.state.gameID} />
     }
 
     // Create error notification

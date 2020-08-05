@@ -4,20 +4,20 @@ const db = require('../db');
 const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
 const jwt = require('jsonwebtoken');
-const secret = "secret"
+const dotenv = require('dotenv')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 // router.use(<route>, require(<token middleware>))
 router.use('/check', require('../middleware'))
 
-router.get('/check', function(req, res, next) {
+router.get('/check', function(req, res) {
   // Valid token and valid user
 
   const getUserQuery = {
-    text: 'SELECT "User".* FROM "User" WHERE "User".username = $1',
+    text: 'SELECT "User".* FROM "User" WHERE "User".id = $1',
     values: [
-      req.headers.from
+      parseInt(req.headers.from)
     ]
   }
 
@@ -49,6 +49,7 @@ router.get('/check', function(req, res, next) {
       id: result.rows[0].id,
       username: result.rows[0].username,
       email: result.rows[0].email,
+      imgFileName: result.rows[0].imgFileName,
     });
   });
 });
@@ -109,7 +110,7 @@ router.post('/login', function(req, res, next) {
       }
 
       // Create token with username
-      const token = jwt.sign({username: result.rows[0].username}, secret)
+      const token = jwt.sign({id: result.rows[0].id}, process.env.PrivateKey)
 
       return res.status(200).set({
         "Content-Type": "application/json",
@@ -118,6 +119,7 @@ router.post('/login', function(req, res, next) {
         id: result.rows[0].id,
         username: result.rows[0].username,
         email: result.rows[0].email,
+        imgFileName: result.rows[0].imgFileName,
         token
       });
     });

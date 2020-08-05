@@ -25,11 +25,12 @@ export const game = (state = gameState, action) => {
       })
 
     case "RECEIVE_GAME":
+
       return Object.assign({}, state, {
         isReceived: true,
         isFetching: false,
         error: null,
-        data: action.payload.data.game,
+        data: action.payload.data,
       })
 
     case "SET_GAME_STATE":

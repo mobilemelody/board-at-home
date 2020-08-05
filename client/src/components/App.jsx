@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { userLogin, userLoading, userLogout, checkLoggedIn } from "../actions"
+import { userLogin, userLoading, userLogout, checkLoggedIn, userUnsetIsNew } from "../actions"
 import { Nav, Navbar, Button } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
@@ -34,11 +34,13 @@ class _App extends React.Component {
 
   componentDidMount() {
     const token = localStorage.getItem('token')
-    const username = localStorage.getItem('username')
+    const id = localStorage.getItem('userID')
 
-    if (token && username) {
+    if (token && id) {
       this.props.userLoading()
       this.props.checkLoggedIn()
+    } else {
+      this.props.userUnsetIsNew()
     }
   }
 
@@ -51,6 +53,10 @@ class _App extends React.Component {
 
     let homeRedirect
     let navbar
+
+    if (user.error != null) {
+      this._userLogout()
+    }
 
     if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
@@ -74,7 +80,7 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="#games">Games</Nav.Link>
-            <LinkContainer to="/profile/">
+            <LinkContainer to="/profile">
               <Nav.Link>Profile</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/games/recommendations/">
@@ -82,6 +88,7 @@ class _App extends React.Component {
             </LinkContainer>
           </Nav>
           <Button
+            variant='info'
             onClick={() => {
               this._userLogout()
             }}
@@ -103,14 +110,14 @@ class _App extends React.Component {
         <NotificationContainer key="app" />
         {navbar}
         <Switch>
-          <Route path='/login'><Login /></Route>
-          <Route path='/signup'><Signup /></Route>
+          <Route path='/login'component={Login}/>
+          <Route path='/signup' component={Signup}/>
           <Route path='/games/recommendations' component={Recommendations} />
-          <Route path='/games'><Games /></Route>
-          <Route path="/gamesAdd"><AddGame /></Route>
-          <Route path='/game'><Game /></Route>
+          <Route path='/games' component={Games}/>
+          <Route path="/gamesAdd" component={AddGame}/>
+          <Route path='/game/:id' component={Game}/>
           <Route path='/collections/:collectionId' component={Collection} />
-          <Route path='/profile'><UserProfile/></Route>
+          <Route path='/profile' component={UserProfile}/>
           {homeRedirect}
         </Switch>
       </div>
@@ -129,7 +136,7 @@ export const App = connect(state => {
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
-    userLogin, userLogout, checkLoggedIn, userLoading
+    userLogin, userLogout, checkLoggedIn, userLoading, userUnsetIsNew
   }, dispatch)
 })(_App)
 

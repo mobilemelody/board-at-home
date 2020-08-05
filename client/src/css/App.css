@@ -9,6 +9,10 @@
   }
 }
 
+.btn {
+  text-transform: unset !important;
+}
+
 .Review-Wrapper .form-check-input{
   background: #708bb8 !important
 }
