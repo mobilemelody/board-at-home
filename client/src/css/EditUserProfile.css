@@ -1,0 +1,21 @@
+.profileImgWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.profileImgWrapper > .MuiPaper-root {
+  position: relative;
+}
+
+.profileImgWrapper > .MuiPaper-root .MuiSvgIcon-root {
+  position: absolute;
+  top: 0;
+  right: 6px;
+}
+
+.profileImgWrapper img {
+  width: 175px;
+  height: 175px;
+}

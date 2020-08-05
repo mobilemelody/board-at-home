@@ -9,7 +9,7 @@ import Rating from '@material-ui/lab/Rating';
 import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Spinner, Button } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
@@ -54,11 +54,13 @@ class _UserProfile extends React.Component {
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
             <div className="button-container">
-              <Button
-              variant='info'
-              >
-                Edit Profile
-              </Button>
+              <Link to='/profile/edit'>
+                <Button
+                variant='info'
+                >
+                  Edit Profile
+                </Button>
+              </Link>
             </div>
           </Grid>
           <Grid item md={8} xs={8}>

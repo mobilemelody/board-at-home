@@ -1,8 +1,11 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import EditIcon from '@material-ui/icons/Edit';
+import '../css/EditUserProfile.css';
 
 class _EditUserProfile extends React.Component {
   constructor(props) {
@@ -27,12 +30,20 @@ class _EditUserProfile extends React.Component {
 
 
   render() {
+    const { user } = this.props
+
     return (
 			<div className="Login">
 				{/* {notifier} */}
 				<Form onSubmit={this.updateProfile}>
 					<Typography variant="h4">Edit Profile</Typography>
 					<hr />
+          <div className='profileImgWrapper'>
+            <Paper>
+              <EditIcon fontSize="small" backgroundColor="black"/>
+              <img alt='profile img' src={user.imgFileName}/>
+            </Paper>
+          </div>
 					<Form.Group>
 						<Form.Label>Username</Form.Label>
 						<Form.Control
@@ -72,7 +83,7 @@ class _EditUserProfile extends React.Component {
 						<Button
 							variant="primary"
 							type="submit"
-						>Sign Up</Button>
+						>Update Profile</Button>
 					</Form.Group>
 				</Form>
 			</div>
