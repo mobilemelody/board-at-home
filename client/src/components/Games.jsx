@@ -20,12 +20,6 @@ const GamePageTotal = (from, to, size) => (
   </span>
 )
 
-const rowEvents = {
-  onClick: (e, row, rowIndex) => {
-    this._setGame(row)
-  }
-}
-
 // Other Review table columns
 const GamesColumns = [{
   dataField: 'id',
