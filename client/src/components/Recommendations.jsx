@@ -120,21 +120,6 @@ class _Recommendations extends React.Component {
   }
 
   _setGame(game) {
-    this.props.getSetGameState({
-      id: game.id,
-      isUserCreated: game.isUserCreated,
-      identifierID: game.identifierID,
-      name: game.name,
-      publisher: game.publisher,
-      year: game.year,
-      minPlaytime: game.minPlaytime,
-      minPlayers: game.minPlayers,
-      maxPlayers: game.maxPlayers,
-      minAge: game.minAge,
-      imgFileName: game.imgFileName,
-      description: game.description,
-      categories: game.categories,
-    })
     this.setState({ viewGame: true, gameID: game.id });
   }
 
@@ -144,6 +129,7 @@ class _Recommendations extends React.Component {
 
     let tableData = []
     let notifier
+    let setGame = this._setGame // gives access to this._setGame in bootstrap table
 
     if ((user.isFetching && !user.isReceived) || !recommendations || !recommendations.isReceived || user.isNew) {
       return (
@@ -165,12 +151,6 @@ class _Recommendations extends React.Component {
     // Create error notification
     if (recommendations.error !== null) {
       notifier = <Notifier type="ERROR_GAMES" />
-    }
-
-    const rowEvents = {
-      onClick: (e, row, rowIndex) => {
-        this._setGame(row)
-      }
     }
 
     // Display message if no recommendations
@@ -259,6 +239,7 @@ class _Recommendations extends React.Component {
             </Grid>
             <Grid item xs={12}>
               <Button
+                onClick={() => setGame(game)}
                 variant="info"
                 size="sm"
                 type="submit"
@@ -282,8 +263,6 @@ class _Recommendations extends React.Component {
                 keyField="id"
                 data={tableData}
                 columns={GamesColumns}
-                rowEvents={rowEvents}
-                // expandRow={ OtherReviewsExpandRow }
                 bordered={false}
                 pagination={paginationFactory(GamesPaginationOptions)}
               />
