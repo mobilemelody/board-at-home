@@ -110,7 +110,8 @@ class _Recommendations extends React.Component {
     super(props)
     this._setGame = this._setGame.bind(this)
     this.state = {
-      viewGame: false
+      viewGame: false,
+      gameID: null,
     }
   }
 
@@ -134,7 +135,7 @@ class _Recommendations extends React.Component {
       description: game.description,
       categories: game.categories,
     })
-    this.setState({ viewGame: true })
+    this.setState({ viewGame: true, gameID: game.id });
   }
 
   render() {
@@ -144,7 +145,7 @@ class _Recommendations extends React.Component {
     let tableData = []
     let notifier
 
-    if ((user.isFetching && !user.isReceived) || !recommendations || !recommendations.isReceived) {
+    if ((user.isFetching && !user.isReceived) || !recommendations || !recommendations.isReceived || user.isNew) {
       return (
         <div className="d-flex justify-content-center mt-5">
           <Spinner animation="border" />
@@ -158,7 +159,7 @@ class _Recommendations extends React.Component {
     }
 
     if (this.state.viewGame) {
-      return <Redirect push to='/game' />
+      return <Redirect push to={'/game/' + this.state.gameID} />
     }
 
     // Create error notification

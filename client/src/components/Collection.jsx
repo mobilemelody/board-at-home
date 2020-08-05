@@ -127,7 +127,7 @@ class _Collection extends React.Component {
     const { user } = this.props;
 
     // Show loading spinner if fetching user and/or collection
-    if ((user.isFetching && !user.isReceived) || !collection.isReceived) {
+    if ((user.isFetching && !user.isReceived) || !collection.isReceived || user.isNew) {
       return (
         <div className="d-flex justify-content-center mt-5">
           <Spinner animation="border" />
@@ -158,7 +158,7 @@ class _Collection extends React.Component {
       let tableData = collection.data.games || [];
 
       tableData.forEach(game => {
-        game.gameInfo = <a href={`/#/games/${game.id}`}><img alt="game cover" src={game.imgFileName} height="50"/> {game.name}</a>;
+        game.gameInfo = <a href={`/#/game/${game.id}`}><img alt="game cover" src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
         game.overallRating = game.overallRating ? parseFloat(game.overallRating).toFixed(1) : '--';
@@ -202,7 +202,7 @@ class _Collection extends React.Component {
       }
 
       let userInfo = (
-        <a href={`/#/users/${collection.data.user.id}`} className="d-inline-flex align-items-center"><Avatar src={collection.data.user.imgFileName} className="mr-1" /> {collection.data.user.username}</a>
+        <div className="d-inline-flex align-items-center"><Avatar src={collection.data.user.imgFileName} className="mr-1" /> {collection.data.user.username}</div>
       );
 
       const addGames = (
