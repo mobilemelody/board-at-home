@@ -16,8 +16,8 @@ router.post('/', (req, res) => {
       .send(err);
   }
 
-  // TODO: Add user ID
-  let userID = 1;
+  // Get user ID from request header
+  let userID = parseInt(req.headers.from);
 
   // Build query object
   let query = { 

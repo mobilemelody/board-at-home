@@ -301,7 +301,6 @@ class _Games extends React.Component {
                       {...props.baseProps}
                       pagination={paginationFactory(GamesPaginationOptions)}
                       bordered={false}
-                      rowEvents={rowEvents}
                     />
                   </div>
                 </Grid>

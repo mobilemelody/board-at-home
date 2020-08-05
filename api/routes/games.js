@@ -51,11 +51,11 @@ router.post('/', (req, res, next) => {
     query.values.push(req.body[field] || null);
   }
 
-  // TODO: Add user details
+  // Add user details
   queryFields.push('"isUserCreated"');
   query.values.push(true);
   queryFields.push('"identifierID"');
-  query.values.push("userId");
+  query.values.push(parseInt(req.headers.from));
 
   query.text = 'INSERT INTO "Game"(' + queryFields.join(', ') + ') VALUES' + dbUtils.expand(1, queryFields.length) + ' RETURNING *';
 
@@ -145,8 +145,8 @@ router.post('/sign-s3', (req, res) => {
 router.get('/recommendations', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
 
-  // TODO: Get user ID from auth header
-  let userID = 1;
+  // Get user ID from request header
+  let userID = parseInt(req.headers.from);
 
   // Build query object
   let query = { 
@@ -247,9 +247,9 @@ router.post('/:game_id/reviews', (req, res) => {
     query.values.push(val);
   }
 
-  // TODO: Add user details
+  // Add user details
   queryFields.push('"userID"');
-  query.values.push(1);
+  query.values.push(parseInt(req.headers.from));
 
   // Add game info
   queryFields.push('"gameID"');
