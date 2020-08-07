@@ -10,7 +10,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
 import { Redirect } from 'react-router-dom'
-import { Spinner } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
@@ -44,18 +44,18 @@ class _UserProfile extends React.Component {
     }
 
     return this.allFetched(user) && (
-      <div className="UserProfile">
+      <Container className="UserProfile py-5">
         <Grid container spacing={1}>
-          <Grid item md={4} xs={4}>
-            <Typography variant='h5'>{user.userName}</Typography>
+          <Grid item md={3} xs={12}>
+            <h1>{user.userName}</h1>
             <Paper className='profileImgWrapper'>
               <img alt='profile img' src={user.imgFileName}/>
             </Paper>
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
           </Grid>
-          <Grid item md={8} xs={8}>
-            <span className="heading">Reviews</span>
+          <Grid item md={9} xs={12} className="pt-3">
+            <h4>Reviews</h4>
             <hr/>
             {
               user.reviews.map((review, idx) => (
@@ -76,27 +76,29 @@ class _UserProfile extends React.Component {
             }
           </Grid>
         </Grid>
-        <span className="heading">Collections</span>
-        <hr/>
-        <Grid container justify="flex-start" className="collections" spacing={1}>
-          {
-            user.collections.map((collection) => (
-              <Grid item md={3} xs={12}>
-                <LinkContainer to={`/collections/${collection.id}`}>
-                  <div className="collection-container">
-                    <BoardGameCollection/>
-                    <div className="collection-name">{collection.name}</div>
-                    <div className="overlay"></div>
-                    <div className="collection-details">
-                      <div className="overlay-title">Number of games: {collection.gameCount}</div>
+        <div className="pt-3">
+          <h4>Collections</h4>
+          <hr/>
+          <Grid container justify="flex-start" className="collections" spacing={1}>
+            {
+              user.collections.map((collection) => (
+                <Grid item md={3} sm={6} xs={12}>
+                  <LinkContainer to={`/collections/${collection.id}`}>
+                    <div className="collection-container">
+                      <BoardGameCollection/>
+                      <div className="collection-name">{collection.name}</div>
+                      <div className="overlay"></div>
+                      <div className="collection-details">
+                        <div className="overlay-title">Number of games: {collection.gameCount}</div>
+                      </div>
                     </div>
-                  </div>
-                </LinkContainer>
-              </Grid>
-            ))
-          }
-        </Grid>
-      </div>
+                  </LinkContainer>
+                </Grid>
+              ))
+            }
+          </Grid>
+        </div>
+      </Container>
     );
   }
 }

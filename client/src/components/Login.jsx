@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom";
 import { userLogin, userLoading, userReset } from "../actions"
-import { Form, Button } from 'react-bootstrap'
+import { Container, Form, Button } from 'react-bootstrap'
 import Typography from '@material-ui/core/Typography';
 import { Notifier } from './Notifier.jsx'
 
@@ -50,9 +50,9 @@ class _Login extends Component {
     }
 
     return (
-      <div className="Login">
+      <Container className="Login">
         {notifier}
-        <Form onSubmit={this._login}>
+        <Form onSubmit={this._login} className="col-md-8 offset-md-2">
           <Typography variant="h4">Login</Typography>
           <hr />
           <Form.Group>
@@ -79,7 +79,7 @@ class _Login extends Component {
             >Login</Button>
           </Form.Group>
         </Form>
-      </div>
+      </Container>
     )
   }
 }

@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
-import { Spinner } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import { getGame, gameLoading, resetGame } from '../actions/index'
 
 import { Reviews } from './Review'
@@ -71,42 +71,43 @@ class _Game extends React.Component {
 
       body =
         <Grid container spacing={3}>
-          <Grid textalign="left" item xs={12}>
-            <Paper className="d-flex justify-content-between align-items-center">
+          <Grid container item xs={12} className="align-items-center">
+            <Grid item sm={6} xs={12}>
               <h1>{game.data.name}</h1>
+            </Grid>
+            <Grid item sm={6} xs={12} className="text-sm-right">
               <AddToCollection />
-            </Paper>
-            <hr className='GameLine'></hr>
+            </Grid>
+            <Grid item xs={12}><hr className='GameLine'></hr></Grid>
           </Grid>
-          <Grid item xs={5}>
-            <Paper className='Img'>
+          <Grid item md={3} xs={12}>
+            <Paper className='ImgWrapper'>
               <img alt='Boardgame cover' className='ImgCenter' src={game.data.imgFileName} />
-              <br />
             </Paper>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item md={5} xs={12}>
             <Grid container spacing={1}>
-              <Grid item xs={12}>Details<hr /></Grid>
+              <Grid item xs={12}><h5>Details</h5><hr /></Grid>
 
-              <Grid item xs={6}>Players:</Grid>
-              <Grid item xs={6}>{game.data.minPlayers} - {game.data.maxPlayers}</Grid>
+              <Grid item xs={5}>Players:</Grid>
+              <Grid item xs={7}>{game.data.minPlayers} - {game.data.maxPlayers}</Grid>
 
-              <Grid item xs={6}>Minimum Age:</Grid>
-              <Grid item xs={6}>{game.data.minAge}</Grid>
+              <Grid item xs={5}>Minimum Age:</Grid>
+              <Grid item xs={7}>{game.data.minAge}</Grid>
 
-              <Grid item xs={6}>Playtime:</Grid>
-              <Grid item xs={6}>{game.data.minPlaytime} - {game.data.maxPlaytime} minutes</Grid>
+              <Grid item xs={5}>Playtime:</Grid>
+              <Grid item xs={7}>{game.data.minPlaytime} - {game.data.maxPlaytime} minutes</Grid>
 
-              <Grid item xs={6}>Publisher:</Grid>
-              <Grid item xs={6}>{game.data.publisher}</Grid>
+              <Grid item xs={5}>Publisher:</Grid>
+              <Grid item xs={7}>{game.data.publisher}</Grid>
 
-              <Grid item xs={6}>Year Published:</Grid>
-              <Grid item xs={6}>{game.data.year}</Grid>
+              <Grid item xs={5}>Year Published:</Grid>
+              <Grid item xs={7}>{game.data.year}</Grid>
             </Grid>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item md={4} xs={12}>
             <Grid container spacing={1}>
-              <Grid item xs={12}>Categories<hr /></Grid>
+              <Grid item xs={12}><h5>Categories</h5><hr /></Grid>
               {categories}
             </Grid>
           </Grid>
@@ -128,9 +129,9 @@ class _Game extends React.Component {
     }
 
     return (
-      <div className='Game'>
+      <Container className='Game py-5'>
         {body}
-      </div>
+      </Container>
     )
   }
 }

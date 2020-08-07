@@ -30,10 +30,7 @@
 }
 
 .App .Login {
-  width: 400px;
-  align-content: center;
   padding-top: 10%;
-  margin: auto;
 }
 
 .App-link {
@@ -47,11 +44,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.App .Game {
-  text-align: left;
-  padding: 10%;
 }
 
 .App .Review-Wrapper {
@@ -114,19 +106,12 @@
   width: 60%;
 }
 
-.CommentsWrapper {
-  padding: 0px 5px 5px 5px !important;
-  margin: 0px 10px 10px 10px !important;
-}
-
 .CommentsWrapper .CommentsP {
-  background-color: #f1f1f1;
   height: 100px !important;
-  padding: 5px;
 }
 
 .App .Game .ReviewTable .react-bootstrap-table .table th {
-  visibility: hidden !important;
+  display: none;
 }
 
 .App .Game .ReviewTable .active .page-item {
@@ -145,14 +130,6 @@
 .parent-expanded td, .child-expanded {
 border-top: 0px !important;
 }
-
-/* .MuiCheckbox-colorSecondary.Mui-checked	{
-  color: #4285f4 !important;
-}
-
-.MuiCheckbox-colorSecondary.Mui-checked:hover	{
-  border: none !important;
-} */
 
 .MuiIconButton-root {
   padding: 0px !important;

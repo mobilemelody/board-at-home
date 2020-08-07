@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { userLoading, userSignUp } from "../actions"
-import { Form, Button } from 'react-bootstrap'
+import { Container, Form, Button } from 'react-bootstrap'
 import Typography from '@material-ui/core/Typography';
 import { Notifier } from './Notifier.jsx'
 import { Redirect } from "react-router-dom";
@@ -85,9 +85,9 @@ class _Signup extends Component {
 		}
 
 		return (
-			<div className="Login">
+			<Container className="Login">
 				{notifier}
-				<Form onSubmit={this._signUp}>
+				<Form onSubmit={this._signUp} className="col-md-8 offset-md-2">
 					<Typography variant="h4">Sign Up</Typography>
 					<hr />
 					<Form.Group>
@@ -141,7 +141,7 @@ class _Signup extends Component {
 						>Sign Up</Button>
 					</Form.Group>
 				</Form>
-			</div>
+			</Container>
 		)
 	}
 }

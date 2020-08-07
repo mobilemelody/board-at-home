@@ -76,23 +76,26 @@ class _App extends React.Component {
 
     if (user.isLoggedIn) {
       navbar =
-        <Navbar bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="#games">Games</Nav.Link>
-            <LinkContainer to="/profile">
-              <Nav.Link>Profile</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/games/recommendations/">
-              <Nav.Link>Recommendations</Nav.Link>
-            </LinkContainer>
-          </Nav>
-          <Button
-            variant='info'
-            onClick={() => {
-              this._userLogout()
-            }}
-          >Logout</Button>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="#games">Games</Nav.Link>
+              <LinkContainer to="/profile">
+                <Nav.Link>Profile</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/games/recommendations/">
+                <Nav.Link>Recommendations</Nav.Link>
+              </LinkContainer>
+            </Nav>
+            <Button
+              variant='info'
+              onClick={() => {
+                this._userLogout()
+              }}
+            >Logout</Button>
+          </Navbar.Collapse>
         </Navbar>
 
       homeRedirect = <Redirect from='/' to='/games' />
