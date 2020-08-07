@@ -56,7 +56,7 @@ class _Notifier extends Component {
 				break
 
 			case 'RECEIVE_REVIEW_UPDATE':
-				NotificationManager.info("", "Revied Updated", 5000)
+				NotificationManager.info("", "Review Updated", 5000)
 				break
 
 			case 'ERROR_INSERT_REVIEW':
