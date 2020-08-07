@@ -222,10 +222,9 @@ router.get('/:game_id/reviews', (req, res) => {
 
 /* Get reviews for a game */
 router.get('/:game_id/reviews/average', (req, res) => {
-  let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT "Review".* FROM "Review" WHERE "Review"."gameID" = $1',
+    text: 'SELECT AVG("overallRating")::NUMERIC(10, 0) AS "avgRating" FROM "Review" WHERE "Review"."gameID" = $1',
     values: [req.params.game_id]
   }
 
@@ -234,20 +233,15 @@ router.get('/:game_id/reviews/average', (req, res) => {
       return res.status(400).send(err);
     }
 
-    let sumRating = 0, avgRating = 0, ratingCount = 0;
+    var avgRating;
 
-    result.rows.forEach((review) => {
-      if (review.overallRating) {
-        ratingCount++
-        sumRating += review.overallRating;
-      }
-    })
-
-    avgRating = Math.round(sumRating/ratingCount);
+    if (result.rows) {
+      avgRating = parseInt(result.rows[0].avgRating);
+    }
 
     let resp = {
       avgRating: avgRating,
-      gameID: req.params.game_id,
+      gameID: parseInt(req.params.game_id),
     };
 
     res.status(200)
@@ -258,10 +252,9 @@ router.get('/:game_id/reviews/average', (req, res) => {
 
 /* Get reviews for all games */
 router.get('/reviews/average', (req, res) => {
-  let hostname = req.protocol + '://' + req.headers.host;
 
   let query = {
-    text: 'SELECT "Game".id, array_agg("Review"."overallRating") as "overallRatings" FROM "Game"' +
+    text: 'SELECT "Game".id as "gameID", AVG("Review"."overallRating")::NUMERIC(10,0) AS "avgRating" FROM "Game"' +
     ' LEFT JOIN "Review" ON "Review"."gameID" = "Game".id' +
     ' GROUP BY "Game".id ORDER BY "Game".id'
   }
@@ -271,32 +264,9 @@ router.get('/reviews/average', (req, res) => {
       return res.status(400).send(err);
     }
 
-    var resp = []
-
-    // for each game in games
-    result.rows.forEach((game) => {
-      
-      var sumRating = 0, avgRating = 0, ratingCount = 0;
-      
-      // for each overallRating review in game
-      if (game.overallRatings) {
-        game.overallRatings.forEach((rating) => {
-            ratingCount++
-            sumRating += rating;
-        })
-        // calculate average rating
-        avgRating = Math.round(sumRating/ratingCount)
-      }
-      
-      resp.push({
-        gameID: game.id,
-        avgRating: avgRating,
-      })
-    })
-
     res.status(200)
       .set({ "Content-Type": "application/json" })
-      .send(resp);
+      .send(result.rows);
   });
 });
 

@@ -44,7 +44,6 @@ export const game = (state = gameState, action) => {
       })
 
     case "RECEIVE_GAME_AVG_RATING":
-      console.log(action.payload)
       return Object.assign({}, state, {
         isAvgRatingReceived: true, 
         isAvgRatingFetching: false,
