@@ -19,3 +19,15 @@
   width: 175px;
   height: 175px;
 }
+
+.EditProfile {
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.EditProfile form {
+  padding-top: 16px;
+  width: 400px;
+}

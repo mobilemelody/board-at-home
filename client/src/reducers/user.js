@@ -14,6 +14,7 @@ const userState = {
   error: null,
   collections: [],
   reviews: [],
+  notifType: null,
 }
 
 // User action reducer handler
@@ -76,13 +77,21 @@ export const user = (state = userState, action) => {
         reviews
       };
 
-      case "RECEIVE_USER_COLLECTIONS":
-        const collections = action.payload.resp.payload.data.collections;
-        return {
-          ...state,
-          isCollectionsReceived: true,
-          collections,
-        };
+    case "RECEIVE_USER_COLLECTIONS":
+      const collections = action.payload.resp.payload.data.collections;
+      return {
+        ...state,
+        isCollectionsReceived: true,
+        collections,
+      };
+
+    case "ERROR_USER_UPDATE":
+      return {
+        ...state,
+        isFetching: false,
+        error: 'An error occurred',
+        notifType: "ERROR_USER_UPDATE",
+      }
 
     case "RECEIVE_USER_LOGIN":
       resp = action.payload.data
@@ -131,12 +140,14 @@ export const user = (state = userState, action) => {
       })
 
     case "RECEIVE_USER_UPDATE":
-      const { imgFileName, username, email } = action.payload.data;
+      const { data } = action.payload;
       return {
         ...state,
-        imgFileName,
-        userName: username,
-        email
+        isFetching: false,
+        imgFileName: data.imgFileName || state.imgFileName,
+        userName: data.username || state.username,
+        email: data.email || state.email,
+        notifType: "RECEIVE_USER_UPDATE",
       };
 
     default:

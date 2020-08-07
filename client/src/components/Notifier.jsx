@@ -31,6 +31,18 @@ class _Notifier extends Component {
 				NotificationManager.error("Try again", "Invalid username/password", 5000)
 				break
 
+			case 'RECEIVE_USER_UPDATE':
+				NotificationManager.info('', 'Profile updated successfully', 5000)
+				break
+
+			case 'ERROR_USER_UPDATE':
+				NotificationManager.error('', 'Error updating profile', 5000)
+				break
+
+			case 'ERROR_EMPTY_FIELDS':
+				NotificationManager.error('', 'Please update at least one field', 5000)
+				break
+
 			case 'ERROR_GAMES':
 				NotificationManager.error("Try again later", "Error Getting Games", 5000)
 				break

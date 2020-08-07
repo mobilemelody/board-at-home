@@ -82,10 +82,10 @@ export const getUserReviews = () => {
   }
 };
 
-export const updateUser = () => {
+export const updateUser = (data) => {
   return (dispatch, getState) => {
     const { user } = getState();
-    return api.put(`/users/${user.id}`)
+    return api.put(`/users/${user.id}`, data)
     .then(res => dispatch(receiveUserUpdate(res)))
     .catch(err => dispatch(errorUserUpdate(err)));
   }

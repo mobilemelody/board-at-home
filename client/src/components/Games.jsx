@@ -171,11 +171,6 @@ class _Games extends React.Component {
       notifier = <Notifier type="ERROR_GAMES" />
     }
 
-    // Create error notification
-    if (games.error !== null) {
-      notifier = <Notifier type="ERROR_GAMES" />
-    }
-
     // Push reviews to table data
     games.rows.forEach(function (game) {
       var categories = []
