@@ -121,6 +121,17 @@ export const reviews = (state = reviewsState, action) => {
         error: null
       })
 
+    case "RESET_REVIEW":
+      return Object.assign({}, state, {
+        isFetching: false,
+        isReceived: false,
+        error: null,
+        notifType: null,
+        userReviewed: false,
+        userReview: {},
+        rows: []
+      })
+
     case "RESET_NOTIF":
       return Object.assign({}, state, {
         notifType: null
