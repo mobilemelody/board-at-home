@@ -220,6 +220,86 @@ router.get('/:game_id/reviews', (req, res) => {
   });
 });
 
+/* Get reviews for a game */
+router.get('/:game_id/reviews/average', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  let query = {
+    text: 'SELECT "Review".* FROM "Review" WHERE "Review"."gameID" = $1',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    let sumRating = 0, avgRating = 0, ratingCount = 0;
+
+    result.rows.forEach((review) => {
+      if (review.overallRating) {
+        ratingCount++
+        sumRating += review.overallRating;
+      }
+    })
+
+    avgRating = Math.round(sumRating/ratingCount);
+
+    let resp = {
+      avgRating: avgRating,
+      gameID: req.params.game_id,
+    };
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(resp);
+  });
+});
+
+/* Get reviews for all games */
+router.get('/reviews/average', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  let query = {
+    text: 'SELECT "Game".id, array_agg("Review"."overallRating") as "overallRatings" FROM "Game"' +
+    ' LEFT JOIN "Review" ON "Review"."gameID" = "Game".id' +
+    ' GROUP BY "Game".id ORDER BY "Game".id'
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    var resp = []
+
+    // for each game in games
+    result.rows.forEach((game) => {
+      
+      var sumRating = 0, avgRating = 0, ratingCount = 0;
+      
+      // for each overallRating review in game
+      if (game.overallRatings) {
+        game.overallRatings.forEach((rating) => {
+            ratingCount++
+            sumRating += rating;
+        })
+        // calculate average rating
+        avgRating = Math.round(sumRating/ratingCount)
+      }
+      
+      resp.push({
+        gameID: game.id,
+        avgRating: avgRating,
+      })
+    })
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(resp);
+  });
+});
+
 /* Create review for game */
 router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;

@@ -6,10 +6,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Redirect } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
-import { getGame, gameLoading, resetGame } from '../actions/index'
+import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
 
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
+import { Notifier } from './Notifier';
+import * as shared from './shared';
 
 class _Game extends React.Component {
 
@@ -35,8 +37,8 @@ class _Game extends React.Component {
 
   render() {
 
-    const { game, user } = this.props
-    let body
+    const { game, user } = this.props;
+    let body;
 
     if (user.isNew) {
       return (
@@ -45,7 +47,16 @@ class _Game extends React.Component {
           <Spinner animation="border" />
         </div>
       </div>
-      )
+      );
+    }
+
+    if(game.error != null) {
+      return (
+        <div>
+          <Notifier type="ERROR_GAME"/>
+          <Redirect to="/"/>
+        </div>
+      );
     }
 
     // if user state is not fetching, not received, and not new
@@ -55,8 +66,17 @@ class _Game extends React.Component {
     }
 
     if (game.isReceived) {
-      var categories = []
+      var categories = [];
+      var avgReview;
 
+      if (!game.isAvgRatingReceived && !game.isAvgRatingFetching && game.error == null) {
+        this.props.getGameAvgRating(game.data.id);
+      }
+
+      if (game.isAvgRatingReceived) {
+        avgReview = shared.avgRating(game.avgRating);
+      }
+ 
       if (game.data.categories) {
         game.data.categories.forEach(function (category) {
           categories.push(
@@ -65,8 +85,8 @@ class _Game extends React.Component {
                 {category}
               </div>
             </Grid>
-          )
-        })
+          );
+        });
       }
 
       body =
@@ -83,6 +103,9 @@ class _Game extends React.Component {
               <img alt='Boardgame cover' className='ImgCenter' src={game.data.imgFileName} />
               <br />
             </Paper>
+                <div className="AvgRating">
+                  {avgReview}
+                </div>
           </Grid>
           <Grid item xs={5}>
             <Grid container spacing={1}>
@@ -131,16 +154,15 @@ class _Game extends React.Component {
       <div className='Game'>
         {body}
       </div>
-    )
+    );
   }
 }
 
 export const Game = connect(state => {
-  const { game } = state
-  const { user } = state
+  const { game, user } = state
   return { game, user }
 }, dispatch => {
   return bindActionCreators({
-    getGame, gameLoading, resetGame
+    getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating
   }, dispatch)
 })(_Game)
