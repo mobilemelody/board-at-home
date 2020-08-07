@@ -4,8 +4,9 @@ const db = require('../db');
 const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 const saltRounds = 10;
 
 // router.use(<route>, require(<token middleware>))
@@ -151,6 +152,80 @@ router.get('/:user_id', (req, res, next) => {
 
     return res.status(200).send(userData);
   });
+});
+
+router.put('/:user_id', (req, res) => {
+  const { username, password, email } = req.body;
+  let queryFields = [];
+
+  let updateQuery = {
+    values: [req.params.user_id],
+  };
+
+  if (username) {
+    updateQuery.values.push(username);
+    queryFields.push(`username = $${updateQuery.values.length}`);
+  }
+
+  if (email) {
+    updateQuery.values.push(email);
+    queryFields.push(`email = $${updateQuery.values.length}`);
+  }
+
+  // Password is added last as we need to asynchronously hash the password and then use the value
+  // to change the user's password
+  if (password) {
+    bcrypt.hash(password, saltRounds, (err, passwordHash) => {
+      if (err) {
+        console.error('Unable to hash password');
+        return res.status(500).set({
+          "Content-Type": "application/json",
+        }).send({
+          status: 'fail',
+          message: err,
+        });
+      }
+      updateQuery.values.push(passwordHash);
+      queryFields.push(`password = $${updateQuery.values.length}`);
+
+      updateQuery.text = `UPDATE "User" SET ${queryFields.join(' ,')} WHERE id = $1 RETURNING *`;
+
+      db.client.query(updateQuery, (err, result) => {
+        if (err) {
+          console.error('Unable to query database');
+          return res.status(500).set({
+            "Content-Type": "application/json",
+          }).send({
+            status: 'fail',
+            message: err
+          });
+        }
+
+        return res.status(200).set({
+          "Content-Type": "application/json",
+        }).send(apiUtils.formatUser(result.rows[0]));
+      });
+    });
+  } else {
+    // Regular update query without hashed password
+    updateQuery.text = `UPDATE "User" SET ${queryFields.join(' ,')} WHERE id = $1 RETURNING *`;
+
+    db.client.query(updateQuery, (err, result) => {
+      if (err) {
+        console.error('Unable to query database');
+        return res.status(500).set({
+          "Content-Type": "application/json",
+        }).send({
+          status: 'fail',
+          message: err
+        });
+      }
+
+      return res.status(200).set({
+        "Content-Type": "application/json",
+      }).send(apiUtils.formatUser(result.rows[0]));
+    });
+  }
 });
 
 /* Get user collections */

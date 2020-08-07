@@ -13,6 +13,8 @@ const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
 const errorUserReviews = createAction("ERROR_USER_REVIEWS");
 const errorUserCheck = createAction("ERROR_USER_CHECK");
 const unsetUserIsNew = createAction("UNSET_NEW");
+const receiveUserUpdate = createAction("RECEIVE_USER_UPDATE");
+const errorUserUpdate = createAction("ERROR_USER_UPDATE");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -72,13 +74,22 @@ export const getUser = () => {
 }
 
 export const getUserReviews = () => {
-  return (dispatch) => {
-    // TODO: Make this dynamic based on an auth token
-    return api.get('/users/1/reviews')
+  return (dispatch, getState) => {
+    const { user } = getState();
+    return api.get(`/users/${user.id}/reviews`)
       .then(resp => dispatch(receiveUserReviews(resp.data)))
       .catch(err => dispatch(errorUserReviews(err)))
   }
 };
+
+export const updateUser = () => {
+  return (dispatch, getState) => {
+    const { user } = getState();
+    return api.put(`/users/${user.id}`)
+    .then(res => dispatch(receiveUserUpdate(res)))
+    .catch(err => dispatch(errorUserUpdate(err)));
+  }
+}
 
 export const userReset = () => {
   return dispatch => {

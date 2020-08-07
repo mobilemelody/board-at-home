@@ -130,6 +130,15 @@ export const user = (state = userState, action) => {
         isNew: false,
       })
 
+    case "RECEIVE_USER_UPDATE":
+      const { imgFileName, username, email } = action.payload.data;
+      return {
+        ...state,
+        imgFileName,
+        userName: username,
+        email
+      };
+
     default:
       return state
   }
