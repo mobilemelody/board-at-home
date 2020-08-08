@@ -14,6 +14,12 @@ import { Spinner } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
+  componentDidMount() {
+    this.props.getUser();
+    this.props.getUserReviews();
+    this.props.getUserCollections();
+  }
+
   allFetched = (user) => {
     return user.isReceived && user.isReviewsReceived;
   }
@@ -53,6 +59,19 @@ class _UserProfile extends React.Component {
             </Paper>
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
+            <div className="pt-2">
+              <div>Average Rating: </div>
+              <Rating
+                name="userAvgRating"
+                value={
+                  user.reviews.map(e => e.overallRating)
+                    .reduce((sum, rating) => sum + rating) / user.reviews.length
+                }
+                precision={0.1}
+                readOnly
+                size="large"
+              />
+            </div>
           </Grid>
           <Grid item md={8} xs={8}>
             <span className="heading">Reviews</span>
