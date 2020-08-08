@@ -224,7 +224,7 @@ router.get('/:game_id/reviews', (req, res) => {
 router.get('/:game_id/reviews/average', (req, res) => {
 
   let query = {
-    text: 'SELECT AVG("overallRating")::NUMERIC(10, 0) AS "avgRating" FROM "Review" WHERE "Review"."gameID" = $1',
+    text: 'SELECT AVG("overallRating")::NUMERIC(10, 1) AS "avgRating" FROM "Review" WHERE "Review"."gameID" = $1',
     values: [req.params.game_id]
   }
 
@@ -236,7 +236,7 @@ router.get('/:game_id/reviews/average', (req, res) => {
     var avgRating;
 
     if (result.rows) {
-      avgRating = parseInt(result.rows[0].avgRating);
+      avgRating = result.rows[0].avgRating;
     }
 
     let resp = {
@@ -254,7 +254,7 @@ router.get('/:game_id/reviews/average', (req, res) => {
 router.get('/reviews/average', (req, res) => {
 
   let query = {
-    text: 'SELECT "Game".id as "gameID", AVG("Review"."overallRating")::NUMERIC(10,0) AS "avgRating" FROM "Game"' +
+    text: 'SELECT "Game".id as "gameID", AVG("Review"."overallRating")::NUMERIC(10,1) AS "avgRating" FROM "Game"' +
     ' LEFT JOIN "Review" ON "Review"."gameID" = "Game".id' +
     ' GROUP BY "Game".id ORDER BY "Game".id'
   }

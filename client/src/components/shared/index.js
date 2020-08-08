@@ -11,8 +11,9 @@ export const avgRating = (rating) => {
       </Grid>
       <Grid item xs={6}>
         <Rating
-          name="avgRating"
+          name="half-rating-read"
           value={rating}
+          precision={0.5}
           disabled
         />
       </Grid>

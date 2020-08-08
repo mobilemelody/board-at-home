@@ -110,7 +110,8 @@ class _Recommendations extends React.Component {
     super(props)
     this._setGame = this._setGame.bind(this)
     this.state = {
-      viewGame: false
+      viewGame: false,
+      gameID: null,
     }
   }
 
@@ -119,22 +120,7 @@ class _Recommendations extends React.Component {
   }
 
   _setGame(game) {
-    this.props.getSetGameState({
-      id: game.id,
-      isUserCreated: game.isUserCreated,
-      identifierID: game.identifierID,
-      name: game.name,
-      publisher: game.publisher,
-      year: game.year,
-      minPlaytime: game.minPlaytime,
-      minPlayers: game.minPlayers,
-      maxPlayers: game.maxPlayers,
-      minAge: game.minAge,
-      imgFileName: game.imgFileName,
-      description: game.description,
-      categories: game.categories,
-    })
-    this.setState({ viewGame: true })
+    this.setState({ viewGame: true,  gameID: game.id})
   }
 
   render() {
@@ -158,7 +144,7 @@ class _Recommendations extends React.Component {
     }
 
     if (this.state.viewGame) {
-      return <Redirect push to='/game' />
+      return <Redirect push to={'/game/'+this.state.gameID}/>
     }
 
     // Create error notification

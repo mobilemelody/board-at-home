@@ -260,11 +260,11 @@ class _Games extends React.Component {
                 </div>
               </Grid>
               <Grid item xs={5}>
-              <div className="RatingWrapper">
-                { 
-                  games.isAvgRatingsReceived ? shared.avgRating(games.avgRatings[game.id]) : <div/>
-                }
-              </div>
+                <div className="RatingWrapper">
+                  { 
+                    games.isAvgRatingsReceived ? shared.avgRating(games.avgRatings[game.id]) : <div/>
+                  }
+                </div>
               </Grid>
               <Grid item xs={5}/>
               <Grid item  xs={2}>

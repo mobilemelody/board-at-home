@@ -107,3 +107,12 @@
   padding-left: 10%;
   padding-right: 10%;
 }
+
+.App .Games .MuiRating-icon, .App .Game .MuiRating-icon {
+  display: inline;
+}
+
+.App .Games .RatingWrapper h5, .App .Game .AvgRating h5 {
+  margin-top: 7px;
+  margin-bottom: 0px;
+}

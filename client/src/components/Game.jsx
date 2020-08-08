@@ -140,10 +140,7 @@ class _Game extends React.Component {
               <p>{game.data.description}</p>
             </Paper>
           </Grid>
-
-          {/* Review Body */}
           <Reviews />
-
           <Grid item xs={12}>
             <hr />
           </Grid>
