@@ -8,11 +8,11 @@ import { Link, Redirect } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Rating from '@material-ui/lab/Rating';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Container, Button, Spinner } from 'react-bootstrap'
-import * as shared from './shared';
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -208,8 +208,20 @@ class _Games extends React.Component {
         categories: game.categories,
         viewer:
           <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <h2>{game.name}</h2>
+            <Grid item container xs={12} spacing={1} className="align-items-center">
+              <Grid item sm={8} xs={12}>
+                <h2>{game.name}</h2>
+              </Grid>
+              <Grid item sm={4} xs={12} className="text-sm-right">
+                {games.isAvgRatingsReceived ? 
+                  <Rating
+                    name="half-rating-read"
+                    value={games.avgRatings[game.id]}
+                    precision={0.1}
+                    size="large"
+                    readOnly
+                  /> : <div/>}
+              </Grid>
             </Grid>
             <Grid item md={3} xs={12}>
               <div className="NameImgWrapper">
@@ -255,14 +267,7 @@ class _Games extends React.Component {
                 </p>
               </div>
             </Grid>
-            <Grid item sm={8} xs={12}>
-              <div className="RatingWrapper">
-                { 
-                  games.isAvgRatingsReceived ? shared.avgRating(games.avgRatings[game.id]) : <div/>
-                }
-              </div>
-            </Grid>
-            <Grid item sm={4} xs={12} className="text-sm-right">
+            <Grid item xs={12}>
               <Button
                 onClick={() => setGame(game)}
                 variant="info"
@@ -276,8 +281,8 @@ class _Games extends React.Component {
     }
 
     return (
-      <Container className="Games py-5">
-        <Grid container spacing={3}>
+      <Container fluid className="Games py-5 px-md-5">
+        <Grid container spacing={1}>
           {notifier}
           <ToolkitProvider
             keyField="id"

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Rating from '@material-ui/lab/Rating';
 import { Redirect } from "react-router-dom";
 import { Container, Spinner } from 'react-bootstrap';
 import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
@@ -11,7 +12,6 @@ import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating }
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
 import { Notifier } from './Notifier';
-import * as shared from './shared';
 
 class _Game extends React.Component {
 
@@ -74,7 +74,17 @@ class _Game extends React.Component {
       }
 
       if (game.isAvgRatingReceived) {
-        avgReview = shared.avgRating(game.avgRating);
+        avgReview =
+          <div>
+            <h5>Average Rating</h5>
+            <Rating
+              name="half-rating-read"
+              value={game.avgRating}
+              precision={0.1}
+              size="large"
+              readOnly
+            />
+          </div>;
       }
  
       if (game.data.categories) {
@@ -149,7 +159,7 @@ class _Game extends React.Component {
     }
 
     return (
-      <Container className='Game py-5'>
+      <Container fluid className="Game py-5 px-md-5">
         {body}
       </Container>
     );
