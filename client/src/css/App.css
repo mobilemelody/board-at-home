@@ -55,6 +55,7 @@
 }
 
 .App .Review-Wrapper {
+  padding-top: 10px;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -127,6 +128,10 @@
 
 .App .Game .ReviewTable .react-bootstrap-table .table th {
   visibility: hidden !important;
+}
+
+.App .Game .ReviewTable .react-bootstrap-table thead {
+  display: none;
 }
 
 .App .Game .ReviewTable .active .page-item {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getGames, getSetGameState } from '../actions/index'
+import { getGames, getSetGameState, getGamesAvgRating } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
 import { Link, Redirect } from 'react-router-dom'
@@ -13,6 +13,7 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button, Spinner } from 'react-bootstrap'
+import * as shared from './shared';
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -130,6 +131,7 @@ class _Games extends React.Component {
 
   componentDidMount() {
     this.props.getGames()
+    this.props.getGamesAvgRating()
   }
 
   _setGame(game) {
@@ -177,95 +179,106 @@ class _Games extends React.Component {
     }
 
     // Push reviews to table data
-    games.rows.forEach(function (game) {
-      var categories = []
+    if (games.isReceived) {
 
-      game.categories.forEach(function (category) {
-        categories.push(
-          <Grid item xs={12}>
-            {category}
-          </Grid>
-        )
-      })
+      games.rows.forEach(function (game) {
+        var categories = []
 
-      tableData.push({
-        // Hidden columns that show in expand renderer
-        id: game.id,
-        isUserCreated: game.isUserCreated,
-        identifierID: game.identifierID,
-        name: game.name,
-        publisher: game.publisher,
-        year: game.year,
-        minPlaytime: game.minPlaytime,
-        minPlayers: game.minPlayers,
-        maxPlayers: game.maxPlayers,
-        minAge: game.minAge,
-        imgFileName: game.imgFileName,
-        description: game.description,
-        categories: game.categories,
-        viewer:
-          <Grid container spacing={1}>
-            <Grid item xs={4}>
-              <div className="NameImgWrapper">
-                <Typography variant='h5'>{game.name}</Typography>
-                <Paper className='ImgWrapper'>
-                  <img alt='Boardgame cover' className='ImgCenter' src={game.imgFileName} />
-                </Paper>
-              </div>
-            </Grid>
-            <Grid item xs={5}>
-              <div className="DetailsWrapper">
-                <Grid container spacing={1}>
-                  {/* Placeholder items for spacing */}
-                  <Grid item xs={12}><br /><br />Details<hr /></Grid>
-
-                  <Grid item xs={4}>Players:</Grid>
-                  <Grid item xs={4}>{game.minPlayers} - {game.maxPlayers}</Grid>
-                  <Grid item xs={4}></Grid>
-
-                  <Grid item xs={4}>Minimum Age:</Grid>
-                  <Grid item xs={4}>{game.minAge}</Grid>
-                  <Grid item xs={4}></Grid>
-
-                  <Grid item xs={4}>Playtime:</Grid>
-                  <Grid item xs={7}>{game.minPlaytime} - {game.maxPlaytime} minutes</Grid>
-                  <Grid item xs={1}></Grid>
-
-                  <Grid item xs={4}>Publisher:</Grid>
-                  <Grid item xs={7}>{game.publisher}</Grid>
-                  <Grid item xs={1}></Grid>
-
-                  <Grid item xs={4}>Year Published:</Grid>
-                  <Grid item xs={4}>{game.year}</Grid>
-                  <Grid item xs={4}></Grid>
-                </Grid>
-              </div>
-            </Grid>
-            <Grid item xs={3}>
-              <div className="CategoriesWrapper">
-                <Grid item xs={12}><br /><br />Categories<hr /></Grid>
-                {categories}
-              </div>
-            </Grid>
+        game.categories.forEach(function (category) {
+          categories.push(
             <Grid item xs={12}>
-              <div className="DescriptionWrapper">
-                <h5>Description</h5>
-                <p className="DescriptionP">
-                  {game.description}
-                </p>
-              </div>
+              {category}
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                onClick={() => setGame(game)}
-                variant="info"
-                size="sm"
-                type="submit"
-              >See Reviews</Button>
+          )
+        })
+
+        tableData.push({
+          // Hidden columns that show in expand renderer
+          id: game.id,
+          isUserCreated: game.isUserCreated,
+          identifierID: game.identifierID,
+          name: game.name,
+          publisher: game.publisher,
+          year: game.year,
+          minPlaytime: game.minPlaytime,
+          minPlayers: game.minPlayers,
+          maxPlayers: game.maxPlayers,
+          minAge: game.minAge,
+          imgFileName: game.imgFileName,
+          description: game.description,
+          categories: game.categories,
+          viewer:
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <div className="NameImgWrapper">
+                  <Typography variant='h5'>{game.name}</Typography>
+                  <Paper className='ImgWrapper'>
+                    <img alt='Boardgame cover' className='ImgCenter' src={game.imgFileName} />
+                  </Paper>
+                </div>
+              </Grid>
+              <Grid item xs={5}>
+                <div className="DetailsWrapper">
+                  <Grid container spacing={1}>
+                    {/* Placeholder items for spacing */}
+                    <Grid item xs={12}><br /><br />Details<hr /></Grid>
+
+                    <Grid item xs={4}>Players:</Grid>
+                    <Grid item xs={4}>{game.minPlayers} - {game.maxPlayers}</Grid>
+                    <Grid item xs={4}></Grid>
+
+                    <Grid item xs={4}>Minimum Age:</Grid>
+                    <Grid item xs={4}>{game.minAge}</Grid>
+                    <Grid item xs={4}></Grid>
+
+                    <Grid item xs={4}>Playtime:</Grid>
+                    <Grid item xs={7}>{game.minPlaytime} - {game.maxPlaytime} minutes</Grid>
+                    <Grid item xs={1}></Grid>
+
+                    <Grid item xs={4}>Publisher:</Grid>
+                    <Grid item xs={7}>{game.publisher}</Grid>
+                    <Grid item xs={1}></Grid>
+
+                    <Grid item xs={4}>Year Published:</Grid>
+                    <Grid item xs={4}>{game.year}</Grid>
+                    <Grid item xs={4}></Grid>
+                  </Grid>
+                </div>
+              </Grid>
+              <Grid item xs={3}>
+                <div className="CategoriesWrapper">
+                  <Grid item xs={12}><br /><br />Categories<hr /></Grid>
+                  {categories}
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div className="DescriptionWrapper">
+                  <h5>Description</h5>
+                  <p className="DescriptionP">
+                    {game.description}
+                  </p>
+                </div>
+              </Grid>
+              <Grid item xs={5}>
+                <div className="RatingWrapper">
+                  { 
+                    games.isAvgRatingsReceived ? shared.avgRating(games.avgRatings[game.id]) : <div/>
+                  }
+                </div>
+              </Grid>
+              <Grid item xs={5}/>
+              <Grid item  xs={2}>
+                <Button
+                  onClick={() => setGame(game)}
+                  variant="info"
+                  size="sm"
+                  type="submit"
+                >See Reviews</Button>
+              </Grid>
             </Grid>
-          </Grid>
+        })
       })
-    })
+    }
 
     return (
       <div className="Games">
@@ -319,6 +332,6 @@ export const Games = connect(state => {
   return { user, games }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState, getGames
+    getSetGameState, getGames, getGamesAvgRating
   }, dispatch)
 })(_Games)

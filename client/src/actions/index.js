@@ -106,6 +106,17 @@ export const getGames = () => {
   }
 }
 
+
+const receiveGamesAvgRating = createAction("RECEIVE_GAMES_AVG_RATING")
+
+export const getGamesAvgRating = (game_id) => {
+  return (dispatch) => {
+    return api.get(`/games/reviews/average`)
+      .then(resp => dispatch(receiveGamesAvgRating(resp)))
+      .catch(err => dispatch(errorGames(err)))
+  }
+}
+
 // Game actions
 const errorGame = createAction("ERROR_GAME")
 const fetchingGame = createAction("FETCHING_GAME")
@@ -129,6 +140,23 @@ export const getGame = (gameID) => {
     return api.get(`/games/${gameID}`)
       .then(resp => dispatch(receiveGame(resp)))
       .catch(err => dispatch(errorGame(err)))
+  }
+}
+
+const fetchingGameAvgRating = createAction("FETCH_GAME_AVG_RATING")
+const receiveGameAvgRating = createAction("RECEIVE_GAME_AVG_RATING")
+
+export const getGameAvgRating = (game_id) => {
+  return (dispatch) => {
+    return api.get(`/games/${game_id}/reviews/average`)
+      .then(resp => dispatch(receiveGameAvgRating(resp)))
+      .catch(err => dispatch(errorGame(err)))
+  }
+}
+
+export const fetchGameAvgRating = () => {
+  return dispatch => {
+    dispatch(fetchingGameAvgRating())
   }
 }
 

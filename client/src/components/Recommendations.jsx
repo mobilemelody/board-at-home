@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { getRecommendations, getSetGameState } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
