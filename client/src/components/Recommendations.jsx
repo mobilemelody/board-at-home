@@ -9,10 +9,10 @@ import { Redirect } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
-import { Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Container, Button, Spinner } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap';
 
 import { Login } from './Login'
 
@@ -250,8 +250,9 @@ class _Recommendations extends React.Component {
             <Grid item xs={12}>
               <Button
                 onClick={() => setGame(game)}
-                variant="info"
-                size="sm"
+                variant="contained"
+                size="medium"
+                className="mb-2"
                 type="submit"
               >See Reviews</Button>
             </Grid>

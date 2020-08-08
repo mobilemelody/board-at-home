@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLoading, userLogout, checkLoggedIn, userUnsetIsNew } from "../actions"
-import { Nav, Navbar, Button } from 'react-bootstrap'
+import Button from '@material-ui/core/Button';
+import { Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { NotificationContainer } from 'react-notifications'
@@ -65,9 +66,12 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto" />
           <Button
+            variant="contained"
             href="#login"
+            className="mr-2"
           >Login</Button>
           <Button
+            variant="contained"
             href="#signup"
           >Sign up</Button>
         </Navbar>
@@ -90,7 +94,7 @@ class _App extends React.Component {
               </LinkContainer>
             </Nav>
             <Button
-              variant='info'
+              variant="contained"
               onClick={() => {
                 this._userLogout()
               }}

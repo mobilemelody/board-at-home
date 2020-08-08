@@ -129,9 +129,13 @@ class _AddToCollectionSearch extends React.Component {
     // Modal dialog content
     let body =
       <div>
-        <Button variant="contained" startIcon={<AddIcon/>} size="large" onClick={this._openDialog}>
-          Add Games
-        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AddIcon/>}
+          size="medium"
+          className="mt-2"
+          onClick={this._openDialog}
+          >Add Games</Button>
         <Modal size="lg" show={this.state.open} onHide={this._closeDialog}>
           <Modal.Header closeButton>
             <Modal.Title>Add Games</Modal.Title>

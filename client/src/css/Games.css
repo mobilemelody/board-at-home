@@ -34,9 +34,8 @@
   padding-top: 20px;
 }
 
-.App .Games .AddNewGame {
-  padding-bottom: 0px;
-  padding-top: 16px;
+.App .Games .AddNewGame a {
+  text-decoration: none;
 }
 
 .App .Games .GamesTableRow {
@@ -44,7 +43,11 @@
 }
 
 .App .Games .GamesSearchBar {
-  height: 32px;
+  height: 36px;
+}
+
+.App .Games .GamesSearchBarContainer .search-label {
+  margin-bottom: 0;
 }
 
 .App .Games .ImgWrapper .ImgCenter,

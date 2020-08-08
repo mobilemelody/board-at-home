@@ -9,10 +9,12 @@ import { Link, Redirect } from 'react-router-dom'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/AddCircle';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
-import { Container, Button, Spinner } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap';
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -262,16 +264,17 @@ class _Games extends React.Component {
             <Grid item xs={12}>
               <div className="DescriptionWrapper mt-2">
                 <h5>Description</h5>
-                <p className="DescriptionP bg-light p-2">
+                <div className="DescriptionP bg-light p-2">
                   {game.description}
-                </p>
+                </div>
               </div>
             </Grid>
             <Grid item xs={12}>
               <Button
                 onClick={() => setGame(game)}
-                variant="info"
-                size="sm"
+                variant="contained"
+                size="medium"
+                className="my-2"
                 type="submit"
               >See Reviews</Button>
             </Grid>
@@ -282,7 +285,7 @@ class _Games extends React.Component {
 
     return (
       <Container fluid className="Games py-5 px-md-5">
-        <Grid container spacing={1}>
+        <Grid container spacing={3}>
           {notifier}
           <ToolkitProvider
             keyField="id"
@@ -293,19 +296,23 @@ class _Games extends React.Component {
             {
               props =>
               <>
-                <Grid item xs={6} className="GamesTitleRow">
-                  <h1>Games</h1>
-                </Grid>
-                <Grid item xs={6} className="AddNewGame text-right">
-                  <Link to='/gamesAdd'>
-                    <Button
-                      variant="info"
-                      size="sm"
-                    >Add New Game</Button>
-                  </Link>
-                </Grid>
-                <Grid item md={6} sm={8} xs={12} className="GamesSearchBarContainer">
-                  <SearchBar {...props.searchProps} placeholder="Search for a game" className="GamesSearchBar"/>
+                <Grid item container xs={12} className="align-items-center">
+                  <Grid item sm={4} xs={6} className="GamesTitleRow">
+                    <h1>Games</h1>
+                  </Grid>
+                  <Grid item sm={4} xs={6} className="AddNewGame text-right">
+                    <Link to='/gamesAdd'>
+                      <Button
+                        variant="outlined"
+                        size="medium"
+                        className="mr-sm-2"
+                        startIcon={<AddIcon/>}
+                      >Add New Game</Button>
+                    </Link>
+                  </Grid>
+                  <Grid item sm={4} xs={12} className="GamesSearchBarContainer">
+                    <SearchBar {...props.searchProps} placeholder="Search for a game" className="GamesSearchBar"/>
+                  </Grid>
                 </Grid>
                 <Grid item xs={12} className="GamesTableRow">
                   <div className="GamesTable">

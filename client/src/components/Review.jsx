@@ -5,10 +5,11 @@ import { bindActionCreators } from 'redux'
 // Import Actions
 import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif, resetReview } from '../actions/index'
 
-import { Form, Button, InputGroup, Spinner } from 'react-bootstrap'
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 
 import BootstrapTable from 'react-bootstrap-table-next'
 import Paper from '@material-ui/core/Paper';
@@ -667,13 +668,16 @@ class _Reviews extends React.Component {
                 {formDisabled ?
                   <Grid item xs={12}>
                     <Button
-                      variant="primary"
+                      variant="contained"
+                      color="primary"
+                      className="mr-2"
                       onClick={() => {
                         this._setFormEdit(reviews.userReview)
                       }}
                     >&nbsp;Edit&nbsp;</Button>
                     <Button
-                      variant="primary"
+                      variant="outlined"
+                      color="default"
                       onClick={() => {
                         this._deleteReview(reviews.userReview)
                       }}
@@ -682,7 +686,8 @@ class _Reviews extends React.Component {
                   :
                   <Grid item xs={12}>
                     <Button
-                      variant="primary"
+                      variant="contained"
+                      color="primary"
                       onClick={() => {
                         this._submitReview()
                       }}
