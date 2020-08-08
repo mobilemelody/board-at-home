@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUser, checkLoggedIn, getUserReviews, getUserCollections } from '../actions/index';
+import { getUser, checkLoggedIn, getUserReviews, getUserCollections, userResetReviewsAndCollections } from '../actions/index';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -15,9 +15,7 @@ import { Spinner } from 'react-bootstrap';
 class _UserProfile extends React.Component {
 
   componentDidMount() {
-    this.props.getUser();
-    this.props.getUserReviews();
-    this.props.getUserCollections();
+    this.props.userResetReviewsAndCollections()
   }
 
   allFetched = (user) => {
@@ -125,6 +123,6 @@ export const UserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    getUser, getUserReviews, getUserCollections, checkLoggedIn
+    getUser, getUserReviews, getUserCollections, userResetReviewsAndCollections, checkLoggedIn
   }, dispatch)
 })(_UserProfile);
