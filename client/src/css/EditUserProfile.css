@@ -12,7 +12,7 @@
 .profileImgWrapper > .MuiPaper-root .MuiSvgIcon-root {
   position: absolute;
   top: 0;
-  right: 6px;
+  right: 0;
 }
 
 .profileImgWrapper img {
@@ -41,6 +41,14 @@
   justify-content: center;
 }
 
+.image-selector {
+  width: 100%;
+}
+
 .image-selector label {
   padding-right: 16px;
+}
+
+.image-selector input {
+  max-width: 50%;
 }

@@ -96,10 +96,11 @@ module.exports = {
   },
 
   formatUser: (input) => {
-    const { username, email } = input;
+    const { username, email, imgFileName } = input;
     return {
       username,
-      email
+      email,
+      imgFileName,
     };
   }
 }

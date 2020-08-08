@@ -15,6 +15,8 @@ const errorUserCheck = createAction("ERROR_USER_CHECK");
 const unsetUserIsNew = createAction("UNSET_NEW");
 const receiveUserUpdate = createAction("RECEIVE_USER_UPDATE");
 const errorUserUpdate = createAction("ERROR_USER_UPDATE");
+const receiveUserPreviewImage = createAction("RECEIVE_USER_PREVIEW_IMAGE");
+const errorUserPreviewImage = createAction("ERROR_USER_PREVIEW_IMAGE");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -94,6 +96,39 @@ export const updateUser = (data) => {
 export const userReset = () => {
   return dispatch => {
     dispatch(resetUser())
+  }
+}
+
+export const uploadPreviewImage = (evt) => {
+  return (dispatch) => {
+    const imageData = evt.target.files[0];
+    const { name, type } = imageData;
+    return api.post(`/users/image-s3`, { fileName: name, fileType: type })
+    .then(res => {
+      // Not a typo. There's a data key within data
+      const { signedRequest, url } = res.data.data.returnData;
+      // We use fetch here because the currently API util will add
+      // headers the AWS S3 doesn't like
+      // TODO: Refactor so that we have a separate API client for external APIs
+      fetch(signedRequest, {
+        method: 'PUT',
+        body: imageData,
+        headers: {
+          'Content-Type': type
+        },
+      })
+      .then(() => dispatch(receiveUserPreviewImage({ url })))
+      .catch(err => dispatch(errorUserPreviewImage(err)));
+    })
+  }
+}
+
+export const updateProfileWithImage = (data) => {
+  return (dispatch, getState) => {
+    const { user } = getState();
+    return api.put(`/users/${user.id}`, data)
+    .then(res => dispatch(receiveUserUpdate(res)))
+    .catch(err => dispatch(errorUserUpdate(err)));
   }
 }
 

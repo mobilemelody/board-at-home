@@ -3,6 +3,7 @@
 const userState = {
   id: null,
   imgFileName: null,
+  previewImgFileName: null,
   userName: null,
   email: null,
   isFetching: false,
@@ -65,6 +66,7 @@ export const user = (state = userState, action) => {
         isNew: false,
         id: resp.id,
         imgFileName: resp.imgFileName,
+        previewImgFileName: resp.imgFileName,
         userName: resp.username,
         email: resp.email,
       })
@@ -148,6 +150,13 @@ export const user = (state = userState, action) => {
         userName: data.username || state.username,
         email: data.email || state.email,
         notifType: "RECEIVE_USER_UPDATE",
+      };
+
+    case "RECEIVE_USER_PREVIEW_IMAGE":
+      const { url } = action.payload;
+      return {
+        ...state,
+        previewImgFileName: url
       };
 
     default:

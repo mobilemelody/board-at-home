@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import '../css/EditUserProfile.css';
-import { updateUser, userLoading } from '../actions/index';
+import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage } from '../actions/index';
 import { Notifier } from './Notifier.jsx';
 
 class _EditUserProfile extends React.Component {
@@ -55,7 +55,15 @@ class _EditUserProfile extends React.Component {
   }
 
   _closeModal = () => {
-    this.setState({ modalOpen: false});
+    this.setState({ modalOpen: false });
+  }
+
+  _handleModalChange = (user) => {
+    const { imgFileName, previewImgFileName } = user;
+    if (imgFileName !== previewImgFileName) {
+      this.props.updateProfileWithImage({ imgFileName: previewImgFileName });
+    }
+    this.setState({ modalOpen: false });
   }
 
 
@@ -80,14 +88,14 @@ class _EditUserProfile extends React.Component {
             <Modal.Title>Change Profile Picture</Modal.Title>
           </Modal.Header>
           <Modal.Body className="update-image-body">
-            <img alt='profile img' src={user.imgFileName} />
+            <img alt='profile img' src={user.previewImgFileName} />
           </Modal.Body>
           <Modal.Footer>
             <div className="image-selector">
               <label htmlFor="image">Select image</label>
-              <input type="file" name="image"/>
+              <input type="file" name="image" onChange={this.props.uploadPreviewImage}/>
             </div>
-            <Button color="primary">
+            <Button color="primary" onClick={() => this._handleModalChange(user)}>
               Use this image
             </Button>
           </Modal.Footer>
@@ -154,6 +162,6 @@ export const EditUserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    updateUser, userLoading
+    updateUser, userLoading, uploadPreviewImage, updateProfileWithImage,
   }, dispatch)
 })(_EditUserProfile);

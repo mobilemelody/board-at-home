@@ -8,6 +8,13 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const { query } = require('express');
 const saltRounds = 10;
+const AWS = require('aws-sdk');
+AWS.config.update({
+  region: process.env.BucketRegion,
+  accessKeyId: process.env.AWSAccessKeyId,
+  secretAccessKey: process.env.AWSSecretKey,
+});
+const S3_BUCKET = process.env.Bucket;
 
 // router.use(<route>, require(<token middleware>))
 router.use('/check', require('../middleware'))
@@ -155,7 +162,7 @@ router.get('/:user_id', (req, res, next) => {
 });
 
 router.put('/:user_id', (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, imgFileName } = req.body;
   let queryFields = [];
 
   let updateQuery = {
@@ -170,6 +177,11 @@ router.put('/:user_id', (req, res) => {
   if (email) {
     updateQuery.values.push(email);
     queryFields.push(`email = $${updateQuery.values.length}`);
+  }
+
+  if (imgFileName) {
+    updateQuery.values.push(imgFileName);
+    queryFields.push(`"imgFileName" = $${updateQuery.values.length}`);
   }
 
   // Password is added last as we need to asynchronously hash the password and then use the value
@@ -337,6 +349,31 @@ router.post('/signup', function(req, res) {
         status: 'success',
       });
     });
+  });
+});
+
+/* Upload game image to S3 */
+router.post('/image-s3', (req, res) => {
+  const S3 = new AWS.S3();
+  const fileName = Date.now() + '-' + req.body.fileName;
+  const fileType = req.body.fileType;
+
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: 'user/' + fileName,
+    ContentType: fileType,
+    ACL: 'public-read',
+  };
+
+  S3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      return res.end();
+    }
+    const returnData = {
+      signedRequest: data,
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${s3Params.Key}`
+    };
+    res.json({ data: {returnData} });
   });
 });
 
