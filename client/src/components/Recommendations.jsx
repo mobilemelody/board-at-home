@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getRecommendations, getSetGameState } from '../actions/index'
+import { getRecommendations, getSetGameState, getGamesAvgRating } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
 import { Redirect } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Rating from '@material-ui/lab/Rating';
 import { Typography } from '@material-ui/core';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -117,6 +118,7 @@ class _Recommendations extends React.Component {
 
   componentDidMount() {
     this.props.getRecommendations();
+    this.props.getGamesAvgRating();
   }
 
   _setGame(game) {
@@ -187,8 +189,19 @@ class _Recommendations extends React.Component {
         categories: game.categories,
         viewer:
           <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <h2>{game.name}</h2>
+            <Grid item container xs={12} spacing={1} className="align-items-center">
+              <Grid item sm={8} xs={12}>
+                <h2>{game.name}</h2>
+              </Grid>
+              <Grid item sm={4} xs={12} className="text-sm-right">
+                <Rating
+                  name="half-rating-read"
+                  value={game.avgRating}
+                  precision={0.1}
+                  size="large"
+                  readOnly
+                />
+              </Grid>
             </Grid>
             <Grid item md={3} xs={12}>
               <div className="NameImgWrapper">
@@ -276,6 +289,6 @@ export const Recommendations = connect(state => {
   return { user, recommendations }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState, getRecommendations
+    getSetGameState, getRecommendations, getGamesAvgRating
   }, dispatch)
 })(_Recommendations)
