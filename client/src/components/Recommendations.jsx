@@ -120,7 +120,7 @@ class _Recommendations extends React.Component {
   }
 
   _setGame(game) {
-    this.setState({ viewGame: true,  gameID: game.id})
+    this.setState({ viewGame: true, gameID: game.id})
   }
 
   render() {
@@ -144,7 +144,7 @@ class _Recommendations extends React.Component {
     }
 
     if (this.state.viewGame) {
-      return <Redirect push to={'/game/'+this.state.gameID}/>
+      return <Redirect push to={'/game/' + this.state.gameID}/>
     }
 
     // Create error notification
