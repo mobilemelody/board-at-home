@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import '../css/EditUserProfile.css';
-import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage } from '../actions/index';
+import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage, getResetUserNotif } from '../actions/index';
 import { Notifier } from './Notifier.jsx';
 
 class _EditUserProfile extends React.Component {
@@ -58,10 +58,14 @@ class _EditUserProfile extends React.Component {
     this.setState({ modalOpen: false });
   }
 
-  _handleModalChange = (user) => {
+  _resetNotif = () => {
+    this.props.getResetUserNotif();
+  }
+
+  _handleModalChange = async (user) => {
     const { imgFileName, previewImgFileName } = user;
     if (imgFileName !== previewImgFileName) {
-      this.props.updateProfileWithImage({ imgFileName: previewImgFileName });
+      await this.props.updateProfileWithImage({ imgFileName: previewImgFileName });
     }
     this.setState({ modalOpen: false });
   }
@@ -79,6 +83,7 @@ class _EditUserProfile extends React.Component {
 
     if (user.notifType !== null) {
       notifier = <Notifier type={user.notifType}/>
+      this._resetNotif()
     }
 
     return (
@@ -95,7 +100,7 @@ class _EditUserProfile extends React.Component {
               <label htmlFor="image">Select image</label>
               <input type="file" name="image" onChange={this.props.uploadPreviewImage}/>
             </div>
-            <Button color="primary" onClick={() => this._handleModalChange(user)}>
+            <Button color="primary" onClick={async () => await this._handleModalChange(user)}>
               Use this image
             </Button>
           </Modal.Footer>
@@ -162,6 +167,6 @@ export const EditUserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    updateUser, userLoading, uploadPreviewImage, updateProfileWithImage,
+    updateUser, userLoading, uploadPreviewImage, updateProfileWithImage, getResetUserNotif
   }, dispatch)
 })(_EditUserProfile);

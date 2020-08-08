@@ -159,6 +159,12 @@ export const user = (state = userState, action) => {
         previewImgFileName: url
       };
 
+    case "RESET_USER_NOTIF":
+      return {
+        ...state,
+        notifType: null,
+      }
+
     default:
       return state
   }

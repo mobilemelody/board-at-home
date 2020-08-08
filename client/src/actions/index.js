@@ -17,6 +17,7 @@ const receiveUserUpdate = createAction("RECEIVE_USER_UPDATE");
 const errorUserUpdate = createAction("ERROR_USER_UPDATE");
 const receiveUserPreviewImage = createAction("RECEIVE_USER_PREVIEW_IMAGE");
 const errorUserPreviewImage = createAction("ERROR_USER_PREVIEW_IMAGE");
+const resetUserNotif = createAction("RESET_USER_NOTIF");
 
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
@@ -96,6 +97,12 @@ export const updateUser = (data) => {
 export const userReset = () => {
   return dispatch => {
     dispatch(resetUser())
+  }
+}
+
+export const getResetUserNotif = () => {
+  return (dispatch) => {
+    dispatch(resetUserNotif());
   }
 }
 
