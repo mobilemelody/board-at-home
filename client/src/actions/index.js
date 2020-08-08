@@ -86,6 +86,14 @@ export const userReset = () => {
   }
 }
 
+const resetUserReviewsAndCollections = createAction("RESET_USER_REVIEWS_AND_COLLECTIONS")
+
+export const userResetReviewsAndCollections = () => {
+  return dispatch => {
+    dispatch(resetUserReviewsAndCollections())
+  }
+}
+
 // Create actions for Games state
 const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
