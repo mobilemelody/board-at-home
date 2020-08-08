@@ -31,3 +31,16 @@
   padding-top: 16px;
   width: 400px;
 }
+
+.EditProfile .edit-icon {
+  cursor: pointer;
+}
+
+.update-image-body {
+  display: flex;
+  justify-content: center;
+}
+
+.image-selector label {
+  padding-right: 16px;
+}

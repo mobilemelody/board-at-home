@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Modal, Form, Button } from 'react-bootstrap';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { bindActionCreators } from 'redux';
@@ -19,13 +19,14 @@ class _EditUserProfile extends React.Component {
       email: null,
       password: null,
       passwordConfirm: null,
+      modalOpen: false,
     };
   }
 
   _updateProfile = (event) => {
     event.preventDefault();
 
-    const form = { ...this.state };
+    const { modalOpen, formError, ...form} = { ...this.state };
 
     // Check password and confirm password
     if (form.password !== form.passwordConfirm) {
@@ -49,6 +50,14 @@ class _EditUserProfile extends React.Component {
     this.setState({ [evt.target.name]: evt.target.value });
   }
 
+  _openModal = () => {
+    this.setState({ modalOpen: true });
+  }
+
+  _closeModal = () => {
+    this.setState({ modalOpen: false});
+  }
+
 
   render() {
     const { user } = this.props;
@@ -66,13 +75,30 @@ class _EditUserProfile extends React.Component {
 
     return (
       <div className="EditProfile">
+        <Modal show={this.state.modalOpen} onHide={this._closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Change Profile Picture</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="update-image-body">
+            <img alt='profile img' src={user.imgFileName} />
+          </Modal.Body>
+          <Modal.Footer>
+            <div className="image-selector">
+              <label htmlFor="image">Select image</label>
+              <input type="file" name="image"/>
+            </div>
+            <Button color="primary">
+              Use this image
+            </Button>
+          </Modal.Footer>
+        </Modal>
         {notifier}
         <Form onSubmit={this._updateProfile}>
           <Typography variant="h4">Edit Profile</Typography>
           <hr />
           <div className='profileImgWrapper'>
             <Paper>
-              <EditIcon fontSize="small" backgroundColor="black" />
+              <EditIcon className="edit-icon" fontSize="small" onClick={this._openModal}/>
               <img alt='profile img' src={user.imgFileName} />
             </Paper>
           </div>
