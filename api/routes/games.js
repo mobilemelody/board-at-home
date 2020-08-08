@@ -220,6 +220,56 @@ router.get('/:game_id/reviews', (req, res) => {
   });
 });
 
+/* Get reviews for a game */
+router.get('/:game_id/reviews/average', (req, res) => {
+
+  let query = {
+    text: 'SELECT AVG("overallRating")::NUMERIC(10, 1) AS "avgRating" FROM "Review" WHERE "Review"."gameID" = $1',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    var avgRating;
+
+    if (result.rows) {
+      avgRating = result.rows[0].avgRating;
+    }
+
+    let resp = {
+      avgRating: avgRating,
+      gameID: parseInt(req.params.game_id),
+    };
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(resp);
+  });
+});
+
+/* Get reviews for all games */
+router.get('/reviews/average', (req, res) => {
+
+  let query = {
+    text: 'SELECT "Game".id as "gameID", AVG("Review"."overallRating")::NUMERIC(10,1) AS "avgRating" FROM "Game"' +
+    ' LEFT JOIN "Review" ON "Review"."gameID" = "Game".id' +
+    ' GROUP BY "Game".id ORDER BY "Game".id'
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(result.rows);
+  });
+});
+
 /* Create review for game */
 router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;

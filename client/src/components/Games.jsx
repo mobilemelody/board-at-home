@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getGames, getSetGameState } from '../actions/index'
+import { getGames, getSetGameState, getGamesAvgRating } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
 import { Link, Redirect } from 'react-router-dom'
@@ -12,6 +12,7 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Container, Button, Spinner } from 'react-bootstrap'
+import * as shared from './shared';
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -129,6 +130,7 @@ class _Games extends React.Component {
 
   componentDidMount() {
     this.props.getGames()
+    this.props.getGamesAvgRating()
   }
 
   _setGame(game) {
@@ -176,16 +178,18 @@ class _Games extends React.Component {
     }
 
     // Push reviews to table data
-    games.rows.forEach(function (game) {
-      var categories = []
+    if (games.isReceived) {
 
-      game.categories.forEach(function (category) {
-        categories.push(
-          <Grid item xs={12}>
-            {category}
-          </Grid>
-        )
-      })
+      games.rows.forEach(function (game) {
+        var categories = []
+
+        game.categories.forEach(function (category) {
+          categories.push(
+            <Grid item xs={12}>
+              {category}
+            </Grid>
+          )
+        })
 
       tableData.push({
         // Hidden columns that show in expand renderer
@@ -251,7 +255,14 @@ class _Games extends React.Component {
                 </p>
               </div>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item sm={8} xs={12}>
+              <div className="RatingWrapper">
+                { 
+                  games.isAvgRatingsReceived ? shared.avgRating(games.avgRatings[game.id]) : <div/>
+                }
+              </div>
+            </Grid>
+            <Grid item sm={4} xs={12} className="text-sm-right">
               <Button
                 onClick={() => setGame(game)}
                 variant="info"
@@ -260,8 +271,9 @@ class _Games extends React.Component {
               >See Reviews</Button>
             </Grid>
           </Grid>
+        })
       })
-    })
+    }
 
     return (
       <Container className="Games py-5">
@@ -314,6 +326,6 @@ export const Games = connect(state => {
   return { user, games }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState, getGames
+    getSetGameState, getGames, getGamesAvgRating
   }, dispatch)
 })(_Games)
