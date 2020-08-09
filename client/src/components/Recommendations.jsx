@@ -1,17 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getRecommendations, getSetGameState } from '../actions/index'
+import { getRecommendations, getSetGameState, getGamesAvgRating } from '../actions/index'
 
 import { Notifier } from './Notifier.jsx'
 import { Redirect } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
+import Button from '@material-ui/core/Button';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Button, Spinner } from 'react-bootstrap'
+import { Spinner } from 'react-bootstrap';
 
 import { Login } from './Login'
 
@@ -117,6 +118,7 @@ class _Recommendations extends React.Component {
 
   componentDidMount() {
     this.props.getRecommendations();
+    this.props.getGamesAvgRating();
   }
 
   _setGame(game) {
@@ -187,52 +189,59 @@ class _Recommendations extends React.Component {
         categories: game.categories,
         viewer:
           <Grid container spacing={1}>
-            <Grid item xs={4}>
+            <Grid item container xs={12} spacing={1} className="align-items-center">
+              <Grid item sm={8} xs={12}>
+                <h2>{game.name}</h2>
+              </Grid>
+              <Grid item sm={4} xs={12} className="text-sm-right">
+                <Rating
+                  name="half-rating-read"
+                  value={game.avgRating}
+                  precision={0.1}
+                  size="large"
+                  readOnly
+                />
+              </Grid>
+            </Grid>
+            <Grid item md={3} xs={12}>
               <div className="NameImgWrapper">
-                <Typography variant='h5'>{game.name}</Typography>
                 <Paper className='ImgWrapper'>
                   <img alt='Boardgame cover' className='ImgCenter' src={game.imgFileName} />
                 </Paper>
               </div>
             </Grid>
-            <Grid item xs={5}>
-              <div className="DetailsWrapper">
+            <Grid item md={5} sm={8} xs={12}>
+              <div className="DetailsWrapper mt-2">
                 <Grid container spacing={1}>
-                  {/* Placeholder items for spacing */}
-                  <Grid item xs={12}><br /><br />Details<hr /></Grid>
+                  <Grid item xs={12}><h5>Details</h5><hr /></Grid>
 
-                  <Grid item xs={4}>Players:</Grid>
-                  <Grid item xs={4}>{game.minPlayers} - {game.maxPlayers}</Grid>
-                  <Grid item xs={4}></Grid>
+                  <Grid item xs={5}>Players:</Grid>
+                  <Grid item xs={7}>{game.minPlayers} - {game.maxPlayers}</Grid>
 
-                  <Grid item xs={4}>Minimum Age:</Grid>
-                  <Grid item xs={4}>{game.minAge}</Grid>
-                  <Grid item xs={4}></Grid>
+                  <Grid item xs={5}>Minimum Age:</Grid>
+                  <Grid item xs={7}>{game.minAge}</Grid>
 
-                  <Grid item xs={4}>Playtime:</Grid>
+                  <Grid item xs={5}>Playtime:</Grid>
                   <Grid item xs={7}>{game.minPlaytime} - {game.maxPlaytime} minutes</Grid>
-                  <Grid item xs={1}></Grid>
 
-                  <Grid item xs={4}>Publisher:</Grid>
+                  <Grid item xs={5}>Publisher:</Grid>
                   <Grid item xs={7}>{game.publisher}</Grid>
-                  <Grid item xs={1}></Grid>
 
-                  <Grid item xs={4}>Year Published:</Grid>
-                  <Grid item xs={4}>{game.year}</Grid>
-                  <Grid item xs={4}></Grid>
+                  <Grid item xs={5}>Year Published:</Grid>
+                  <Grid item xs={7}>{game.year}</Grid>
                 </Grid>
               </div>
             </Grid>
-            <Grid item xs={3}>
-              <div className="CategoriesWrapper">
-                <Grid item xs={12}><br /><br />Categories<hr /></Grid>
+            <Grid item sm={4} xs={12}>
+              <div className="CategoriesWrapper mt-2">
+                <Grid item xs={12}><h5>Categories</h5><hr /></Grid>
                 {categories}
               </div>
             </Grid>
-            <Grid item xs={12}>
-              <div className="DescriptionWrapper">
+            <Grid item xs={12} className="d-none d-sm-block">
+              <div className="DescriptionWrapper mt-2">
                 <h5>Description</h5>
-                <p className="DescriptionP">
+                <p className="DescriptionP bg-light p-2">
                   {game.description}
                 </p>
               </div>
@@ -240,8 +249,9 @@ class _Recommendations extends React.Component {
             <Grid item xs={12}>
               <Button
                 onClick={() => setGame(game)}
-                variant="info"
-                size="sm"
+                variant="contained"
+                size="medium"
+                className="mb-2"
                 type="submit"
               >See Reviews</Button>
             </Grid>
@@ -253,9 +263,8 @@ class _Recommendations extends React.Component {
       <div className="Games">
         <Grid container spacing={3}>
           {notifier}
-          <Grid item xs={12}><br /></Grid>
-          <Grid item xs={10} className="GamesTitleRow">
-            <Typography variant="h3">Recommendations</Typography>
+          <Grid item xs={6} className="GamesTitleRow">
+            <h1>Recommendations</h1>
           </Grid>
           <Grid item xs={12} className="GamesTableRow">
             <div className="GamesTable">
@@ -280,6 +289,6 @@ export const Recommendations = connect(state => {
   return { user, recommendations }
 }, dispatch => {
   return bindActionCreators({
-    getSetGameState, getRecommendations
+    getSetGameState, getRecommendations, getGamesAvgRating
   }, dispatch)
 })(_Recommendations)

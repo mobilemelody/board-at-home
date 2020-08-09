@@ -1,9 +1,9 @@
 import React from 'react';
-import { Modal, Form, Button } from 'react-bootstrap';
-import Typography from '@material-ui/core/Typography';
+import { Modal, Form } from 'react-bootstrap';
 import Paper from '@material-ui/core/Paper';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import '../css/EditUserProfile.css';
 import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage, getResetUserNotif } from '../actions/index';
@@ -106,8 +106,8 @@ class _EditUserProfile extends React.Component {
           </Modal.Footer>
         </Modal>
         {notifier}
-        <Form onSubmit={this._updateProfile}>
-          <Typography variant="h4">Edit Profile</Typography>
+        <Form onSubmit={this._updateProfile} className="col-md-8 offset-md-2">
+          <h1>Edit Profile</h1>
           <hr />
           <div className='profileImgWrapper'>
             <Paper>
@@ -152,7 +152,8 @@ class _EditUserProfile extends React.Component {
           </Form.Group>
           <Form.Group>
             <Button
-              variant="primary"
+              variant="contained"
+              color="primary"
               type="submit"
             >Update Profile</Button>
           </Form.Group>

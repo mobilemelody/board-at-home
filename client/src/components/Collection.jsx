@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { Notifier } from './Notifier.jsx';
-import { Container, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
+import { Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
+import Rating from '@material-ui/lab/Rating';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
@@ -161,7 +162,7 @@ class _Collection extends React.Component {
         game.gameInfo = <a href={`/#/game/${game.id}`}><img alt="game cover" src={game.imgFileName} height="50"/> {game.name}</a>;
         game.players = <div>{game.minPlayers} - {game.maxPlayers}</div>;
         game.playtime = <div>{game.minPlaytime} - {game.maxPlaytime} min</div>;
-        game.overallRating = game.overallRating ? parseFloat(game.overallRating).toFixed(1) : '--';
+        game.overallRating = <Rating value={game.overallRating} precision={0.1} size="small" readOnly/>;
         game.remove = belongsToUser ? <IconButton aria-label="remove" onClick={() => {this._removeGame(collection.data, game.id)}}><DeleteIcon/></IconButton> : '';
       });
 
@@ -235,9 +236,9 @@ class _Collection extends React.Component {
     }
 
     return (
-      <Container className="collection-wrapper py-3">
+      <div className="collection-wrapper">
         {body}
-      </Container>
+      </div>
     );
   }
 }

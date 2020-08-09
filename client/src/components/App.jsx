@@ -2,14 +2,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLoading, userLogout, checkLoggedIn, userUnsetIsNew } from "../actions"
-import { Nav, Navbar, Button } from 'react-bootstrap'
+import Button from '@material-ui/core/Button';
+import { Nav, Navbar, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { NotificationContainer } from 'react-notifications'
 
 // CSS imports
-import '../css/App.css';
-import '../css/Games.css';
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -66,9 +65,12 @@ class _App extends React.Component {
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
           <Nav className="mr-auto" />
           <Button
+            variant="contained"
             href="#login"
+            className="mr-2"
           >Login</Button>
           <Button
+            variant="contained"
             href="#signup"
           >Sign up</Button>
         </Navbar>
@@ -77,23 +79,26 @@ class _App extends React.Component {
 
     if (user.isLoggedIn) {
       navbar =
-        <Navbar bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="#games">Games</Nav.Link>
-            <LinkContainer to="/profile">
-              <Nav.Link>Profile</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/games/recommendations/">
-              <Nav.Link>Recommendations</Nav.Link>
-            </LinkContainer>
-          </Nav>
-          <Button
-            variant='info'
-            onClick={() => {
-              this._userLogout()
-            }}
-          >Logout</Button>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="#games">Games</Nav.Link>
+              <LinkContainer to="/profile">
+                <Nav.Link>Profile</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/games/recommendations/">
+                <Nav.Link>Recommendations</Nav.Link>
+              </LinkContainer>
+            </Nav>
+            <Button
+              variant="contained"
+              onClick={() => {
+                this._userLogout()
+              }}
+            >Logout</Button>
+          </Navbar.Collapse>
         </Navbar>
 
       homeRedirect = <Redirect from='/' to='/games' />
@@ -110,18 +115,20 @@ class _App extends React.Component {
       <div className="App">
         <NotificationContainer key="app" />
         {navbar}
-        <Switch>
-          <Route path='/login'component={Login}/>
-          <Route path='/signup' component={Signup}/>
-          <Route path='/games/recommendations' component={Recommendations} />
-          <Route path='/games' component={Games}/>
-          <Route path="/gamesAdd" component={AddGame}/>
-          <Route path='/game/:id' component={Game}/>
-          <Route path='/collections/:collectionId' component={Collection} />
-          <Route exact path='/profile' component={UserProfile}/>
-          <Route exact path='/profile/edit' component={EditUserProfile}/>
-          {homeRedirect}
-        </Switch>
+        <Container fluid className="py-5 px-md-5">
+          <Switch>
+            <Route path='/login'component={Login}/>
+            <Route path='/signup' component={Signup}/>
+            <Route path='/games/recommendations' component={Recommendations} />
+            <Route path='/games' component={Games}/>
+            <Route path="/gamesAdd" component={AddGame}/>
+            <Route path='/game/:id' component={Game}/>
+            <Route path='/collections/:collectionId' component={Collection} />
+            <Route exact path='/profile' component={UserProfile}/>
+            <Route exact path='/profile/edit' component={EditUserProfile}/>
+            {homeRedirect}
+          </Switch>
+        </Container>
       </div>
     );
   }

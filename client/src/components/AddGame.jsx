@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 import { Spinner } from 'react-bootstrap';
 
 const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
@@ -95,7 +96,11 @@ class AddGameForm extends React.Component {
           </div>
         </div>
 
-        <input type="submit" className="btn btn-lg btn-primary" value="Save Game" />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+        >Save Game</Button>
 
       </form>
     );
@@ -177,7 +182,7 @@ class AddGameForm extends React.Component {
 
   render() {
     return (
-      <div className="container py-3">
+      <div>
         <h1>Add a Game</h1>
         {this.createForm()}
       </div>

@@ -167,7 +167,7 @@ class _AddToCollection extends React.Component {
     // Modal dialog content
     let body =
       <div>
-        <Button variant="contained" startIcon={<AddIcon/>} size="small" onClick={this._openDialog}>
+        <Button variant="outlined" startIcon={<AddIcon/>} size="medium" onClick={this._openDialog}>
           Add to Collection
         </Button>
         <Modal show={this.state.open} onHide={this._closeDialog}>

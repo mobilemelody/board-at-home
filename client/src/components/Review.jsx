@@ -5,12 +5,12 @@ import { bindActionCreators } from 'redux'
 // Import Actions
 import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif, resetReview } from '../actions/index'
 
-import { Form, Button, InputGroup, Spinner } from 'react-bootstrap'
+import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 
-import Typography from '@material-ui/core/Typography';
 import BootstrapTable from 'react-bootstrap-table-next'
 import Paper from '@material-ui/core/Paper';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -44,22 +44,12 @@ const OtherReviewPaginationOptions = {
   }]
 };
 
-// Other Review table columns
 const OtherReviewsColumns = [{
   dataField: 'id',
   text: '',
   hidden: true
 }, {
-  dataField: 'img',
-  classes: 'UserImg',
-  text: '',
-}, {
-  dataField: 'userAndRating',
-  classes: 'UserAndRating',
-  text: '',
-}, {
-  dataField: 'comments',
-  classes: 'Comments',
+  dataField: 'reviewViewer',
   text: '',
 }, {
   dataField: 'strategy',
@@ -124,91 +114,71 @@ const OtherReviewsExpandRow = {
   expandColumnRenderer: ({ expanded }) => {
     if (expanded) {
       return (
-        <Typography variant="h4">-</Typography>
+        <h4>-</h4>
       )
     }
     return (
-      <Typography variant="h4">...</Typography>
+      <h4>...</h4>
     )
   },
   renderer: row => (
     <Grid container spacing={1}>
-      <Grid item xs={1}></Grid>
-      <Grid item xs={5}><h6>Sub Categories</h6></Grid>
-
-      <Grid item xs={1}></Grid>
-      <Grid item xs={5}><h6>Good For</h6></Grid>
+      <Grid item md={2}></Grid>
       {/* Star Ratings */}
-      <Grid item xs={6}>
-        <Grid container spacing={1}>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Strategy</p></Grid>
-          <Grid item xs={4}>
+      <Grid item md={5} xs={12}>
+        <Grid item xs={12}><h6>Sub Categories</h6></Grid>
+        <Grid container spacing={1} xs={12}>
+          <Grid item xs={6}><p>Strategy</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.strategy} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Luck</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Luck</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.luck} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Player Interaction</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Player Interaction</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.playerInteraction} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Replay Value</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Replay Value</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.replayValue} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Complexity</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Complexity</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.complexity} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Art & Style</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Art & Style</p></Grid>
+          <Grid item xs={6}>
             <Rating
               value={row.artAndStyle} // Add review state here here
               readOnly
             />
           </Grid>
-          <Grid item xs={2}></Grid>
         </Grid>
       </Grid>
 
       {/* Checkbox Good For */}
-      <Grid item xs={6}>
-        <Grid container spacing={1}>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Families</p></Grid>
-          <Grid item xs={4}>
+      <Grid item md={5} xs={12}>
+        <Grid item xs={12}><h6>Good For</h6></Grid>
+        <Grid container spacing={1} xs={12}>
+          <Grid item xs={6}><p>Families</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfFamilies}
               disableRipple
@@ -216,11 +186,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Adults</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Adults</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfAdults}
               disableRipple
@@ -228,11 +195,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Teens</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Teens</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfTeens}
               disableRipple
@@ -240,11 +204,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Kids</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Kids</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfKids}
               disableRipple
@@ -252,11 +213,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>2 Players</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>2 Players</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gf2Player}
               disableRipple
@@ -264,11 +222,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Large Groups</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Large Groups</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfLargeGroups}
               disableRipple
@@ -276,11 +231,8 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
-
-          <Grid item xs={2}></Grid>
-          <Grid item xs={4}><p>Social Distancing</p></Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}><p>Social Distancing</p></Grid>
+          <Grid item xs={6}>
             <Checkbox
               checked={row.gfSocialDistancing}
               disableRipple
@@ -288,7 +240,6 @@ const OtherReviewsExpandRow = {
               size='small'
             />
           </Grid>
-          <Grid item xs={2}></Grid>
 
         </Grid>
       </Grid>
@@ -440,28 +391,30 @@ class _Reviews extends React.Component {
     reviews.rows.forEach(function (review) {
       tableData.push({
         id: review.id,
-        img:
-          <Paper className='ImgReview'>
-            <img alt="user profile pic" className='ImgCenterReview' src={review.user.imgFileName} />
-          </Paper>,
-        userAndRating:
-          <div>
-            <Typography>{review.user.username}</Typography>
-            <hr />
-            <p>Overall Rating</p>
-            <Rating
-              name="overallRating"
-              value={review.overallRating}
-              readOnly
-            />
-          </div>,
-        comments:
-          <div className="CommentsWrapper">
-            <h6>Comments</h6>
-            <p className="CommentsP">
-              {review.comments}
-            </p>
-          </div>,
+        reviewViewer:
+          <Grid container spacing={1}>
+            <Grid item md={2} xs={6}>
+              <Paper className='ImgReview'>
+                <img alt="user profile pic" className='ImgCenterReview' src={review.user.imgFileName} />
+              </Paper>
+            </Grid>
+            <Grid item md={3} xs={6}>
+              <h5>{review.user.username}</h5>
+              <hr />
+              <h6>Overall Rating</h6>
+              <Rating
+                name="overallRating"
+                value={review.overallRating}
+                readOnly
+              />
+            </Grid>
+            <Grid item md={7} xs={12} className="CommentsWrapper">
+              <h6>Comments</h6>
+              <p className="CommentsP bg-light p-2 overflow-auto">
+                {review.comments}
+              </p>
+            </Grid>
+          </Grid>,
         // Hidden columns that show in expand renderer
         strategy: review.strategy,
         luck: review.luck,
@@ -480,7 +433,7 @@ class _Reviews extends React.Component {
     })
 
     return (
-      <div className="Review-Wrapper">
+      <div className="Review-Wrapper pt-5">
         {notifier}
         <Grid item xs={12}>
           {/* Review heading */}
@@ -498,9 +451,9 @@ class _Reviews extends React.Component {
             <Form>
               <Grid container spacing={2}>
                 {/* Star Ratings */}
-                <Grid item xs={6}>
+                <Grid item md={6} xs={12}>
                   <fieldset disabled={formDisabled}>
-                    <Typography>Ratings</Typography>
+                    <h5>Ratings</h5>
                     <br />
                     <Grid container spacing={1}>
                       <Grid item xs={6}>
@@ -592,15 +545,15 @@ class _Reviews extends React.Component {
                 </Grid>
 
                 {/* Good For */}
-                <Grid item xs={6}>
+                <Grid item md={6} xs={12}>
                   <fieldset disabled={formDisabled}>
-                    <Typography>Good For</Typography>
+                    <h5>Good For</h5>
                     <br />
                     <Grid container spacing={1}>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Families</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxFamilies">
                           <Form.Check
                             size="lg"
@@ -611,10 +564,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Adults</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxAdults">
                           <Form.Check
                             size="lg"
@@ -625,10 +578,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Teens</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxTeens">
                           <Form.Check
                             size="lg"
@@ -639,10 +592,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Kids</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxKids">
                           <Form.Check
                             size="lg"
@@ -653,10 +606,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>2 Players</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckbox2Player">
                           <Form.Check
                             size="lg"
@@ -667,10 +620,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Large Groups</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxLargeGroups">
                           <Form.Check
                             size="lg"
@@ -681,10 +634,10 @@ class _Reviews extends React.Component {
                           />
                         </Form.Group>
                       </Grid>
-                      <Grid item xs={4}>
+                      <Grid item xs={8}>
                         <p>Social Distancing</p>
                       </Grid>
-                      <Grid item xs={8}>
+                      <Grid item xs={4}>
                         <Form.Group id="formGridCheckboxSocialDistancing">
                           <Form.Check
                             size="lg"
@@ -700,7 +653,7 @@ class _Reviews extends React.Component {
                 </Grid>
                 <Grid item xs={12}>
                   <fieldset disabled={formDisabled}>
-                    <Typography>Comments</Typography>
+                    <h5>Comments</h5>
                     <InputGroup>
                       <Form.Control
                         as="textarea"
@@ -715,13 +668,16 @@ class _Reviews extends React.Component {
                 {formDisabled ?
                   <Grid item xs={12}>
                     <Button
-                      variant="primary"
+                      variant="contained"
+                      color="primary"
+                      className="mr-2"
                       onClick={() => {
                         this._setFormEdit(reviews.userReview)
                       }}
                     >&nbsp;Edit&nbsp;</Button>
                     <Button
-                      variant="primary"
+                      variant="outlined"
+                      color="default"
                       onClick={() => {
                         this._deleteReview(reviews.userReview)
                       }}
@@ -730,7 +686,8 @@ class _Reviews extends React.Component {
                   :
                   <Grid item xs={12}>
                     <Button
-                      variant="primary"
+                      variant="contained"
+                      color="primary"
                       onClick={() => {
                         this._submitReview()
                       }}
@@ -743,8 +700,7 @@ class _Reviews extends React.Component {
           </div>
         </Grid>
         {/* Other Reviews Table */}
-        <Grid item xs={12}>
-          <br /><br />
+        <Grid item xs={12} className="pt-5">
           <h3>Other Reviews</h3>
           <div className="ReviewTable">
             <BootstrapTable
