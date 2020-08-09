@@ -5,11 +5,12 @@ import { getUser, checkLoggedIn, getUserReviews, getUserCollections, userResetRe
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Rating from '@material-ui/lab/Rating';
+import Button from '@material-ui/core/Button';
 import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
 import { Link, Redirect } from 'react-router-dom'
-import { Spinner, Button } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
@@ -72,7 +73,7 @@ class _UserProfile extends React.Component {
             <div className="button-container">
               <Link to='/profile/edit'>
                 <Button
-                variant='info'
+                  variant='contained'
                 >
                   Edit Profile
                 </Button>
