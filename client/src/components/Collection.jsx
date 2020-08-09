@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { Notifier } from './Notifier.jsx';
-import { Container, Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
+import { Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
 import Chip from '@material-ui/core/Chip';
@@ -236,9 +236,9 @@ class _Collection extends React.Component {
     }
 
     return (
-      <Container className="collection-wrapper py-3">
+      <div className="collection-wrapper">
         {body}
-      </Container>
+      </div>
     );
   }
 }

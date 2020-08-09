@@ -3,14 +3,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin, userLoading, userLogout, checkLoggedIn, userUnsetIsNew } from "../actions"
 import Button from '@material-ui/core/Button';
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { NotificationContainer } from 'react-notifications'
 
 // CSS imports
-import '../css/App.css';
-import '../css/Games.css';
 import "mdbreact/dist/css/mdb.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -116,17 +114,19 @@ class _App extends React.Component {
       <div className="App">
         <NotificationContainer key="app" />
         {navbar}
-        <Switch>
-          <Route path='/login'component={Login}/>
-          <Route path='/signup' component={Signup}/>
-          <Route path='/games/recommendations' component={Recommendations} />
-          <Route path='/games' component={Games}/>
-          <Route path="/gamesAdd" component={AddGame}/>
-          <Route path='/game/:id' component={Game}/>
-          <Route path='/collections/:collectionId' component={Collection} />
-          <Route path='/profile' component={UserProfile}/>
-          {homeRedirect}
-        </Switch>
+        <Container fluid className="py-5 px-md-5">
+          <Switch>
+            <Route path='/login'component={Login}/>
+            <Route path='/signup' component={Signup}/>
+            <Route path='/games/recommendations' component={Recommendations} />
+            <Route path='/games' component={Games}/>
+            <Route path="/gamesAdd" component={AddGame}/>
+            <Route path='/game/:id' component={Game}/>
+            <Route path='/collections/:collectionId' component={Collection} />
+            <Route path='/profile' component={UserProfile}/>
+            {homeRedirect}
+          </Switch>
+        </Container>
       </div>
     );
   }

@@ -9,7 +9,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
 import { Redirect } from 'react-router-dom'
-import { Container, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
@@ -47,7 +47,7 @@ class _UserProfile extends React.Component {
     }
 
     return this.allFetched(user) && (
-      <Container className="UserProfile py-5">
+      <div className="UserProfile">
         <Grid container spacing={1}>
           <Grid item md={3} xs={12}>
             <h1>{user.userName}</h1>
@@ -114,7 +114,7 @@ class _UserProfile extends React.Component {
             }
           </Grid>
         </div>
-      </Container>
+      </div>
     );
   }
 }

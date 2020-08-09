@@ -6,8 +6,9 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import { Redirect } from "react-router-dom";
-import { Container, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
+import '../css/Games.css';
 
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
@@ -159,9 +160,9 @@ class _Game extends React.Component {
     }
 
     return (
-      <Container fluid className="Game py-5 px-md-5">
+      <div className="Game">
         {body}
-      </Container>
+      </div>
     );
   }
 }

@@ -12,7 +12,7 @@ import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Container, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
 import { Login } from './Login'
 
@@ -210,10 +210,9 @@ class _Recommendations extends React.Component {
                 </Paper>
               </div>
             </Grid>
-            <Grid item md={5} xs={12}>
+            <Grid item md={5} sm={8} xs={12}>
               <div className="DetailsWrapper mt-2">
                 <Grid container spacing={1}>
-                  {/* Placeholder items for spacing */}
                   <Grid item xs={12}><h5>Details</h5><hr /></Grid>
 
                   <Grid item xs={5}>Players:</Grid>
@@ -233,13 +232,13 @@ class _Recommendations extends React.Component {
                 </Grid>
               </div>
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item sm={4} xs={12}>
               <div className="CategoriesWrapper mt-2">
                 <Grid item xs={12}><h5>Categories</h5><hr /></Grid>
                 {categories}
               </div>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className="d-none d-sm-block">
               <div className="DescriptionWrapper mt-2">
                 <h5>Description</h5>
                 <p className="DescriptionP bg-light p-2">
@@ -261,7 +260,7 @@ class _Recommendations extends React.Component {
     })
 
     return (
-      <Container className="Games py-5">
+      <div className="Games">
         <Grid container spacing={3}>
           {notifier}
           <Grid item xs={6} className="GamesTitleRow">
@@ -279,7 +278,7 @@ class _Recommendations extends React.Component {
             </div>
           </Grid>
         </Grid>
-      </Container>
+      </div>
     )
   }
 }

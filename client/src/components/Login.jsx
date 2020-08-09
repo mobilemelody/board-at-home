@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom";
 import { userLogin, userLoading, userReset } from "../actions"
 import Button from '@material-ui/core/Button';
-import { Container, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { Notifier } from './Notifier.jsx'
 
 class _Login extends Component {
@@ -50,7 +50,7 @@ class _Login extends Component {
     }
 
     return (
-      <Container className="Login">
+      <div className="Login">
         {notifier}
         <Form onSubmit={this._login} className="col-md-8 offset-md-2">
           <h1>Login</h1>
@@ -80,7 +80,7 @@ class _Login extends Component {
             >Login</Button>
           </Form.Group>
         </Form>
-      </Container>
+      </div>
     )
   }
 }

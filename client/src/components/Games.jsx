@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getGames, getSetGameState, getGamesAvgRating } from '../actions/index'
+import '../css/Games.css';
 
 import { Notifier } from './Notifier.jsx'
 import { Link, Redirect } from 'react-router-dom'
@@ -14,7 +15,7 @@ import AddIcon from '@material-ui/icons/AddCircle';
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
-import { Container, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 
 const GamePageTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -232,10 +233,9 @@ class _Games extends React.Component {
                 </Paper>
               </div>
             </Grid>
-            <Grid item md={5} xs={12}>
+            <Grid item md={5} sm={8} xs={12}>
               <div className="DetailsWrapper mt-2">
                 <Grid container spacing={1}>
-                  {/* Placeholder items for spacing */}
                   <Grid item xs={12}><h5>Details</h5><hr /></Grid>
 
                   <Grid item xs={5}>Players:</Grid>
@@ -255,13 +255,13 @@ class _Games extends React.Component {
                 </Grid>
               </div>
             </Grid>
-            <Grid item md={4} xs={12}>
+            <Grid item sm={4} xs={12}>
               <div className="CategoriesWrapper mt-2">
                 <Grid item xs={12}><h5>Categories</h5><hr /></Grid>
                 {categories}
               </div>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className="d-none d-sm-block">
               <div className="DescriptionWrapper mt-2">
                 <h5>Description</h5>
                 <div className="DescriptionP bg-light p-2">
@@ -284,7 +284,7 @@ class _Games extends React.Component {
     }
 
     return (
-      <Container fluid className="Games py-5 px-md-5">
+      <div className="Games">
         <Grid container spacing={3}>
           {notifier}
           <ToolkitProvider
@@ -327,7 +327,7 @@ class _Games extends React.Component {
             }
           </ToolkitProvider>
         </Grid>
-      </Container>
+      </div>
     )
   }
 }
