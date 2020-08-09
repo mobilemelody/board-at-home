@@ -3,6 +3,7 @@
 const userState = {
   id: null,
   imgFileName: null,
+  previewImgFileName: null,
   userName: null,
   email: null,
   isFetching: false,
@@ -14,6 +15,7 @@ const userState = {
   error: null,
   collections: [],
   reviews: [],
+  notifType: null,
 }
 
 // User action reducer handler
@@ -64,6 +66,7 @@ export const user = (state = userState, action) => {
         isNew: false,
         id: resp.id,
         imgFileName: resp.imgFileName,
+        previewImgFileName: resp.imgFileName,
         userName: resp.username,
         email: resp.email,
       })
@@ -76,13 +79,21 @@ export const user = (state = userState, action) => {
         reviews
       };
 
-      case "RECEIVE_USER_COLLECTIONS":
-        const collections = action.payload.resp.payload.data.collections;
-        return {
-          ...state,
-          isCollectionsReceived: true,
-          collections,
-        };
+    case "RECEIVE_USER_COLLECTIONS":
+      const collections = action.payload.resp.payload.data.collections;
+      return {
+        ...state,
+        isCollectionsReceived: true,
+        collections,
+      };
+
+    case "ERROR_USER_UPDATE":
+      return {
+        ...state,
+        isFetching: false,
+        error: 'An error occurred',
+        notifType: "ERROR_USER_UPDATE",
+      }
 
     case "RECEIVE_USER_LOGIN":
       resp = action.payload.data
@@ -140,6 +151,30 @@ export const user = (state = userState, action) => {
       return Object.assign({}, state, {
         isNew: false,
       })
+
+    case "RECEIVE_USER_UPDATE":
+      const { data } = action.payload;
+      return {
+        ...state,
+        isFetching: false,
+        imgFileName: data.imgFileName || state.imgFileName,
+        userName: data.username || state.username,
+        email: data.email || state.email,
+        notifType: "RECEIVE_USER_UPDATE",
+      };
+
+    case "RECEIVE_USER_PREVIEW_IMAGE":
+      const { url } = action.payload;
+      return {
+        ...state,
+        previewImgFileName: url
+      };
+
+    case "RESET_USER_NOTIF":
+      return {
+        ...state,
+        notifType: null,
+      }
 
     default:
       return state

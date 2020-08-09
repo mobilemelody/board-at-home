@@ -93,5 +93,14 @@ module.exports = {
       game.categories = [];
     }
     return game;
+  },
+
+  formatUser: (input) => {
+    const { username, email, imgFileName } = input;
+    return {
+      username,
+      email,
+      imgFileName,
+    };
   }
 }

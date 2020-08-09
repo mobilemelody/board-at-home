@@ -149,7 +149,7 @@ router.get('/recommendations', (req, res) => {
   let userID = parseInt(req.headers.from);
 
   // Build query object
-  let query = { 
+  let query = {
     text: 'SELECT "Game".*, array_agg(DISTINCT("GameCategorySelect".category)) as categories, SUM("similarUsers"."numGames") AS "score" FROM "Review" LEFT JOIN "Game" ON "Review"."gameID" = "Game".id LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID" LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id LEFT JOIN ( SELECT "Review"."userID", COUNT(*) AS "numGames" FROM "Review" WHERE "Review"."gameID" IN ( SELECT "Game".id FROM "Game" JOIN "Review" ON "Game".id = "Review"."gameID" WHERE "Review"."userID" = $1 AND "Review"."overallRating" >= 4 ) AND "Review"."overallRating" >= 4 AND "Review"."userID" != $1 GROUP BY "Review"."userID" ORDER BY "numGames" ) AS "similarUsers" ON "Review"."userID" = "similarUsers"."userID" WHERE "Review"."userID" = "similarUsers"."userID" AND "Review"."gameID" NOT IN ( SELECT "gameID" FROM "Review" WHERE "userID" = $1 ) AND "Review"."overallRating" >= 4 GROUP BY "Game".id ORDER BY "score" DESC',
     values: [userID]
   };

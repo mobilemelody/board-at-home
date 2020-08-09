@@ -1,0 +1,60 @@
+.profileImgWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.profileImgWrapper > .MuiPaper-root {
+  position: relative;
+}
+
+.profileImgWrapper > .MuiPaper-root .MuiSvgIcon-root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #FFF;
+}
+
+.profileImgWrapper img {
+  width: 175px;
+  height: 175px;
+}
+
+.EditProfile {
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.EditProfile form {
+  padding-top: 16px;
+  width: 400px;
+}
+
+.EditProfile .edit-icon {
+  cursor: pointer;
+}
+
+.update-image-body {
+  display: flex;
+  justify-content: center;
+}
+
+.update-image-body img {
+  max-width: 50%;
+  max-height: 50%;
+}
+
+.image-selector {
+  width: 100%;
+}
+
+.image-selector label {
+  padding-right: 16px;
+}
+
+.image-selector input {
+  max-width: 50%;
+}
