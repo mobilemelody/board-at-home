@@ -65,8 +65,8 @@ export const user = (state = userState, action) => {
         error: null,
         isNew: false,
         id: resp.id,
-        imgFileName: resp.imgFileName,
-        previewImgFileName: resp.imgFileName,
+        imgFileName: resp.imgFileName || 'https://boardathome.s3.us-east-2.amazonaws.com/user/test3.jpg',
+        previewImgFileName: resp.imgFileName || 'https://boardathome.s3.us-east-2.amazonaws.com/user/test3.jpg',
         userName: resp.username,
         email: resp.email,
       })
