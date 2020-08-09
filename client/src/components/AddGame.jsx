@@ -182,7 +182,7 @@ class AddGameForm extends React.Component {
 
   render() {
     return (
-      <div className="container py-5">
+      <div>
         <h1>Add a Game</h1>
         {this.createForm()}
       </div>
