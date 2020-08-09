@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getUser, checkLoggedIn, getUserReviews, getUserCollections } from '../actions/index';
+import { getUser, checkLoggedIn, getUserReviews, getUserCollections, userResetReviewsAndCollections } from '../actions/index';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -13,6 +13,10 @@ import { Link, Redirect } from 'react-router-dom'
 import { Spinner, Button } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
+
+  componentDidMount() {
+    this.props.userResetReviewsAndCollections()
+  }
 
   allFetched = (user) => {
     return user.isReceived && user.isReviewsReceived;
@@ -53,6 +57,19 @@ class _UserProfile extends React.Component {
             </Paper>
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
+            <div className="pt-2">
+              <div>Average Rating: </div>
+              <Rating
+                name="userAvgRating"
+                value={
+                  user.reviews.map(e => e.overallRating)
+                    .reduce((sum, rating) => sum + rating) / user.reviews.length
+                }
+                precision={0.1}
+                readOnly
+                size="large"
+              />
+            </div>
             <div className="button-container">
               <Link to='/profile/edit'>
                 <Button
@@ -115,6 +132,6 @@ export const UserProfile = connect(state => {
   return { user };
 }, dispatch => {
   return bindActionCreators({
-    getUser, getUserReviews, getUserCollections, checkLoggedIn
+    getUser, getUserReviews, getUserCollections, userResetReviewsAndCollections, checkLoggedIn
   }, dispatch)
 })(_UserProfile);

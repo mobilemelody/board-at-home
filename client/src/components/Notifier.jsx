@@ -1,6 +1,6 @@
-import { NotificationManager } from 'react-notifications'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { NotificationManager } from "react-notifications"
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
 class _Notifier extends Component {
 	constructor(props) {
@@ -15,19 +15,19 @@ class _Notifier extends Component {
 	_createNotification(type) {
 		switch (type) {
 
-			case 'ERROR_SIGNUP_ALL_FIELDS':
+			case "ERROR_SIGNUP_ALL_FIELDS":
 				NotificationManager.error("Try again", "All fields required for signup", 5000)
 				break
 
-			case 'ERROR_SIGNUP_PASSWORD':
+			case "ERROR_SIGNUP_PASSWORD":
 				NotificationManager.error("Try again", "Password and confirmed password must match", 5000)
 				break
 
-			case 'ERROR_SIGNUP_EMAIL':
+			case "ERROR_SIGNUP_EMAIL":
 				NotificationManager.error("Try again", "Email and confirmed email must match", 5000)
 				break
 
-			case 'ERROR_LOGIN':
+			case "ERROR_LOGIN":
 				NotificationManager.error("Try again", "Invalid username/password", 5000)
 				break
 
@@ -47,11 +47,11 @@ class _Notifier extends Component {
 				NotificationManager.error("Try again later", "Error Getting Games", 5000)
 				break
 
-			case 'RECEIVE_REVIEW_INSERT':
+			case "RECEIVE_REVIEW_INSERT":
 				NotificationManager.info("", "Review Added", 5000)
 				break
 
-			case 'RECEIVE_REVIEW_DELETE':
+			case "RECEIVE_REVIEW_DELETE":
 				NotificationManager.info("", "Review Deleted", 5000)
 				break
 
@@ -59,24 +59,28 @@ class _Notifier extends Component {
 				NotificationManager.info("", "Review Updated", 5000)
 				break
 
-			case 'ERROR_INSERT_REVIEW':
+			case "ERROR_INSERT_REVIEW":
 				NotificationManager.error("Try again later", "Error Inserting Review", 5000)
 				break
 
-			case 'ERROR_DELETE_REVIEW':
+			case "ERROR_DELETE_REVIEW":
 				NotificationManager.error("Try again later", "Error Deleting Review", 5000)
 				break
 
-			case 'ERROR_REVIEWS_RECEIVE':
-				NotificationManager.error('Try again later', 'Reviews unavailable')
+			case "ERROR_REVIEWS_RECEIVE":
+				NotificationManager.error("Try again later", "Reviews unavailable")
 				break
 
-			case 'ERROR_UPDATE_REVIEW':
-				NotificationManager.error('Try again later', "Error Updating Review")
+			case "ERROR_UPDATE_REVIEW":
+				NotificationManager.error("Try again later", "Error Updating Review")
 				break
 
-			case 'NO_RECOMMENDATIONS':
-				NotificationManager.error('Try reviewing some more games', "No recommendations")
+			case "NO_RECOMMENDATIONS":
+				NotificationManager.error("Try reviewing some more games","No recommendations")
+				break
+
+			case "ERROR_GAME":
+				NotificationManager.error("Try again", "Unable to view game")
 				break
 
 			default:

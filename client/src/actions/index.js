@@ -139,6 +139,14 @@ export const updateProfileWithImage = (data) => {
   }
 }
 
+const resetUserReviewsAndCollections = createAction("RESET_USER_REVIEWS_AND_COLLECTIONS")
+
+export const userResetReviewsAndCollections = () => {
+  return dispatch => {
+    dispatch(resetUserReviewsAndCollections())
+  }
+}
+
 // Create actions for Games state
 const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
@@ -155,6 +163,17 @@ export const getGames = () => {
   return (dispatch) => {
     return api.get('/games/')
       .then(resp => dispatch(receiveGames(resp)))
+      .catch(err => dispatch(errorGames(err)))
+  }
+}
+
+
+const receiveGamesAvgRating = createAction("RECEIVE_GAMES_AVG_RATING")
+
+export const getGamesAvgRating = (game_id) => {
+  return (dispatch) => {
+    return api.get(`/games/reviews/average`)
+      .then(resp => dispatch(receiveGamesAvgRating(resp)))
       .catch(err => dispatch(errorGames(err)))
   }
 }
@@ -182,6 +201,23 @@ export const getGame = (gameID) => {
     return api.get(`/games/${gameID}`)
       .then(resp => dispatch(receiveGame(resp)))
       .catch(err => dispatch(errorGame(err)))
+  }
+}
+
+const fetchingGameAvgRating = createAction("FETCH_GAME_AVG_RATING")
+const receiveGameAvgRating = createAction("RECEIVE_GAME_AVG_RATING")
+
+export const getGameAvgRating = (game_id) => {
+  return (dispatch) => {
+    return api.get(`/games/${game_id}/reviews/average`)
+      .then(resp => dispatch(receiveGameAvgRating(resp)))
+      .catch(err => dispatch(errorGame(err)))
+  }
+}
+
+export const fetchGameAvgRating = () => {
+  return dispatch => {
+    dispatch(fetchingGameAvgRating())
   }
 }
 

@@ -114,6 +114,15 @@ export const user = (state = userState, action) => {
         email: resp.email
       })
 
+    case "RESET_USER_REVIEWS_AND_COLLECTIONS":
+      return Object.assign({}, state, {
+        isNew: false,
+        isReviewsReceived: false,
+        isCollectionsReceived: false,
+        collections: [],
+        reviews: [],
+      })
+
     case "RESET_USER":
       // Remove token if present
       if (localStorage.getItem('token')) {
@@ -134,6 +143,8 @@ export const user = (state = userState, action) => {
         isLoggedIn: false,
         error: null,
         isNew: false,
+        collections: [],
+        reviews: [],
       })
 
     case "UNSET_NEW":
