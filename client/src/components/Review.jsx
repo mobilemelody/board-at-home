@@ -322,7 +322,7 @@ class _Reviews extends React.Component {
   _submitReview() {
     this.setState({ editReview: false })
 
-    var review = {
+    const review = {
       overallRating: this.state.overallRating,
       comments: this.state.comments,
       strategy: this.state.strategy,

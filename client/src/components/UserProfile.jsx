@@ -8,8 +8,8 @@ import Rating from '@material-ui/lab/Rating';
 import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
 import '../css/UserProfile.css';
-import { Redirect } from 'react-router-dom'
-import { Spinner } from 'react-bootstrap';
+import { Link, Redirect } from 'react-router-dom'
+import { Spinner, Button } from 'react-bootstrap';
 
 class _UserProfile extends React.Component {
 
@@ -68,6 +68,15 @@ class _UserProfile extends React.Component {
                 readOnly
                 size="large"
               />
+            </div>
+            <div className="button-container">
+              <Link to='/profile/edit'>
+                <Button
+                variant='info'
+                >
+                  Edit Profile
+                </Button>
+              </Link>
             </div>
           </Grid>
           <Grid item md={9} xs={12} className="pt-3">

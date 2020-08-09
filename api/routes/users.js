@@ -4,9 +4,17 @@ const db = require('../db');
 const dbUtils = require('../utils/db.js');
 const apiUtils = require('../utils/api.js');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 const saltRounds = 10;
+const AWS = require('aws-sdk');
+AWS.config.update({
+  region: process.env.BucketRegion,
+  accessKeyId: process.env.AWSAccessKeyId,
+  secretAccessKey: process.env.AWSSecretKey,
+});
+const S3_BUCKET = process.env.Bucket;
 
 // router.use(<route>, require(<token middleware>))
 router.use('/check', require('../middleware'))
@@ -153,6 +161,85 @@ router.get('/:user_id', (req, res, next) => {
   });
 });
 
+router.put('/:user_id', (req, res) => {
+  const { username, password, email, imgFileName } = req.body;
+  let queryFields = [];
+
+  let updateQuery = {
+    values: [req.params.user_id],
+  };
+
+  if (username) {
+    updateQuery.values.push(username);
+    queryFields.push(`username = $${updateQuery.values.length}`);
+  }
+
+  if (email) {
+    updateQuery.values.push(email);
+    queryFields.push(`email = $${updateQuery.values.length}`);
+  }
+
+  if (imgFileName) {
+    updateQuery.values.push(imgFileName);
+    queryFields.push(`"imgFileName" = $${updateQuery.values.length}`);
+  }
+
+  // Password is added last as we need to asynchronously hash the password and then use the value
+  // to change the user's password
+  if (password) {
+    bcrypt.hash(password, saltRounds, (err, passwordHash) => {
+      if (err) {
+        console.error('Unable to hash password');
+        return res.status(500).set({
+          "Content-Type": "application/json",
+        }).send({
+          status: 'fail',
+          message: err,
+        });
+      }
+      updateQuery.values.push(passwordHash);
+      queryFields.push(`password = $${updateQuery.values.length}`);
+
+      updateQuery.text = `UPDATE "User" SET ${queryFields.join(' ,')} WHERE id = $1 RETURNING *`;
+
+      db.client.query(updateQuery, (err, result) => {
+        if (err) {
+          console.error('Unable to query database');
+          return res.status(500).set({
+            "Content-Type": "application/json",
+          }).send({
+            status: 'fail',
+            message: err
+          });
+        }
+
+        return res.status(200).set({
+          "Content-Type": "application/json",
+        }).send(apiUtils.formatUser(result.rows[0]));
+      });
+    });
+  } else {
+    // Regular update query without hashed password
+    updateQuery.text = `UPDATE "User" SET ${queryFields.join(' ,')} WHERE id = $1 RETURNING *`;
+
+    db.client.query(updateQuery, (err, result) => {
+      if (err) {
+        console.error('Unable to query database');
+        return res.status(500).set({
+          "Content-Type": "application/json",
+        }).send({
+          status: 'fail',
+          message: err
+        });
+      }
+
+      return res.status(200).set({
+        "Content-Type": "application/json",
+      }).send(apiUtils.formatUser(result.rows[0]));
+    });
+  }
+});
+
 /* Get user collections */
 router.get('/:user_id/collections', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
@@ -262,6 +349,31 @@ router.post('/signup', function(req, res) {
         status: 'success',
       });
     });
+  });
+});
+
+/* Upload game image to S3 */
+router.post('/image-s3', (req, res) => {
+  const S3 = new AWS.S3();
+  const fileName = Date.now() + '-' + req.body.fileName;
+  const fileType = req.body.fileType;
+
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: 'user/' + fileName,
+    ContentType: fileType,
+    ACL: 'public-read',
+  };
+
+  S3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      return res.end();
+    }
+    const returnData = {
+      signedRequest: data,
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${s3Params.Key}`
+    };
+    res.json({ data: {returnData} });
   });
 });
 
