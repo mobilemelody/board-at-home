@@ -1,89 +1,177 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { MDBContainer, MDBRating } from 'mdbreact';
+import Rating from '@material-ui/lab/Rating';
+import { Redirect } from "react-router-dom";
+import { Spinner } from 'react-bootstrap';
+import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
+import '../css/Games.css';
 
-import {Reviews} from './Review'
-
-
-const RatingPage = () => {
-  return (
-    <MDBContainer>
-      <MDBRating feedback/>
-    </MDBContainer>
-  );
-};
+import { Reviews } from './Review'
+import { AddToCollection } from './AddToCollection';
+import { Notifier } from './Notifier';
 
 class _Game extends React.Component {
-    constructor(props) {
-        super(props)
+
+  constructor(props) {
+    super(props)
+  }
+
+  componentDidMount() {
+    this.unlisten = this.props.history.listen((location, action) => {
+      this.props.resetGame()
+      this.props.gameLoading()
+      this.props.getGame(this.props.match.params.id)
+    });
+
+    this.props.resetGame()
+    this.props.gameLoading()
+    this.props.getGame(this.props.match.params.id)
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
+  }
+
+  render() {
+
+    const { game, user } = this.props;
+    let body;
+
+    if (user.isNew) {
+      return (
+      <div className="spinner-wrapper">
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" />
+        </div>
+      </div>
+      );
     }
 
-    componentDidMount() {
-        
+    if(game.error != null) {
+      return (
+        <div>
+          <Notifier type="ERROR_GAME"/>
+          <Redirect to="/"/>
+        </div>
+      );
     }
 
+    // if user state is not fetching, not received, and not new
+    // at this point, there is no token & id in localStorage, so route should redirect to login
+    if(!user.isReceived && !user.isFetching && !user.isNew) {
+      return <Redirect to='/login' />
+    }
 
-    render() {
+    if (game.isReceived) {
+      var categories = [];
+      var avgReview;
 
-        const { game } = this.props
-        // const { review }
+      if (!game.isAvgRatingReceived && !game.isAvgRatingFetching && game.error == null) {
+        this.props.getGameAvgRating(game.data.id);
+      }
 
-        return (
-            <Grid container spacing={3}>
-                <Grid textAlign="left" item xs={12}>
-                    <Paper>
-                    <h1>{game.data.name}</h1>
-                    </Paper>
-                    <hr className='GameLine'></hr>
-                </Grid>
-                <Grid item xs={5}>
-                    <Paper className='Img'>
-                        <img className='ImgCenter' src = {game.data.imgFileName}/>
-                        <br/>
-                    </Paper>
-                </Grid>
-                <Grid item xs={6}>
-                    <Grid container spacing={1}>
-                        <Grid item xs={12}></Grid>
-                        <Grid item xs={6}>Players:</Grid>
-                        <Grid item xs={6}>{game.data.minPlayers} - {game.data.maxPlayers}</Grid> 
-
-                        <Grid item xs={6}>Minimum Age:</Grid>
-                        <Grid item xs={6}>{game.data.minAge}</Grid> 
-
-                        <Grid item xs={6}>Playtime:</Grid>
-                        <Grid item xs={6}>{game.data.minPlaytime} - {game.data.maxPlaytime} minutes</Grid> 
-
-                        <Grid item xs={6}>Publisher:</Grid>
-                        <Grid item xs={6}>{game.data.publisher}</Grid> 
-
-                        <Grid item xs={6}>Year Published:</Grid>
-                        <Grid item xs={6}>{game.data.year}</Grid>
-                    </Grid>
-                </Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={12}>
-                    <hr className='GameLine'></hr>
-                    <Paper  className='Description'>
-                        <h5>Description</h5>
-                        <p>{game.data.description}</p>
-                    </Paper>
-                </Grid>
-
-                {/* Review Body */}
-                <Reviews/>
-
-                <Grid item xs={12}>
-                    <hr/>
-                </Grid>
+      if (game.isAvgRatingReceived) {
+        avgReview =
+          <div>
+            <h5>Average Rating</h5>
+            <Rating
+              name="half-rating-read"
+              value={game.avgRating}
+              precision={0.1}
+              size="large"
+              readOnly
+            />
+          </div>;
+      }
+ 
+      if (game.data.categories) {
+        game.data.categories.forEach(function (category) {
+          categories.push(
+            <Grid item xs={12}>
+              <div className="Category">
+                {category}
+              </div>
             </Grid>
-        )
+          );
+        });
+      }
+
+      body =
+        <Grid container spacing={3}>
+          <Grid container item xs={12} className="align-items-center">
+            <Grid item sm={6} xs={12}>
+              <h1>{game.data.name}</h1>
+            </Grid>
+            <Grid item sm={6} xs={12} className="text-sm-right">
+              <AddToCollection />
+            </Grid>
+            <Grid item xs={12}><hr className='GameLine'></hr></Grid>
+          </Grid>
+          <Grid item md={3} xs={12}>
+            <Paper className='ImgWrapper'>
+              <img alt='Boardgame cover' className='ImgCenter' src={game.data.imgFileName} />
+            </Paper>
+                <div className="AvgRating">
+                  {avgReview}
+                </div>
+          </Grid>
+          <Grid item md={5} xs={12}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}><h5>Details</h5><hr /></Grid>
+
+              <Grid item xs={5}>Players:</Grid>
+              <Grid item xs={7}>{game.data.minPlayers} - {game.data.maxPlayers}</Grid>
+
+              <Grid item xs={5}>Minimum Age:</Grid>
+              <Grid item xs={7}>{game.data.minAge}</Grid>
+
+              <Grid item xs={5}>Playtime:</Grid>
+              <Grid item xs={7}>{game.data.minPlaytime} - {game.data.maxPlaytime} minutes</Grid>
+
+              <Grid item xs={5}>Publisher:</Grid>
+              <Grid item xs={7}>{game.data.publisher}</Grid>
+
+              <Grid item xs={5}>Year Published:</Grid>
+              <Grid item xs={7}>{game.data.year}</Grid>
+            </Grid>
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}><h5>Categories</h5><hr /></Grid>
+              {categories}
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <hr className='GameLine'></hr>
+            <Paper className='Description'>
+              <h5>Description</h5>
+              <p>{game.data.description}</p>
+            </Paper>
+          </Grid>
+          <Reviews />
+          <Grid item xs={12}>
+            <hr />
+          </Grid>
+        </Grid>
     }
+
+    return (
+      <div className="Game">
+        {body}
+      </div>
+    );
+  }
 }
 
 export const Game = connect(state => {
-    const { game } = state
-    return { game }
-}, null)(_Game)
+  const { game, user } = state
+  return { game, user }
+}, dispatch => {
+  return bindActionCreators({
+    getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating
+  }, dispatch)
+})(_Game)

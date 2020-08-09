@@ -35,7 +35,7 @@ router.get('/:review_id', (req, res) => {
       return res.status(400).send(err);
     }
 
-    if (result.rows.length) { 
+    if (result.rows.length) {
       let review = apiUtils.formatReview(result.rows[0], hostname);
 
       res.status(200)
@@ -58,7 +58,7 @@ router.patch('/:review_id', (req, res) => {
   const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
-  let query_fields = [];
+  let queryFields = [];
 
   // Build query object
   let query = { text: '', values: [] };
@@ -78,12 +78,12 @@ router.patch('/:review_id', (req, res) => {
       }
 
       query.values.push(val);
-      query_fields.push(fields[field] + ' = $' + query.values.length);
+      queryFields.push(fields[field] + ' = $' + query.values.length);
     }
   }
 
   // Check if no valid fields
-  if (!query_fields.length) {
+  if (!queryFields.length) {
     let err = { "Error": "The request object is missing at least one valid field" };
     return res.status(400)
       .set({ "Content-Type": "application/json" })
@@ -91,7 +91,7 @@ router.patch('/:review_id', (req, res) => {
   }
 
   query.values.push(parseInt(req.params.review_id));
-  query.text = 'UPDATE "Review" SET ' + query_fields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
+  query.text = 'UPDATE "Review" SET ' + queryFields.join(', ') + ' WHERE id = $' + query.values.length + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {
@@ -106,7 +106,7 @@ router.patch('/:review_id', (req, res) => {
 
     let review = apiUtils.formatReview(result.rows[0], hostname);
     res.status(200)
-      .set({ 
+      .set({
         "Content-Type": "application/json",
         "Content-Location": review.url
       })
@@ -128,7 +128,7 @@ router.delete('/:review_id', (req, res) => {
   db.client.query(query, (err, result) => {
     if (err) {
       return res.status(400).send(err);
-    } else if (result.rowCount == 0) {
+    } else if (result.rowCount === 0) {
       err = { "Error": "No review with this id exists" };
       return res.status(404)
         .set({ "Content-Type": "application/json" })

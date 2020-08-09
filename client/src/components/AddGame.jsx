@@ -1,6 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import { Spinner } from 'react-bootstrap';
 
 const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
 
@@ -23,9 +26,6 @@ class AddGameForm extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
   }
 
   createForm() {
@@ -96,7 +96,11 @@ class AddGameForm extends React.Component {
           </div>
         </div>
 
-        <input type="submit" className="btn btn-lg btn-primary" value="Save Game" />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+        >Save Game</Button>
 
       </form>
     );
@@ -120,7 +124,7 @@ class AddGameForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let values = {...this.state};
+    let values = { ...this.state };
     if (values.categories) {
       values.categories = values.categories.map(e => e.value);
     }
@@ -139,24 +143,22 @@ class AddGameForm extends React.Component {
           "Content-Type": "application/json"
         },
       })
-      .then(res => res.json())
-      .then(res => {
-        let returnData = res.data.returnData;
-        let signedRequest = returnData.signedRequest;
-        let url = returnData.url;
-        fetch(signedRequest, {
-          method: 'PUT',
-          body: values.image,
-          headers: {
-            "Content-Type": imageData.fileType
-          },
-        })
+        .then(res => res.json())
         .then(res => {
-          // Save values to database
-          values.image = url;
-          this.saveToDB(values);
+          const { signedRequest, url } = res.data.returnData;
+          fetch(signedRequest, {
+            method: 'PUT',
+            body: values.image,
+            headers: {
+              "Content-Type": imageData.fileType
+            },
+          })
+            .then(res => {
+              // Save values to database
+              values.image = url;
+              this.saveToDB(values);
+            })
         })
-      })
     } else {
       this.saveToDB(values);
     }
@@ -171,16 +173,16 @@ class AddGameForm extends React.Component {
         "Content-Type": "application/json"
       },
     })
-    .then(res => res.json())
-    .then(res => {
-      // TODO: Go to new game page
-      this.props.handleSubmit(res.name);
-    })
+      .then(res => res.json())
+      .then(res => {
+        // Go to new game page
+        this.props.handleSubmit(res.id);
+      })
   }
 
   render() {
     return (
-      <div className="container py-3">
+      <div>
         <h1>Add a Game</h1>
         {this.createForm()}
       </div>
@@ -194,14 +196,14 @@ class _AddGame extends React.Component {
     super(props);
     this.state = {
       categoryList: [],
-      gameName: ''
+      gameId: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(name) {
-    this.setState({ gameName: name });
+  handleSubmit(id) {
+    this.setState({ gameId: id });
   }
 
   componentDidMount() {
@@ -218,12 +220,25 @@ class _AddGame extends React.Component {
   }
 
   render() {
-    let alert = '';
-    if (this.state.gameName) {
-      alert = 
-        <div className="alert alert-primary">
-          {this.state.gameName} was added!
+
+    const { user } = this.props;
+
+    // Show loading spinner if fetching user
+    if (user.isFetching && !user.isReceived) {
+      return (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner animation="border" />
         </div>
+      );
+    }
+
+    // Show login form if not logged in
+    if (!user.isLoggedIn) {
+      return <Redirect to="/login" />
+    }
+
+    if (this.state.gameId) {
+      return <Redirect push to={'/game/'+this.state.gameId} />
     }
     return (
       <div>
@@ -235,4 +250,7 @@ class _AddGame extends React.Component {
 
 }
 
-export const AddGame = connect(null, null)(_AddGame)
+export const AddGame = connect(state => {
+  const { user } = state;
+  return { user };
+}, null)(_AddGame)

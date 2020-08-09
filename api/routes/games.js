@@ -15,15 +15,15 @@ const S3_BUCKET = process.env.Bucket;
 /* Get all games */
 router.get('/', (req, res, next) => {
   const getGamesQuery = 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
-  ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
-  ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+  ' LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+  ' LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
   ' GROUP BY "Game".id ORDER BY "Game".id';
 
   db.client.query(getGamesQuery, (err, result) => {
     if (err) {
       return res.status(400).send(err);
     }
-    res.status(200).send(result.rows);
+    res.status(200).send(result.rows.map(e => apiUtils.formatGame(e)));
   });
 });
 
@@ -35,7 +35,7 @@ router.post('/', (req, res, next) => {
   const fields = dbUtils.gameFields;
 
   // Create array of field names for query
-  let query_fields = Object.keys(fields).map(e => fields[e]);
+  let queryFields = Object.keys(fields).map(e => fields[e]);
 
   // Validate data received
   if (!("name" in req.body)) {
@@ -51,13 +51,13 @@ router.post('/', (req, res, next) => {
     query.values.push(req.body[field] || null);
   }
 
-  // TODO: Add user details
-  query_fields.push('"isUserCreated"');
+  // Add user details
+  queryFields.push('"isUserCreated"');
   query.values.push(true);
-  query_fields.push('"identifierID"');
-  query.values.push("userId");
+  queryFields.push('"identifierID"');
+  query.values.push(parseInt(req.headers.from));
 
-  query.text = 'INSERT INTO "Game"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length) + ' RETURNING *';
+  query.text = 'INSERT INTO "Game"(' + queryFields.join(', ') + ') VALUES' + dbUtils.expand(1, queryFields.length) + ' RETURNING *';
 
   // Run query to add game
   db.client.query(query, (err, result) => {
@@ -113,9 +113,7 @@ router.post('/', (req, res, next) => {
         })
         .send(game);
     }
-
   });
-
 });
 
 /* Upload game image to S3 */
@@ -143,12 +141,40 @@ router.post('/sign-s3', (req, res) => {
   });
 });
 
+/* Get game recommendations */
+router.get('/recommendations', (req, res) => {
+  let hostname = req.protocol + '://' + req.headers.host;
+
+  // Get user ID from request header
+  let userID = parseInt(req.headers.from);
+
+  // Build query object
+  let query = { 
+    text: 'SELECT "Game".*, array_agg(DISTINCT("GameCategorySelect".category)) as categories, SUM("similarUsers"."numGames") AS "score", AVG("gameRatings"."overallRating") AS "avgRating" FROM "Review" LEFT JOIN "Game" ON "Review"."gameID" = "Game".id LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID" LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id LEFT JOIN ( SELECT "Review"."userID", COUNT(*) AS "numGames" FROM "Review" WHERE "Review"."gameID" IN ( SELECT "Game".id FROM "Game" JOIN "Review" ON "Game".id = "Review"."gameID" WHERE "Review"."userID" = $1 AND "Review"."overallRating" >= 4 ) AND "Review"."overallRating" >= 4 AND "Review"."userID" != $1 GROUP BY "Review"."userID" ORDER BY "numGames" ) AS "similarUsers" ON "Review"."userID" = "similarUsers"."userID" LEFT JOIN (SELECT "gameID", "overallRating" FROM "Review") AS "gameRatings" ON "Review"."gameID" = "gameRatings"."gameID" WHERE "Review"."userID" = "similarUsers"."userID" AND "Review"."gameID" NOT IN ( SELECT "gameID" FROM "Review" WHERE "userID" = $1 ) AND "Review"."overallRating" >= 4 GROUP BY "Game".id ORDER BY "score" DESC',
+    values: [userID]
+  };
+
+  // Run query
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    res.status(200)
+      .set({
+        "Content-Type": "application/json"
+      })
+      .send(result.rows.map(e => apiUtils.formatGame(e)));
+  });
+
+});
+
 /* Get game information by id */
 router.get('/:game_id', (req, res) => {
   const query = {
     text: 'SELECT "Game".*, array_agg("GameCategorySelect".category) as categories FROM "Game"' +
-      ' JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
-      ' JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
+      ' LEFT JOIN "GameCategory" ON "Game".id = "GameCategory"."gameID"' +
+      ' LEFT JOIN "GameCategorySelect" ON "GameCategory"."categoryID" = "GameCategorySelect".id' +
       ' WHERE "Game".id = $1' +
       ' GROUP BY "Game".id',
     values: [req.params.game_id]
@@ -167,7 +193,7 @@ router.get('/:game_id', (req, res) => {
       return res.status(404).send('Not found');
     }
 
-    return res.status(200).send(game);
+    return res.status(200).send(apiUtils.formatGame(game));
   });
 });
 
@@ -194,6 +220,56 @@ router.get('/:game_id/reviews', (req, res) => {
   });
 });
 
+/* Get reviews for a game */
+router.get('/:game_id/reviews/average', (req, res) => {
+
+  let query = {
+    text: 'SELECT AVG("overallRating")::NUMERIC(10, 1) AS "avgRating" FROM "Review" WHERE "Review"."gameID" = $1',
+    values: [req.params.game_id]
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    var avgRating;
+
+    if (result.rows) {
+      avgRating = result.rows[0].avgRating;
+    }
+
+    let resp = {
+      avgRating: avgRating,
+      gameID: parseInt(req.params.game_id),
+    };
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(resp);
+  });
+});
+
+/* Get reviews for all games */
+router.get('/reviews/average', (req, res) => {
+
+  let query = {
+    text: 'SELECT "Game".id as "gameID", AVG("Review"."overallRating")::NUMERIC(10,1) AS "avgRating" FROM "Game"' +
+    ' LEFT JOIN "Review" ON "Review"."gameID" = "Game".id' +
+    ' GROUP BY "Game".id ORDER BY "Game".id'
+  }
+
+  db.client.query(query, (err, result) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+
+    res.status(200)
+      .set({ "Content-Type": "application/json" })
+      .send(result.rows);
+  });
+});
+
 /* Create review for game */
 router.post('/:game_id/reviews', (req, res) => {
   let hostname = req.protocol + '://' + req.headers.host;
@@ -202,7 +278,7 @@ router.post('/:game_id/reviews', (req, res) => {
   const fields = dbUtils.reviewFields;
 
   // Create array of field names for query
-  let query_fields = Object.keys(fields).map(e => fields[e]);
+  let queryFields = Object.keys(fields).map(e => fields[e]);
 
   // Build query object
   let query = { text: '', values: [] };
@@ -221,15 +297,15 @@ router.post('/:game_id/reviews', (req, res) => {
     query.values.push(val);
   }
 
-  // TODO: Add user details
-  query_fields.push('"userID"');
-  query.values.push(1);
+  // Add user details
+  queryFields.push('"userID"');
+  query.values.push(parseInt(req.headers.from));
 
   // Add game info
-  query_fields.push('"gameID"');
+  queryFields.push('"gameID"');
   query.values.push(parseInt(req.params.game_id));
 
-  query.text = 'INSERT INTO "Review"(' + query_fields.join(', ') + ') VALUES' + dbUtils.expand(1, query_fields.length)  + ' RETURNING *';
+  query.text = 'INSERT INTO "Review"(' + queryFields.join(', ') + ') VALUES' + dbUtils.expand(1, queryFields.length)  + ' RETURNING *';
 
   // Run query
   db.client.query(query, (err, result) => {
