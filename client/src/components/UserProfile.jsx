@@ -58,17 +58,21 @@ class _UserProfile extends React.Component {
             <div className="email">Email: {user.email}</div>
             <div className="num-collections">Number of collections: {user.collections.length} </div>
             <div className="pt-2">
-              <div>Average Rating: </div>
-              <Rating
-                name="userAvgRating"
-                value={
-                  user.reviews.map(e => e.overallRating)
-                    .reduce((sum, rating) => sum + rating) / user.reviews.length
-                }
-                precision={0.1}
-                readOnly
-                size="large"
-              />
+              { user.reviews.length > 0 &&
+                <>
+                  <div>Average Rating: </div>
+                  <Rating
+                    name="userAvgRating"
+                    value={
+                      user.reviews.map(e => e.overallRating)
+                        .reduce((sum, rating) => sum + rating) / user.reviews.length
+                    }
+                    precision={0.1}
+                    readOnly
+                    size="large"
+                  />
+                </>
+              }
             </div>
             <div className="button-container">
               <Link to='/profile/edit'>
