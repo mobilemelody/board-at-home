@@ -65,7 +65,15 @@ class _App extends React.Component {
       this._userLogout()
     }
 
-    if (!user.isLoggedIn && !user.isFetching) {
+    if(user.isNew || user.isFetching) {
+      navbar = 
+        <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
+          <Nav className="mr-auto" />
+        </Navbar>
+    }
+
+    else if (!user.isLoggedIn && !user.isFetching) {
       // Import login component
       navbar =
         <Navbar bg="dark" variant="dark">
@@ -84,7 +92,7 @@ class _App extends React.Component {
       homeRedirect = <Redirect from='/' to='/login' />
     }
 
-    if (user.isLoggedIn) {
+    else if (user.isLoggedIn) {
       navbar =
         <Navbar collapseOnSelect expand="sm" bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
@@ -111,12 +119,6 @@ class _App extends React.Component {
       homeRedirect = <Redirect from='/' to='/games' />
     }
 
-    if (user.isFetching) {
-      navbar =
-        <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Board At Home</Navbar.Brand>
-        </Navbar>
-    }
     return (
       <div className="App">
         <NotificationContainer key="app" />
