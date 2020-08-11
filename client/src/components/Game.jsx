@@ -1,21 +1,28 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
+// Action imports
+import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
+// Other imports
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import { Redirect } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
-import { getGame, gameLoading, resetGame, fetchGameAvgRating, getGameAvgRating } from '../actions/index'
 import '../css/Games.css';
 
+// Component Imports
 import { Reviews } from './Review'
 import { AddToCollection } from './AddToCollection';
 import { Notifier } from './Notifier';
 
-class _Game extends React.Component {
 
+// ------------------------------------
+// App Class 
+// Renders game page
+// ------------------------------------
+class _Game extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -31,7 +38,7 @@ class _Game extends React.Component {
     this.props.gameLoading()
     this.props.getGame(this.props.match.params.id)
   }
-
+  
   componentWillUnmount() {
     this.unlisten()
   }
@@ -41,6 +48,7 @@ class _Game extends React.Component {
     const { game, user } = this.props;
     let body;
 
+    // spinner if user is new
     if (user.isNew) {
       return (
       <div className="spinner-wrapper">
@@ -51,6 +59,7 @@ class _Game extends React.Component {
       );
     }
 
+    // show notification if error
     if(game.error != null) {
       return (
         <div>
@@ -60,8 +69,7 @@ class _Game extends React.Component {
       );
     }
 
-    // if user state is not fetching, not received, and not new
-    // at this point, there is no token & id in localStorage, so route should redirect to login
+    // redirect if logout on this page
     if(!user.isReceived && !user.isFetching && !user.isNew) {
       return <Redirect to='/login' />
     }
@@ -70,10 +78,12 @@ class _Game extends React.Component {
       var categories = [];
       var avgReview;
 
+      // get average rating if game state is received
       if (!game.isAvgRatingReceived && !game.isAvgRatingFetching && game.error == null) {
         this.props.getGameAvgRating(game.data.id);
       }
 
+      // if average rating API received
       if (game.isAvgRatingReceived) {
         avgReview =
           <div>
@@ -87,7 +97,8 @@ class _Game extends React.Component {
             />
           </div>;
       }
- 
+      
+      // for each game category
       if (game.data.categories) {
         game.data.categories.forEach(function (category) {
           categories.push(

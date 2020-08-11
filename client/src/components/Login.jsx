@@ -1,12 +1,20 @@
+// React, Redux imports
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Redirect } from "react-router-dom";
+// Action imports
 import { userLogin, userLoading, userReset } from "../actions"
+// Component imports
+import { Notifier } from './Notifier.jsx'
+// Other imports
 import Button from '@material-ui/core/Button';
 import { Form } from 'react-bootstrap';
-import { Notifier } from './Notifier.jsx'
 
+// ------------------------------------
+// Edit User Profile Class 
+// Renders login form
+// ------------------------------------
 class _Login extends Component {
   constructor(props) {
     super(props)

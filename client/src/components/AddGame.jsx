@@ -1,12 +1,18 @@
+// React, Redux imports
 import React from 'react';
-import Select from 'react-select';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+// Other imports
 import Button from '@material-ui/core/Button';
 import { Spinner } from 'react-bootstrap';
+import Select from 'react-select';
 
 const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://boardathome.herokuapp.com';
 
+// ------------------------------------
+// Add Game Form Class
+// Renders form for adding new game
+// ------------------------------------
 class AddGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -111,10 +117,6 @@ class AddGameForm extends React.Component {
     const value = name === 'image' ? event.target.files[0] : event.target.value;
 
     this.setState({ [name]: value });
-
-    if (name === 'name') {
-      // TODO: Check database for similar game names
-    }
   }
 
   handleCategoryChange(categories) {

@@ -1,14 +1,23 @@
+// React, Redux imports
 import React from 'react';
-import { Modal, Form } from 'react-bootstrap';
-import Paper from '@material-ui/core/Paper';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+// Action imports
+import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage, getResetUserNotif } from '../actions/index';
+// Component imports
+import { Notifier } from './Notifier.jsx';
+// Other imports
+import { Modal, Form } from 'react-bootstrap';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
+// CSS imports
 import '../css/EditUserProfile.css';
-import { updateUser, userLoading, uploadPreviewImage, updateProfileWithImage, getResetUserNotif } from '../actions/index';
-import { Notifier } from './Notifier.jsx';
 
+// ------------------------------------
+// Edit User Profile Class 
+// Renders form for updating user
+// ------------------------------------
 class _EditUserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -81,6 +90,7 @@ class _EditUserProfile extends React.Component {
       this.setState({ formError: null })
     }
 
+    // create notification and then reset notification
     if (user.notifType !== null) {
       notifier = <Notifier type={user.notifType}/>
       this._resetNotif()
