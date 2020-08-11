@@ -21,7 +21,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { AddToCollectionSearch } from './AddToCollectionSearch';
 
 // Import Actions
-import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection } from '../actions/index'
+import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection, resetCollection } from '../actions/index'
 
 // Column names for table of games
 const tableColumns = [{
@@ -76,7 +76,19 @@ class _Collection extends React.Component {
   }
 
   componentDidMount() {
+    this.unlisten = this.props.history.listen((location, action) => {
+      const { collectionId } = this.props;
+      this.props.resetCollection();
+      this.props.getCollection(collectionId);
+      this.setState({
+        id: collectionId,
+        name: this.props.collection.data.name,
+        isPrivate: this.props.collection.data.isPrivate
+      });
+    });
+    
     const { collectionId } = this.props;
+    this.props.resetCollection();
     this.props.getCollection(collectionId);
     this.setState({
       id: collectionId,
@@ -146,7 +158,6 @@ class _Collection extends React.Component {
     let body = <div></div>;
 
     if (collection.isReceived && !collection.error && user.isReceived && !user.error) {
-
       const belongsToUser = collection.data.user.id === user.id
 
       // Check privacy setting
@@ -254,6 +265,6 @@ export const Collection = connect((state, ownProps) => {
   };
 }, dispatch => {
   return bindActionCreators({
-    getCollection, getSetCollectionState, updateCollection, removeGameFromCollection
+    getCollection, getSetCollectionState, updateCollection, removeGameFromCollection, resetCollection
   }, dispatch)
 })(_Collection)

@@ -428,6 +428,13 @@ const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
 const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
 const setCollectionState = createAction("SET_COLLECTION_STATE");
+const resetCollectionState = createAction("RESET_COLLECTION_STATE");
+
+export const resetCollection = () => {
+  return (dispatch) => {
+    return dispatch(resetCollectionState())
+  }
+}
 
 // get collection by id
 export const getCollection = (id) => {
