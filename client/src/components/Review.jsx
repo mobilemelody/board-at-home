@@ -1,107 +1,24 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
 // Import Actions
 import { getGameReviews, updateReview, submitReview, deleteReview, getResetReviewNotif, resetReview } from '../actions/index'
-
+// Component imports
+import { Notifier } from './Notifier.jsx'
+import * as shared from './shared'
+// Other imports
 import { Form, InputGroup, Spinner } from 'react-bootstrap';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-
 import BootstrapTable from 'react-bootstrap-table-next'
 import Paper from '@material-ui/core/Paper';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import { Notifier } from './Notifier.jsx'
 
-const OtherReviewPageTotal = (from, to, size) => (
-  <span className="react-bootstrap-table-pagination-total">
-    Showing { from} to { to} of { size} Results
-  </span>
-)
-
-// Set custom pagination
-const OtherReviewPaginationOptions = {
-  paginationSize: 5,
-  pageStartIndex: 1,
-  hideSizePerPage: true,
-  hidePageListOnlyOnePage: true,
-  firstPageText: 'First',
-  prePageText: 'Back',
-  nextPageText: 'Next',
-  lastPageText: 'Last',
-  nextPageTitle: 'First page',
-  prePageTitle: 'Pre page',
-  firstPageTitle: 'Next page',
-  lastPageTitle: 'Last page',
-  showTotal: true,
-  paginationTotalRenderer: OtherReviewPageTotal,
-  disablePageTitle: true,
-  sizePerPageList: [{
-    text: '5', value: 5
-  }]
-};
-
-const OtherReviewsColumns = [{
-  dataField: 'id',
-  text: '',
-  hidden: true
-}, {
-  dataField: 'reviewViewer',
-  text: '',
-}, {
-  dataField: 'strategy',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'luck',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'playerInteraction',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'replayValue',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'complexity',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'artAndStyle',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gfKids',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gfTeens',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gfFamilies',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gf2Player',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gfLargeGroups',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'gfSocialDistancing',
-  text: '',
-  hidden: true,
-}];
-
-const OtherReviewsExpandRow = {
+// Renders drop-down review details
+const ReviewsExpandRow = {
   parentClassName: 'parent-expanded',
   className: 'child-expanded',
   onlyOneExpanding: true,
@@ -247,7 +164,10 @@ const OtherReviewsExpandRow = {
   )
 }
 
-
+// ------------------------------------
+// Review Class
+// Renders user and other users reviews in game page
+// ------------------------------------
 class _Reviews extends React.Component {
   constructor(props) {
     super(props)
@@ -706,10 +626,10 @@ class _Reviews extends React.Component {
             <BootstrapTable
               keyField="id"
               data={tableData}
-              columns={OtherReviewsColumns}
-              expandRow={OtherReviewsExpandRow}
+              columns={shared.ReviewsColumns}
+              expandRow={ReviewsExpandRow}
               bordered={false}
-              pagination={paginationFactory(OtherReviewPaginationOptions)}
+              pagination={paginationFactory(shared.PaginationOptions)}
             />
           </div>
         </Grid>

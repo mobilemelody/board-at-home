@@ -1,13 +1,19 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+// Action imports
+import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections } from '../actions/index'
+// Other Imports
 import { Modal, Form } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
 import LockIcon from '@material-ui/icons/Lock';
 
-import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections } from '../actions/index'
-
+// ------------------------------------
+// Add to Collection Class 
+// Renders form for adding game to collection
+// ------------------------------------
 class _AddToCollection extends React.Component {
   constructor(props) {
     super(props);
@@ -103,8 +109,9 @@ class _AddToCollection extends React.Component {
     let collectionsList = [];
     let modalBody;
 
+    // collections received without error
     if (collections.isReceived && !collections.error) {
-
+      
       // Create list of collections
       collectionsList = collections.data.collections.map(e => 
         <Form.Check
@@ -151,6 +158,7 @@ class _AddToCollection extends React.Component {
             >Add</Button>
           </Form>
       } else {
+        // add new collection
         addCollection =
           <Button startIcon={<AddIcon/>} onClick={this._setFormAdd}>
             Add Collection

@@ -1,6 +1,10 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+// Action imports
+import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index';
+// Other imports
 import { Modal } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -8,7 +12,6 @@ import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/AddCircle';
 
-import { getCollection, getGames, addGameToCollection, removeGameFromCollection } from '../actions/index';
 
 // Column names for table of games
 const tableColumns = [{
@@ -48,6 +51,10 @@ const GamesPaginationOptions = {
   }]
 };
 
+// ------------------------------------
+// Add to Collection Search Class 
+// Implements Collec
+// ------------------------------------
 class _AddToCollectionSearch extends React.Component {
   constructor(props) {
     super(props);

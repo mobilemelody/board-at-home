@@ -1,7 +1,13 @@
-import { NotificationManager } from "react-notifications"
+// React, Redux imports
 import React, { Component } from "react"
 import { connect } from "react-redux"
+// Other imports
+import { NotificationManager } from "react-notifications"
 
+// ------------------------------------
+// Notifier Class 
+// Creates notification from props 
+// ------------------------------------
 class _Notifier extends Component {
 	constructor(props) {
 		super(props);

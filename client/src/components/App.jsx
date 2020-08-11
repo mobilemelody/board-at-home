@@ -1,20 +1,10 @@
+// React, Redux imports
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { userLogin, userLoading, userLogout, checkLoggedIn, userUnsetIsNew } from "../actions"
-import Button from '@material-ui/core/Button';
-import { Nav, Navbar, Container } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Switch, Redirect } from 'react-router-dom'
-import { NotificationContainer } from 'react-notifications'
-
-// CSS imports
-import "mdbreact/dist/css/mdb.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import 'react-notifications/lib/notifications.css';
-import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
-
+// Action imports
+import { userLogin, userLoading, userReset, checkLoggedIn, userUnsetIsNew } from "../actions"
 // Component imports
 import { Login } from './Login'
 import { Signup } from './Signup'
@@ -25,7 +15,22 @@ import { Collection } from './Collection'
 import { UserProfile } from './UserProfile'
 import { Recommendations } from './Recommendations'
 import { EditUserProfile } from './EditUserProfile'
+// Other imports
+import Button from '@material-ui/core/Button';
+import { Nav, Navbar, Container } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { NotificationContainer } from 'react-notifications'
+// CSS imports
+import "mdbreact/dist/css/mdb.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import 'react-notifications/lib/notifications.css';
+import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 
+// ------------------------------------
+// App Class 
+// Entry component for application
+// ------------------------------------
 class _App extends React.Component {
   constructor(props) {
     super(props)
@@ -36,6 +41,7 @@ class _App extends React.Component {
     const token = localStorage.getItem('token')
     const id = localStorage.getItem('userID')
 
+    // check if previous session in localStorage
     if (token && id) {
       this.props.userLoading()
       this.props.checkLoggedIn()
@@ -45,7 +51,7 @@ class _App extends React.Component {
   }
 
   _userLogout() {
-    this.props.userLogout()
+    this.props.userReset()
   }
 
   render() {
@@ -105,7 +111,6 @@ class _App extends React.Component {
     }
 
     if (user.isFetching) {
-      // Add a loading icon
       navbar =
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Board At Home</Navbar.Brand>
@@ -145,7 +150,7 @@ export const App = connect(state => {
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
-    userLogin, userLogout, checkLoggedIn, userLoading, userUnsetIsNew
+    userLogin, userReset, checkLoggedIn, userLoading, userUnsetIsNew
   }, dispatch)
 })(_App)
 

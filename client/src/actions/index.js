@@ -2,27 +2,34 @@
 import { createAction } from 'redux-actions'
 import api from "../lib/api"
 
+// -----------------------------------------------
+// User State Actions and Dispatches
+// -----------------------------------------------
+
 // Create actions for User state
 const errorUser = createAction("ERROR_USER")
 const fetchingUser = createAction("FETCHING_USER")
 const receiveUser = createAction("RECEIVE_USER")
 const receiveUserLogin = createAction("RECEIVE_USER_LOGIN")
 const receiveUserSignedUp = createAction("RECEIVE_USER_SIGNEDUP")
+const errorUserCheck = createAction("ERROR_USER_CHECK");
 const resetUser = createAction("RESET_USER")
 const receiveUserReviews = createAction("RECEIVE_USER_REVIEWS");
 const errorUserReviews = createAction("ERROR_USER_REVIEWS");
-const errorUserCheck = createAction("ERROR_USER_CHECK");
 const unsetUserIsNew = createAction("UNSET_NEW");
 const receiveUserUpdate = createAction("RECEIVE_USER_UPDATE");
 const errorUserUpdate = createAction("ERROR_USER_UPDATE");
 const receiveUserPreviewImage = createAction("RECEIVE_USER_PREVIEW_IMAGE");
 const errorUserPreviewImage = createAction("ERROR_USER_PREVIEW_IMAGE");
 const resetUserNotif = createAction("RESET_USER_NOTIF");
+const resetUserReviewsAndCollections = createAction("RESET_USER_REVIEWS_AND_COLLECTIONS")
 
+// set user to fetching
 export const userLoading = () => {
   return dispatch => dispatch(fetchingUser());
 }
 
+// add new user
 export const userSignUp = (user) => {
   return (dispatch) => {
     return api.post("/users/signup", user)
@@ -31,6 +38,7 @@ export const userSignUp = (user) => {
   }
 }
 
+// check token and userID in API 
 export const checkLoggedIn = () => {
   return (dispatch) => {
     return api.get("/users/check")
@@ -39,8 +47,8 @@ export const checkLoggedIn = () => {
   }
 }
 
+// login user with username and password
 export const userLogin = (username, password) => {
-  // dispatch triggers a state change
   return (dispatch) => {
     let data = { username, password }
     return api.post("/users/login", data)
@@ -49,14 +57,12 @@ export const userLogin = (username, password) => {
   }
 }
 
+// set user is new to false
 export const userUnsetIsNew = () => {
   return dispatch => dispatch(unsetUserIsNew());
 }
 
-export const userLogout = () => {
-  return dispatch => dispatch(resetUser());
-}
-
+// get user from API
 export const getUser = () => {
   return (dispatch, getState) => {
     const { user } = getState()
@@ -76,6 +82,7 @@ export const getUser = () => {
   }
 }
 
+// get user reviews from API
 export const getUserReviews = () => {
   return (dispatch, getState) => {
     const { user } = getState();
@@ -85,6 +92,7 @@ export const getUserReviews = () => {
   }
 };
 
+// update user in API
 export const updateUser = (data) => {
   return (dispatch, getState) => {
     const { user } = getState();
@@ -94,18 +102,21 @@ export const updateUser = (data) => {
   }
 }
 
+// reset user state
 export const userReset = () => {
   return dispatch => {
     dispatch(resetUser())
   }
 }
 
+// reset user notification
 export const getResetUserNotif = () => {
   return (dispatch) => {
     dispatch(resetUserNotif());
   }
 }
 
+// upload user selected image as profile picture
 export const uploadPreviewImage = (evt) => {
   return (dispatch) => {
     const imageData = evt.target.files[0];
@@ -130,6 +141,7 @@ export const uploadPreviewImage = (evt) => {
   }
 }
 
+// updates user and s3 image
 export const updateProfileWithImage = (data) => {
   return (dispatch, getState) => {
     const { user } = getState();
@@ -139,26 +151,32 @@ export const updateProfileWithImage = (data) => {
   }
 }
 
-const resetUserReviewsAndCollections = createAction("RESET_USER_REVIEWS_AND_COLLECTIONS")
-
+// reset user reviews and collections for /profile
 export const userResetReviewsAndCollections = () => {
   return dispatch => {
     dispatch(resetUserReviewsAndCollections())
   }
 }
 
+// -----------------------------------------------
+// Games State Actions and Dispatches
+// -----------------------------------------------
+
 // Create actions for Games state
 const errorGames = createAction("ERROR_GAMES")
 const fetchingGames = createAction("FETCHING_GAMES")
 const receiveGames = createAction("RECEIVE_GAMES")
 const setGameState = createAction("SET_GAME_STATE")
+const receiveGamesAvgRating = createAction("RECEIVE_GAMES_AVG_RATING")
 
+// set games state to fetching
 export const gamesLoading = () => {
   return dispatch => {
     dispatch(fetchingGames())
   }
 }
 
+// get games from API
 export const getGames = () => {
   return (dispatch) => {
     return api.get('/games/')
@@ -167,9 +185,7 @@ export const getGames = () => {
   }
 }
 
-
-const receiveGamesAvgRating = createAction("RECEIVE_GAMES_AVG_RATING")
-
+// get games average rating from API
 export const getGamesAvgRating = (game_id) => {
   return (dispatch) => {
     return api.get(`/games/reviews/average`)
@@ -178,24 +194,33 @@ export const getGamesAvgRating = (game_id) => {
   }
 }
 
+// -----------------------------------------------
+// Game State Actions and Dispatches
+// -----------------------------------------------
+
 // Game actions
 const errorGame = createAction("ERROR_GAME")
 const fetchingGame = createAction("FETCHING_GAME")
 const receiveGame = createAction("RECEIVE_GAME")
 const resetGameState = createAction("RESET_GAME")
+const fetchingGameAvgRating = createAction("FETCH_GAME_AVG_RATING")
+const receiveGameAvgRating = createAction("RECEIVE_GAME_AVG_RATING")
 
+// set game to fetching
 export const gameLoading = () => {
   return dispatch => {
     dispatch(fetchingGame())
   }
 }
 
+// reset game state
 export const resetGame = () => {
   return dispatch => {
     dispatch(resetGameState())
   }
 }
 
+// get game from API
 export const getGame = (gameID) => {
   return (dispatch) => {
     return api.get(`/games/${gameID}`)
@@ -204,9 +229,7 @@ export const getGame = (gameID) => {
   }
 }
 
-const fetchingGameAvgRating = createAction("FETCH_GAME_AVG_RATING")
-const receiveGameAvgRating = createAction("RECEIVE_GAME_AVG_RATING")
-
+// get game average rating from API
 export const getGameAvgRating = (game_id) => {
   return (dispatch) => {
     return api.get(`/games/${game_id}/reviews/average`)
@@ -215,12 +238,14 @@ export const getGameAvgRating = (game_id) => {
   }
 }
 
+// set game average rating to fetching
 export const fetchGameAvgRating = () => {
   return dispatch => {
     dispatch(fetchingGameAvgRating())
   }
 }
 
+// Set game from games table
 export const getSetGameState = (game) => {
   return (dispatch) => {
     return dispatch(setGameState(game))
@@ -246,26 +271,28 @@ export const getRecommendations = () => {
   }
 }
 
+// -----------------------------------------------
+// Reviews State Actions and Dispatches
+// -----------------------------------------------
+
 // Create actions for Review state
 const errorInsertReview = createAction("ERROR_INSERT_REVIEW");
 const errorDeleteReview = createAction("ERROR_DELETE_REVIEW");
 const errorReceiveReviews = createAction("ERROR_REVIEWS_RECEIVE");
 const errorUpdateReviews = createAction("ERROR_UPDATE_REVIEW");
-
 const submitReviewFetching = createAction("SUBMIT_REVIEW_FETCHING");
 const receiveReviews = createAction("RECEIVE_REVIEWS");
 const receiveReviewsDeleted = createAction("RECEIVE_REVIEW_DELETE");
 const receiveReviewInserted = createAction("RECEIVE_REVIEW_INSERT");
 const receiveReviewUpdated = createAction("RECEIVE_REVIEW_UPDATE");
 const resetReviewNotif = createAction("RESET_NOTIF");
+const resetReviewState = createAction("RESET_REVIEW")
 
 export const getResetReviewNotif = () => {
   return (dispatch) => {
     dispatch(resetReviewNotif())
   }
 }
-
-
 
 export const submitReviewFetch = () => {
   return (dispatch) => {
@@ -376,13 +403,16 @@ export const getGameReviews = () => {
   }
 }
 
-const resetReviewState = createAction("RESET_REVIEW")
-
+// reset review state
 export const resetReview = () => {
   return (dispatch) => {
     dispatch(resetReviewState())
   }
 }
+
+// -----------------------------------------------
+// Collection State Actions and Dispatches
+// -----------------------------------------------
 
 // Create actions for Collection state
 const errorCollection = createAction("ERROR_COLLECTION");
@@ -391,20 +421,17 @@ const errorUpdateCollection = createAction("ERROR_UPDATE_COLLECTION");
 const errorAddGame = createAction("ERROR_ADD_GAME");
 const errorRemoveGame = createAction("ERROR_REMOVE_GAME");
 const errorUserCollections = createAction("ERROR_USER_COLLECTIONS");
-
 const receiveCollection = createAction("RECEIVE_COLLECTION");
 const receiveCollectionAdded = createAction("RECEIVE_COLLECTION_ADD");
 const receiveCollectionUpdated = createAction("RECEIVE_COLLECTION_UPDATE");
 const receiveGameAdded = createAction("RECEIVE_GAME_ADD");
 const receiveGameRemoved = createAction("RECEIVE_GAME_REMOVE");
-
-// const fetchingUserCollections = createAction("FETCH_USER_COLLECTIONS");
 const receiveUserCollections = createAction("RECEIVE_USER_COLLECTIONS");
-
 const setCollectionState = createAction("SET_COLLECTION_STATE");
 
+// get collection by id
 export const getCollection = (id) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     let collection_id = id;
     return api.get(`/collections/${collection_id}`)
       .then(res => {
@@ -418,6 +445,7 @@ export const getCollection = (id) => {
   }
 }
 
+// set collection state to collection
 export const getSetCollectionState = (collection) => {
   return (dispatch) => {
     return dispatch(setCollectionState(collection))
@@ -426,10 +454,7 @@ export const getSetCollectionState = (collection) => {
 
 // Create a new collection
 export const createCollection = (collection) => {
-  return (dispatch, getState) => {
-    // TODO: Add user info to request
-    // const { user } = getState();
-
+  return (dispatch) => {
     return api.post(`/collections`, collection)
       .then(res => {
         dispatch(receiveCollectionAdded({
@@ -452,7 +477,7 @@ export const createCollection = (collection) => {
 
 // update collection info
 export const updateCollection = (data) => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     let collectionData = {
       name: data.name,
       isPrivate: data.isPrivate

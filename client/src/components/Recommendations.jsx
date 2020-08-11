@@ -1,11 +1,14 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getRecommendations, getSetGameState, getGamesAvgRating } from '../actions/index'
-
-import { Notifier } from './Notifier.jsx'
 import { Redirect } from 'react-router-dom'
-
+// Action imports
+import { getRecommendations, getSetGameState, getGamesAvgRating } from '../actions/index'
+// Component imports
+import { Notifier } from './Notifier.jsx'
+import * as shared from './shared'
+// Other imports
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Rating from '@material-ui/lab/Rating';
@@ -14,98 +17,10 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { Spinner } from 'react-bootstrap';
 
-import { Login } from './Login'
-
-const GamePageTotal = (from, to, size) => (
-  <span className="react-bootstrap-table-pagination-total">
-    Showing { from} to { to} of { size} Results
-  </span>
-)
-
-// Other Review table columns
-const GamesColumns = [{
-  dataField: 'id',
-  text: '',
-  hidden: true
-}, {
-  dataField: 'isUserCreated',
-  classes: 'isUserCreated',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'identifierID',
-  classes: 'identifierID',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'name',
-  classes: 'name',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'publisher',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'year',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'minAge',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'minPlaytime',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'maxPlaytime',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'minPlayers',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'maxPlayers',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'imgFileName',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'description',
-  text: '',
-  hidden: true,
-}, {
-  dataField: 'viewer',
-  text: '',
-}]
-
-// Set custom pagination
-const GamesPaginationOptions = {
-  paginationSize: 5,
-  pageStartIndex: 1,
-  hideSizePerPage: true,
-  hidePageListOnlyOnePage: true,
-  firstPageText: 'First',
-  prePageText: 'Back',
-  nextPageText: 'Next',
-  lastPageText: 'Last',
-  nextPageTitle: 'First page',
-  prePageTitle: 'Pre page',
-  firstPageTitle: 'Next page',
-  lastPageTitle: 'Last page',
-  showTotal: true,
-  paginationTotalRenderer: GamePageTotal,
-  disablePageTitle: true,
-  sizePerPageList: [{
-    text: '5', value: 5
-  }]
-};
-
-
+// ------------------------------------
+// Recommendations Class
+// Renders paginated table of recommended games
+// ------------------------------------
 class _Recommendations extends React.Component {
   constructor(props) {
     super(props)
@@ -143,9 +58,10 @@ class _Recommendations extends React.Component {
 
     // Redirect to Home page if user logs out on games page
     if (!user.isLoggedIn) {
-      return <Login />
+      return <Redirect push to='/login'/>
     }
 
+    // if game selected, redirect to game page
     if (this.state.viewGame) {
       return <Redirect push to={'/game/' + this.state.gameID} />
     }
@@ -271,9 +187,9 @@ class _Recommendations extends React.Component {
               <BootstrapTable
                 keyField="id"
                 data={tableData}
-                columns={GamesColumns}
+                columns={shared.GamesColumns}
                 bordered={false}
-                pagination={paginationFactory(GamesPaginationOptions)}
+                pagination={paginationFactory(shared.PaginationOptions)}
               />
             </div>
           </Grid>

@@ -1,19 +1,26 @@
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link, Redirect } from 'react-router-dom'
+// Action imports
 import { getUser, checkLoggedIn, getUserReviews, getUserCollections, userResetReviewsAndCollections } from '../actions/index';
+// Other imports
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 import { LinkContainer } from 'react-router-bootstrap';
 import BoardGameCollection from '../svg/board-game-collection';
-import '../css/UserProfile.css';
-import { Link, Redirect } from 'react-router-dom'
 import { Spinner } from 'react-bootstrap';
+// CSS imports
+import '../css/UserProfile.css';
 
+// ------------------------------------
+// User Profile Class
+// Renders user, user reviews, and link to user collections
+// ------------------------------------
 class _UserProfile extends React.Component {
-
   componentDidMount() {
     this.props.userResetReviewsAndCollections()
   }
@@ -36,8 +43,7 @@ class _UserProfile extends React.Component {
       )
     }
 
-    // if user state is not fetching, not received, and not new
-    // at this point, there is no token & id in localStorage, so route should redirect to login
+    // if user state is not fetching, not received, and not new redirect to login
     if(!user.isReceived && !user.isFetching && !user.isNew) {
       return <Redirect to='/login' />
     }
