@@ -95,6 +95,15 @@ export const collection = (state = collectionState, action) => {
           data: action.payload,
       });
     
+    case "RESET_COLLECTION_STATE":
+      return Object.assign({}, state, {
+        isFetching: false,
+        isReceived: false,
+        isSet: false,
+        error: null,
+        data: {},
+      });
+
     default:
       return state;
   }
