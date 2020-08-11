@@ -1,10 +1,13 @@
-
-
+// React, Redux imports
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
-import { Notifier } from './Notifier.jsx';
+// Import Actions
+import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection, resetCollection } from '../actions/index'
+// Component Imports
+import { AddToCollectionSearch } from './AddToCollectionSearch';
+// Other Imports
 import { Row, Col, Form, Alert, Spinner } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
@@ -17,11 +20,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
 import CloseIcon from '@material-ui/icons/Close';
-
-import { AddToCollectionSearch } from './AddToCollectionSearch';
-
-// Import Actions
-import { getCollection, getSetCollectionState, updateCollection, removeGameFromCollection, resetCollection } from '../actions/index'
 
 // Column names for table of games
 const tableColumns = [{
@@ -57,6 +55,11 @@ const tableColumns = [{
   headerStyle: { width: '50px' }
 }];
 
+
+// ------------------------------------
+// Collection Class 
+// Renders collection from props id
+// ------------------------------------
 class _Collection extends React.Component {
   constructor(props) {
     super(props);
@@ -95,6 +98,11 @@ class _Collection extends React.Component {
       name: this.props.collection.data.name,
       isPrivate: this.props.collection.data.isPrivate
     });
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
+    this.props.resetCollection()
   }
 
   _setCollection(collection) {

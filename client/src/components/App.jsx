@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Route, Switch, Redirect } from 'react-router-dom'
 // Action imports
-import { userLogin, userLoading, userReset, checkLoggedIn, userUnsetIsNew } from "../actions"
+import { userLogin, userLoading, userReset, checkLoggedIn, userUnsetIsNew, resetCollection } from "../actions"
 // Component imports
 import { Login } from './Login'
 import { Signup } from './Signup'
@@ -61,6 +61,7 @@ class _App extends React.Component {
     let navbar
 
     if (user.error != null) {
+      this.resetCollection()
       this._userLogout()
     }
 
@@ -150,7 +151,7 @@ export const App = connect(state => {
   // but with every action creator wrapped into a dispatch call so they may be invoked directly.
 }, dispatch => {
   return bindActionCreators({
-    userLogin, userReset, checkLoggedIn, userLoading, userUnsetIsNew
+    userLogin, userReset, checkLoggedIn, userLoading, userUnsetIsNew, resetCollection
   }, dispatch)
 })(_App)
 

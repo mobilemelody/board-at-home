@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 // Action imports
-import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections } from '../actions/index'
+import { addGameToCollection, removeGameFromCollection, createCollection, getUserCollections, resetCollection } from '../actions/index'
 // Other Imports
 import { Modal, Form } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
@@ -37,6 +37,10 @@ class _AddToCollection extends React.Component {
 
   componentDidMount() {
     this.props.getUserCollections();
+  }
+
+  componentWillUnmount() {
+    this.props.resetCollection();
   }
 
   _openDialog() {
@@ -206,6 +210,6 @@ export const AddToCollection = connect(state => {
   return { state: { collection, collections, game } };
 }, dispatch => {
   return bindActionCreators({
-    addGameToCollection, removeGameFromCollection, createCollection, getUserCollections
+    addGameToCollection, removeGameFromCollection, createCollection, getUserCollections, resetCollection
   }, dispatch)
 })(_AddToCollection)
